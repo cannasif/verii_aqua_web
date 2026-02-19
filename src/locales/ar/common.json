@@ -287,7 +287,26 @@
     "waitingApprovalOrders": "الطلبات في انتظار الموافقة",
     "orderList": "قائمة الطلبات",
     "reportsList": "قائمة",
-    "reportsCreate": "إنشاء جديد"
+    "reportsCreate": "إنشاء جديد",
+    "aquaDefinitions": "تعريفات أكوا",
+    "aquaProjects": "المشاريع",
+    "aquaCages": "الأقفاص",
+    "aquaProjectCageAssignments": "تعيين مشروع-قفص",
+    "aquaWeatherSeverities": "تعريفات شدة الطقس",
+    "aquaWeatherTypes": "تعريفات نوع الطقس",
+    "aquaNetOperationTypes": "أنواع عمليات الشبك",
+    "aquaOperations": "عمليات أكوا",
+    "aquaGoodsReceipts": "استلام البضائع (سمك/علف)",
+    "aquaFeedings": "التغذية (صباح/مساء)",
+    "aquaMortalities": "النفوق",
+    "aquaTransfers": "النقل",
+    "aquaWeighings": "الوزن",
+    "aquaStockConverts": "تحويل المخزون",
+    "aquaDailyWeathers": "الطقس اليومي",
+    "aquaNetOperations": "عمليات الشبك",
+    "aquaReports": "التقارير",
+    "aquaBatchMovements": "حركات الدُفعات",
+    "aquaCageBalances": "رصيد القفص"
   },
   "dashboard": {
     "title": "لوحة التحكم",
@@ -4138,5 +4157,169 @@
     "deleteError": "تعذر حذف حد الخصم",
     "updateSuccess": "تم تحديث حد الخصم بنجاح",
     "updateError": "تعذر تحديث حد الخصم"
+  },
+  "aqua": {
+    "common": {
+      "id": "المعرف",
+      "actions": "الإجراءات",
+      "loading": "جارٍ التحميل...",
+      "noData": "لا توجد بيانات",
+      "refresh": "تحديث",
+      "new": "جديد",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "post": "ترحيل",
+      "previous": "السابق",
+      "next": "التالي",
+      "createRecord": "إنشاء سجل",
+      "editRecord": "تعديل السجل",
+      "select": "اختر",
+      "cancel": "إلغاء",
+      "save": "حفظ",
+      "saving": "جارٍ الحفظ...",
+      "confirmDelete": "هل تريد حذف هذا السجل؟"
+    },
+    "toast": {
+      "created": "تم إنشاء السجل",
+      "createFailed": "تعذر إنشاء السجل",
+      "updated": "تم تحديث السجل",
+      "updateFailed": "تعذر تحديث السجل",
+      "deleted": "تم حذف السجل",
+      "deleteFailed": "تعذر حذف السجل",
+      "posted": "تم الترحيل بنجاح",
+      "postFailed": "فشل الترحيل"
+    },
+    "status": {
+      "draft": "مسودة",
+      "posted": "مرحل",
+      "cancelled": "ملغي"
+    },
+    "feedingSlot": {
+      "morning": "صباح",
+      "evening": "مساء"
+    },
+    "sourceType": {
+      "manual": "يدوي",
+      "planned": "مخطط",
+      "auto": "تلقائي"
+    },
+    "pages": {
+      "projects": {
+        "title": "المشاريع",
+        "description": "قائمة وإدارة مشاريع أكوا."
+      },
+      "cages": {
+        "title": "الأقفاص",
+        "description": "تعريفات الأقفاص ومعلومات السعة."
+      },
+      "projectCageAssignments": {
+        "title": "تعيين مشروع-قفص",
+        "description": "سجلات ربط المشروع بالقفص."
+      },
+      "weatherSeverities": {
+        "title": "تعريف شدة الطقس",
+        "description": "مستويات شدة الطقس."
+      },
+      "weatherTypes": {
+        "title": "تعريف نوع الطقس",
+        "description": "تعريفات أنواع الطقس."
+      },
+      "netOperationTypes": {
+        "title": "أنواع عمليات الشبك",
+        "description": "تعريفات أنواع عمليات الشبك."
+      },
+      "goodsReceipts": {
+        "title": "استلام البضائع (سمك/علف)",
+        "description": "سجلات رؤوس استلام البضائع."
+      },
+      "feedings": {
+        "title": "التغذية (صباح/مساء)",
+        "description": "سجلات رؤوس التغذية."
+      },
+      "mortalities": {
+        "title": "النفوق",
+        "description": "سجلات رؤوس النفوق."
+      },
+      "transfers": {
+        "title": "النقل",
+        "description": "سجلات رؤوس النقل."
+      },
+      "weighings": {
+        "title": "الوزن",
+        "description": "سجلات رؤوس الوزن."
+      },
+      "stockConverts": {
+        "title": "تحويل المخزون",
+        "description": "سجلات رؤوس تحويل المخزون."
+      },
+      "dailyWeathers": {
+        "title": "الطقس اليومي",
+        "description": "سجلات الطقس اليومية حسب المشروع."
+      },
+      "netOperations": {
+        "title": "عمليات الشبك",
+        "description": "سجلات رؤوس عمليات الشبك."
+      },
+      "batchMovements": {
+        "title": "حركات الدُفعات",
+        "description": "تقرير دفتر حركة الدُفعات."
+      },
+      "cageBalances": {
+        "title": "رصيد القفص",
+        "description": "رصيد الكتلة الحيوية وعدد الأحياء حسب القفص."
+      }
+    },
+    "fields": {
+      "projectCode": "رمز المشروع",
+      "projectName": "اسم المشروع",
+      "startDate": "تاريخ البدء",
+      "endDate": "تاريخ الانتهاء",
+      "status": "الحالة",
+      "note": "ملاحظة",
+      "cageCode": "رمز القفص",
+      "cageName": "اسم القفص",
+      "capacityCount": "السعة (عدد)",
+      "capacityGram": "السعة (جرام)",
+      "projectId": "معرف المشروع",
+      "cageId": "معرف القفص",
+      "assignedDate": "تاريخ التعيين",
+      "releasedDate": "تاريخ الإنهاء",
+      "code": "الرمز",
+      "name": "الاسم",
+      "score": "الدرجة",
+      "receiptNo": "رقم الاستلام",
+      "receiptDate": "تاريخ الاستلام",
+      "supplierId": "معرف المورد",
+      "warehouseId": "معرف المستودع",
+      "feedingNo": "رقم التغذية",
+      "feedingDate": "تاريخ التغذية",
+      "feedingSlot": "فترة التغذية",
+      "sourceType": "نوع المصدر",
+      "mortalityDate": "تاريخ النفوق",
+      "transferNo": "رقم النقل",
+      "transferDate": "تاريخ النقل",
+      "weighingNo": "رقم الوزن",
+      "weighingDate": "تاريخ الوزن",
+      "convertNo": "رقم التحويل",
+      "convertDate": "تاريخ التحويل",
+      "weatherDate": "التاريخ",
+      "weatherTypeId": "معرف نوع الطقس",
+      "weatherSeverityId": "معرف شدة الطقس",
+      "temperatureC": "الحرارة (م)",
+      "windKnot": "الرياح (عقدة)",
+      "operationTypeId": "معرف نوع العملية",
+      "operationNo": "رقم العملية",
+      "operationDate": "تاريخ العملية",
+      "fishBatchId": "معرف دفعة السمك",
+      "projectCageId": "معرف قفص المشروع",
+      "movementType": "نوع الحركة",
+      "signedCount": "فرق العدد",
+      "signedBiomassGram": "فرق الكتلة الحيوية",
+      "movementDate": "تاريخ الحركة",
+      "liveCount": "عدد الأحياء",
+      "averageGram": "متوسط الجرام",
+      "biomassGram": "الكتلة الحيوية (جرام)",
+      "asOfDate": "حتى تاريخ"
+    }
   }
 }

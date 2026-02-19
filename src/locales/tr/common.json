@@ -314,7 +314,190 @@
     "reportsList": "Liste",
     "reportsCreate": "Yeni Oluştur",
     "definitions": "Tanımlar",
-    "users": "Kullanıcılar"
+    "users": "Kullanıcılar",
+    "aquaDefinitions": "Aqua Tanımları",
+    "aquaProjects": "Projeler",
+    "aquaCages": "Kafesler",
+    "aquaProjectCageAssignments": "Proje-Kafes Atama",
+    "aquaWeatherSeverities": "Hava Durumu Şiddet Tanımı",
+    "aquaWeatherTypes": "Hava Durumu Tip Tanımı",
+    "aquaNetOperationTypes": "Ağ İşlem Tipleri",
+    "aquaOperations": "Aqua İşlemleri",
+    "aquaGoodsReceipts": "Mal Kabul (Balık/Yem)",
+    "aquaFeedings": "Besleme (Sabah/Akşam)",
+    "aquaMortalities": "Ölüm",
+    "aquaTransfers": "Transfer",
+    "aquaWeighings": "Tartım",
+    "aquaStockConverts": "Stok Dönüşüm",
+    "aquaDailyWeathers": "Günlük Hava Durumu",
+    "aquaNetOperations": "Ağ İşlemleri",
+    "aquaReports": "Raporlar",
+    "aquaBatchMovements": "Parti Hareketleri",
+    "aquaCageBalances": "Kafes Dengesi"
+  },
+  "aqua": {
+    "common": {
+      "id": "ID",
+      "actions": "İşlem",
+      "loading": "Yükleniyor...",
+      "noData": "Veri yok",
+      "refresh": "Yenile",
+      "new": "Yeni",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "post": "Postla",
+      "previous": "Önceki",
+      "next": "Sonraki",
+      "createRecord": "Yeni Kayıt",
+      "editRecord": "Kayıt Düzenle",
+      "select": "Seçiniz",
+      "cancel": "İptal",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor...",
+      "confirmDelete": "Bu kayıt silinsin mi?"
+    },
+    "toast": {
+      "created": "Kayıt oluşturuldu",
+      "createFailed": "Kayıt oluşturulamadı",
+      "updated": "Kayıt güncellendi",
+      "updateFailed": "Kayıt güncellenemedi",
+      "deleted": "Kayıt silindi",
+      "deleteFailed": "Kayıt silinemedi",
+      "posted": "Postlama tamamlandı",
+      "postFailed": "Postlama başarısız"
+    },
+    "status": {
+      "draft": "Taslak",
+      "posted": "Postlandı",
+      "cancelled": "İptal"
+    },
+    "feedingSlot": {
+      "morning": "Sabah",
+      "evening": "Akşam"
+    },
+    "sourceType": {
+      "manual": "Manuel",
+      "planned": "Planlı",
+      "auto": "Otomatik"
+    },
+    "pages": {
+      "projects": {
+        "title": "Projeler",
+        "description": "Aqua proje listesi ve yönetimi."
+      },
+      "cages": {
+        "title": "Kafesler",
+        "description": "Kafes tanımları ve kapasite bilgileri."
+      },
+      "projectCageAssignments": {
+        "title": "Proje-Kafes Atama",
+        "description": "Proje ve kafes eşleştirme kayıtları."
+      },
+      "weatherSeverities": {
+        "title": "Hava Durumu Şiddet Tanımı",
+        "description": "Hava durumu şiddet seviyeleri."
+      },
+      "weatherTypes": {
+        "title": "Hava Durumu Tip Tanımı",
+        "description": "Hava durumu tip tanımları."
+      },
+      "netOperationTypes": {
+        "title": "Ağ İşlem Tipleri",
+        "description": "Ağ işlem tipi tanımları."
+      },
+      "goodsReceipts": {
+        "title": "Mal Kabul (Balık/Yem)",
+        "description": "Mal kabul başlık kayıtları."
+      },
+      "feedings": {
+        "title": "Besleme (Sabah/Akşam)",
+        "description": "Besleme başlık kayıtları."
+      },
+      "mortalities": {
+        "title": "Ölüm",
+        "description": "Ölüm başlık kayıtları."
+      },
+      "transfers": {
+        "title": "Transfer",
+        "description": "Transfer başlık kayıtları."
+      },
+      "weighings": {
+        "title": "Tartım",
+        "description": "Tartım başlık kayıtları."
+      },
+      "stockConverts": {
+        "title": "Stok Dönüşüm",
+        "description": "Stok sınıf dönüşüm başlık kayıtları."
+      },
+      "dailyWeathers": {
+        "title": "Günlük Hava Durumu",
+        "description": "Proje bazlı günlük hava durumu kayıtları."
+      },
+      "netOperations": {
+        "title": "Ağ İşlemleri",
+        "description": "Ağ işlem başlık kayıtları."
+      },
+      "batchMovements": {
+        "title": "Parti Hareketleri",
+        "description": "Parti hareketleri muhasebe raporu."
+      },
+      "cageBalances": {
+        "title": "Kafes Dengesi",
+        "description": "Kafes bazlı canlı adet ve biyokütle dengesi."
+      }
+    },
+    "fields": {
+      "projectCode": "Proje Kodu",
+      "projectName": "Proje Adı",
+      "startDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "status": "Durum",
+      "note": "Not",
+      "cageCode": "Kafes Kodu",
+      "cageName": "Kafes Adı",
+      "capacityCount": "Kapasite Adet",
+      "capacityGram": "Kapasite (Gram)",
+      "projectId": "Proje ID",
+      "cageId": "Kafes ID",
+      "assignedDate": "Atama Tarihi",
+      "releasedDate": "Ayrılma Tarihi",
+      "code": "Kod",
+      "name": "Ad",
+      "score": "Skor",
+      "receiptNo": "Belge No",
+      "receiptDate": "Belge Tarihi",
+      "supplierId": "Tedarikçi ID",
+      "warehouseId": "Depo ID",
+      "feedingNo": "Besleme No",
+      "feedingDate": "Besleme Tarihi",
+      "feedingSlot": "Besleme Slotu",
+      "sourceType": "Kaynak Tipi",
+      "mortalityDate": "Ölüm Tarihi",
+      "transferNo": "Transfer No",
+      "transferDate": "Transfer Tarihi",
+      "weighingNo": "Tartım No",
+      "weighingDate": "Tartım Tarihi",
+      "convertNo": "Dönüşüm No",
+      "convertDate": "Dönüşüm Tarihi",
+      "weatherDate": "Tarih",
+      "weatherTypeId": "Hava Tipi ID",
+      "weatherSeverityId": "Hava Şiddeti ID",
+      "temperatureC": "Sıcaklık (C)",
+      "windKnot": "Rüzgar (knot)",
+      "operationTypeId": "İşlem Tipi ID",
+      "operationNo": "İşlem No",
+      "operationDate": "İşlem Tarihi",
+      "fishBatchId": "Balık Partisi ID",
+      "projectCageId": "Proje Kafes ID",
+      "movementType": "Hareket Tipi",
+      "signedCount": "Adet Farkı",
+      "signedBiomassGram": "Biyokütle Farkı",
+      "movementDate": "Hareket Tarihi",
+      "liveCount": "Canlı Adet",
+      "averageGram": "Ortalama Gram",
+      "biomassGram": "Biyokütle Gram",
+      "asOfDate": "Tarih"
+    }
   },
   "pdfReportDesigner": {
     "list": "Listele",

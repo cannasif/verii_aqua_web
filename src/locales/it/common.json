@@ -287,7 +287,26 @@
     "waitingApprovalOrders": "Ordini in attesa di approvazione",
     "orderList": "Elenco ordini",
     "reportsList": "Elenco",
-    "reportsCreate": "Crea nuovo"
+    "reportsCreate": "Crea nuovo",
+    "aquaDefinitions": "Definizioni Aqua",
+    "aquaProjects": "Progetti",
+    "aquaCages": "Gabbie",
+    "aquaProjectCageAssignments": "Assegnazioni Progetto-Gabbia",
+    "aquaWeatherSeverities": "Definizioni Severità Meteo",
+    "aquaWeatherTypes": "Definizioni Tipo Meteo",
+    "aquaNetOperationTypes": "Tipi Operazione Rete",
+    "aquaOperations": "Operazioni Aqua",
+    "aquaGoodsReceipts": "Ricevimento Merci (Pesce/Mangime)",
+    "aquaFeedings": "Alimentazione (Mattina/Sera)",
+    "aquaMortalities": "Mortalità",
+    "aquaTransfers": "Trasferimento",
+    "aquaWeighings": "Pesatura",
+    "aquaStockConverts": "Conversione Stock",
+    "aquaDailyWeathers": "Meteo Giornaliero",
+    "aquaNetOperations": "Operazioni Rete",
+    "aquaReports": "Report",
+    "aquaBatchMovements": "Movimenti Lotto",
+    "aquaCageBalances": "Saldo Gabbia"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -4167,5 +4186,169 @@
     "deleteError": "Impossibile eliminare il limite di sconto",
     "updateSuccess": "Limite di sconto aggiornato",
     "updateError": "Impossibile aggiornare il limite di sconto"
+  },
+  "aqua": {
+    "common": {
+      "id": "ID",
+      "actions": "Azioni",
+      "loading": "Caricamento...",
+      "noData": "Nessun dato",
+      "refresh": "Aggiorna",
+      "new": "Nuovo",
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "post": "Registra",
+      "previous": "Precedente",
+      "next": "Successivo",
+      "createRecord": "Crea Record",
+      "editRecord": "Modifica Record",
+      "select": "Seleziona",
+      "cancel": "Annulla",
+      "save": "Salva",
+      "saving": "Salvataggio...",
+      "confirmDelete": "Eliminare questo record?"
+    },
+    "toast": {
+      "created": "Record creato",
+      "createFailed": "Impossibile creare il record",
+      "updated": "Record aggiornato",
+      "updateFailed": "Impossibile aggiornare il record",
+      "deleted": "Record eliminato",
+      "deleteFailed": "Impossibile eliminare il record",
+      "posted": "Registrazione completata",
+      "postFailed": "Registrazione non riuscita"
+    },
+    "status": {
+      "draft": "Bozza",
+      "posted": "Registrato",
+      "cancelled": "Annullato"
+    },
+    "feedingSlot": {
+      "morning": "Mattina",
+      "evening": "Sera"
+    },
+    "sourceType": {
+      "manual": "Manuale",
+      "planned": "Pianificato",
+      "auto": "Automatico"
+    },
+    "pages": {
+      "projects": {
+        "title": "Progetti",
+        "description": "Elenco e gestione progetti Aqua."
+      },
+      "cages": {
+        "title": "Gabbie",
+        "description": "Definizioni gabbie e informazioni capacità."
+      },
+      "projectCageAssignments": {
+        "title": "Assegnazione Progetto-Gabbia",
+        "description": "Record di assegnazione progetto e gabbia."
+      },
+      "weatherSeverities": {
+        "title": "Definizione Severità Meteo",
+        "description": "Livelli di severità meteo."
+      },
+      "weatherTypes": {
+        "title": "Definizione Tipo Meteo",
+        "description": "Definizioni dei tipi meteo."
+      },
+      "netOperationTypes": {
+        "title": "Tipi Operazione Rete",
+        "description": "Definizioni dei tipi di operazione rete."
+      },
+      "goodsReceipts": {
+        "title": "Ricevimento Merci (Pesce/Mangime)",
+        "description": "Record intestazione ricevimento merci."
+      },
+      "feedings": {
+        "title": "Alimentazione (Mattina/Sera)",
+        "description": "Record intestazione alimentazione."
+      },
+      "mortalities": {
+        "title": "Mortalità",
+        "description": "Record intestazione mortalità."
+      },
+      "transfers": {
+        "title": "Trasferimento",
+        "description": "Record intestazione trasferimento."
+      },
+      "weighings": {
+        "title": "Pesatura",
+        "description": "Record intestazione pesatura."
+      },
+      "stockConverts": {
+        "title": "Conversione Stock",
+        "description": "Record intestazione conversione stock."
+      },
+      "dailyWeathers": {
+        "title": "Meteo Giornaliero",
+        "description": "Record meteo giornalieri per progetto."
+      },
+      "netOperations": {
+        "title": "Operazioni Rete",
+        "description": "Record intestazione operazioni rete."
+      },
+      "batchMovements": {
+        "title": "Movimenti Lotto",
+        "description": "Report contabile movimenti lotto."
+      },
+      "cageBalances": {
+        "title": "Saldo Gabbia",
+        "description": "Saldo biomassa e conteggio vivo per gabbia."
+      }
+    },
+    "fields": {
+      "projectCode": "Codice Progetto",
+      "projectName": "Nome Progetto",
+      "startDate": "Data Inizio",
+      "endDate": "Data Fine",
+      "status": "Stato",
+      "note": "Nota",
+      "cageCode": "Codice Gabbia",
+      "cageName": "Nome Gabbia",
+      "capacityCount": "Capacità (Quantità)",
+      "capacityGram": "Capacità (Grammo)",
+      "projectId": "ID Progetto",
+      "cageId": "ID Gabbia",
+      "assignedDate": "Data Assegnazione",
+      "releasedDate": "Data Rilascio",
+      "code": "Codice",
+      "name": "Nome",
+      "score": "Punteggio",
+      "receiptNo": "N. Ricevimento",
+      "receiptDate": "Data Ricevimento",
+      "supplierId": "ID Fornitore",
+      "warehouseId": "ID Magazzino",
+      "feedingNo": "N. Alimentazione",
+      "feedingDate": "Data Alimentazione",
+      "feedingSlot": "Fascia Alimentazione",
+      "sourceType": "Tipo Sorgente",
+      "mortalityDate": "Data Mortalità",
+      "transferNo": "N. Trasferimento",
+      "transferDate": "Data Trasferimento",
+      "weighingNo": "N. Pesatura",
+      "weighingDate": "Data Pesatura",
+      "convertNo": "N. Conversione",
+      "convertDate": "Data Conversione",
+      "weatherDate": "Data",
+      "weatherTypeId": "ID Tipo Meteo",
+      "weatherSeverityId": "ID Severità Meteo",
+      "temperatureC": "Temperatura (C)",
+      "windKnot": "Vento (nodo)",
+      "operationTypeId": "ID Tipo Operazione",
+      "operationNo": "N. Operazione",
+      "operationDate": "Data Operazione",
+      "fishBatchId": "ID Lotto Pesce",
+      "projectCageId": "ID Gabbia Progetto",
+      "movementType": "Tipo Movimento",
+      "signedCount": "Delta Quantità",
+      "signedBiomassGram": "Delta Biomassa",
+      "movementDate": "Data Movimento",
+      "liveCount": "Conteggio Vivo",
+      "averageGram": "Grammo Medio",
+      "biomassGram": "Biomassa (Grammo)",
+      "asOfDate": "Data Riferimento"
+    }
   }
 }

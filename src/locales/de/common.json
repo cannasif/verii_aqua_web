@@ -287,7 +287,26 @@
     "reportsList": "Liste",
     "reportsCreate": "Neu erstellen",
     "definitions": "Definitionen",
-    "users": "Benutzer"
+    "users": "Benutzer",
+    "aquaDefinitions": "Aqua-Definitionen",
+    "aquaProjects": "Projekte",
+    "aquaCages": "Käfige",
+    "aquaProjectCageAssignments": "Projekt-Käfig-Zuweisungen",
+    "aquaWeatherSeverities": "Wetterstärke-Definitionen",
+    "aquaWeatherTypes": "Wettertyp-Definitionen",
+    "aquaNetOperationTypes": "Netzoperationstypen",
+    "aquaOperations": "Aqua-Operationen",
+    "aquaGoodsReceipts": "Wareneingang (Fisch/Futter)",
+    "aquaFeedings": "Fütterung (Morgen/Abend)",
+    "aquaMortalities": "Mortalität",
+    "aquaTransfers": "Transfer",
+    "aquaWeighings": "Wägung",
+    "aquaStockConverts": "Bestandsumwandlung",
+    "aquaDailyWeathers": "Tägliches Wetter",
+    "aquaNetOperations": "Netzoperationen",
+    "aquaReports": "Berichte",
+    "aquaBatchMovements": "Chargenbewegungen",
+    "aquaCageBalances": "Käfigsaldo"
   },
   "dashboard": {
     "title": "Armaturenbrett",
@@ -4093,5 +4112,169 @@
     "deleteError": "Beim Löschen des Rabattlimits ist ein Fehler aufgetreten",
     "updateSuccess": "Rabattlimit erfolgreich aktualisiert",
     "updateError": "Beim Aktualisieren des Rabattlimits ist ein Fehler aufgetreten"
+  },
+  "aqua": {
+    "common": {
+      "id": "ID",
+      "actions": "Aktionen",
+      "loading": "Wird geladen...",
+      "noData": "Keine Daten",
+      "refresh": "Aktualisieren",
+      "new": "Neu",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "post": "Buchen",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "createRecord": "Datensatz erstellen",
+      "editRecord": "Datensatz bearbeiten",
+      "select": "Auswählen",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "saving": "Wird gespeichert...",
+      "confirmDelete": "Diesen Datensatz löschen?"
+    },
+    "toast": {
+      "created": "Datensatz erstellt",
+      "createFailed": "Datensatz konnte nicht erstellt werden",
+      "updated": "Datensatz aktualisiert",
+      "updateFailed": "Datensatz konnte nicht aktualisiert werden",
+      "deleted": "Datensatz gelöscht",
+      "deleteFailed": "Datensatz konnte nicht gelöscht werden",
+      "posted": "Buchung abgeschlossen",
+      "postFailed": "Buchung fehlgeschlagen"
+    },
+    "status": {
+      "draft": "Entwurf",
+      "posted": "Gebucht",
+      "cancelled": "Storniert"
+    },
+    "feedingSlot": {
+      "morning": "Morgen",
+      "evening": "Abend"
+    },
+    "sourceType": {
+      "manual": "Manuell",
+      "planned": "Geplant",
+      "auto": "Automatisch"
+    },
+    "pages": {
+      "projects": {
+        "title": "Projekte",
+        "description": "Aqua-Projektliste und Verwaltung."
+      },
+      "cages": {
+        "title": "Käfige",
+        "description": "Käfigdefinitionen und Kapazitätsinformationen."
+      },
+      "projectCageAssignments": {
+        "title": "Projekt-Käfig-Zuweisung",
+        "description": "Projekt- und Käfigzuordnungen."
+      },
+      "weatherSeverities": {
+        "title": "Wetterstärke-Definition",
+        "description": "Wetterstärke-Stufen."
+      },
+      "weatherTypes": {
+        "title": "Wettertyp-Definition",
+        "description": "Wettertyp-Definitionen."
+      },
+      "netOperationTypes": {
+        "title": "Netzoperationstypen",
+        "description": "Definitionen der Netzoperationstypen."
+      },
+      "goodsReceipts": {
+        "title": "Wareneingang (Fisch/Futter)",
+        "description": "Kopfdatensätze für Wareneingang."
+      },
+      "feedings": {
+        "title": "Fütterung (Morgen/Abend)",
+        "description": "Kopfdatensätze für Fütterung."
+      },
+      "mortalities": {
+        "title": "Mortalität",
+        "description": "Kopfdatensätze für Mortalität."
+      },
+      "transfers": {
+        "title": "Transfer",
+        "description": "Kopfdatensätze für Transfers."
+      },
+      "weighings": {
+        "title": "Wägung",
+        "description": "Kopfdatensätze für Wägungen."
+      },
+      "stockConverts": {
+        "title": "Bestandsumwandlung",
+        "description": "Kopfdatensätze für Bestandsumwandlung."
+      },
+      "dailyWeathers": {
+        "title": "Tägliches Wetter",
+        "description": "Projektbezogene tägliche Wetterdaten."
+      },
+      "netOperations": {
+        "title": "Netzoperationen",
+        "description": "Kopfdatensätze für Netzoperationen."
+      },
+      "batchMovements": {
+        "title": "Chargenbewegungen",
+        "description": "Ledger-Bericht zu Chargenbewegungen."
+      },
+      "cageBalances": {
+        "title": "Käfigsaldo",
+        "description": "Käfigbezogener Lebendbestand und Biomasse-Saldo."
+      }
+    },
+    "fields": {
+      "projectCode": "Projektcode",
+      "projectName": "Projektname",
+      "startDate": "Startdatum",
+      "endDate": "Enddatum",
+      "status": "Status",
+      "note": "Notiz",
+      "cageCode": "Käfigcode",
+      "cageName": "Käfigname",
+      "capacityCount": "Kapazität (Anzahl)",
+      "capacityGram": "Kapazität (Gramm)",
+      "projectId": "Projekt-ID",
+      "cageId": "Käfig-ID",
+      "assignedDate": "Zuweisungsdatum",
+      "releasedDate": "Freigabedatum",
+      "code": "Code",
+      "name": "Name",
+      "score": "Punktzahl",
+      "receiptNo": "Belegnummer",
+      "receiptDate": "Belegdatum",
+      "supplierId": "Lieferanten-ID",
+      "warehouseId": "Lager-ID",
+      "feedingNo": "Fütterungsnummer",
+      "feedingDate": "Fütterungsdatum",
+      "feedingSlot": "Fütterungszeit",
+      "sourceType": "Quelltyp",
+      "mortalityDate": "Mortalitätsdatum",
+      "transferNo": "Transfernummer",
+      "transferDate": "Transferdatum",
+      "weighingNo": "Wägungsnummer",
+      "weighingDate": "Wägungsdatum",
+      "convertNo": "Umwandlungsnummer",
+      "convertDate": "Umwandlungsdatum",
+      "weatherDate": "Datum",
+      "weatherTypeId": "Wettertyp-ID",
+      "weatherSeverityId": "Wetterstärke-ID",
+      "temperatureC": "Temperatur (C)",
+      "windKnot": "Wind (Knoten)",
+      "operationTypeId": "Operationstyp-ID",
+      "operationNo": "Operationsnummer",
+      "operationDate": "Operationsdatum",
+      "fishBatchId": "Fischchargen-ID",
+      "projectCageId": "Projekt-Käfig-ID",
+      "movementType": "Bewegungstyp",
+      "signedCount": "Mengenänderung",
+      "signedBiomassGram": "Biomasseänderung",
+      "movementDate": "Bewegungsdatum",
+      "liveCount": "Lebendbestand",
+      "averageGram": "Durchschnittsgramm",
+      "biomassGram": "Biomasse (Gramm)",
+      "asOfDate": "Standdatum"
+    }
   }
 }

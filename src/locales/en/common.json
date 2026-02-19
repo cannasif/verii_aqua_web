@@ -313,7 +313,26 @@
     "waitingApprovalOrders": "Orders Pending Approval",
     "orderList": "Order List",
     "reportsList": "List",
-    "reportsCreate": "Create New"
+    "reportsCreate": "Create New",
+    "aquaDefinitions": "Aqua Definitions",
+    "aquaProjects": "Projects",
+    "aquaCages": "Cages",
+    "aquaProjectCageAssignments": "Project-Cage Assignments",
+    "aquaWeatherSeverities": "Weather Severity Definitions",
+    "aquaWeatherTypes": "Weather Type Definitions",
+    "aquaNetOperationTypes": "Net Operation Types",
+    "aquaOperations": "Aqua Operations",
+    "aquaGoodsReceipts": "Goods Receipt (Fish/Feed)",
+    "aquaFeedings": "Feeding (Morning/Evening)",
+    "aquaMortalities": "Mortality",
+    "aquaTransfers": "Transfer",
+    "aquaWeighings": "Weighing",
+    "aquaStockConverts": "Stock Convert",
+    "aquaDailyWeathers": "Daily Weather",
+    "aquaNetOperations": "Net Operations",
+    "aquaReports": "Reports",
+    "aquaBatchMovements": "Batch Movement",
+    "aquaCageBalances": "Cage Balance"
   },
   "pdfReportDesigner": {
     "list": "List",
@@ -4116,5 +4135,169 @@
   "menu": "Hangfire Monitoring",
   "language_choice": "Language Option",
   "appearance": "View Mode",
-  "logout": "LOG OUT"
+  "logout": "LOG OUT",
+  "aqua": {
+    "common": {
+      "id": "ID",
+      "actions": "Actions",
+      "loading": "Loading...",
+      "noData": "No data",
+      "refresh": "Refresh",
+      "new": "New",
+      "edit": "Edit",
+      "delete": "Delete",
+      "post": "Post",
+      "previous": "Previous",
+      "next": "Next",
+      "createRecord": "Create Record",
+      "editRecord": "Edit Record",
+      "select": "Select",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving...",
+      "confirmDelete": "Delete this record?"
+    },
+    "toast": {
+      "created": "Record created",
+      "createFailed": "Record could not be created",
+      "updated": "Record updated",
+      "updateFailed": "Record could not be updated",
+      "deleted": "Record deleted",
+      "deleteFailed": "Record could not be deleted",
+      "posted": "Posting completed",
+      "postFailed": "Posting failed"
+    },
+    "status": {
+      "draft": "Draft",
+      "posted": "Posted",
+      "cancelled": "Cancelled"
+    },
+    "feedingSlot": {
+      "morning": "Morning",
+      "evening": "Evening"
+    },
+    "sourceType": {
+      "manual": "Manual",
+      "planned": "Planned",
+      "auto": "Auto"
+    },
+    "pages": {
+      "projects": {
+        "title": "Projects",
+        "description": "Aqua project list and management."
+      },
+      "cages": {
+        "title": "Cages",
+        "description": "Cage definitions and capacity information."
+      },
+      "projectCageAssignments": {
+        "title": "Project-Cage Assignment",
+        "description": "Project and cage mapping records."
+      },
+      "weatherSeverities": {
+        "title": "Weather Severity Definition",
+        "description": "Weather severity levels."
+      },
+      "weatherTypes": {
+        "title": "Weather Type Definition",
+        "description": "Weather type definitions."
+      },
+      "netOperationTypes": {
+        "title": "Net Operation Types",
+        "description": "Net operation type definitions."
+      },
+      "goodsReceipts": {
+        "title": "Goods Receipt (Fish/Feed)",
+        "description": "Goods receipt header records."
+      },
+      "feedings": {
+        "title": "Feeding (Morning/Evening)",
+        "description": "Feeding header records."
+      },
+      "mortalities": {
+        "title": "Mortality",
+        "description": "Mortality header records."
+      },
+      "transfers": {
+        "title": "Transfer",
+        "description": "Transfer header records."
+      },
+      "weighings": {
+        "title": "Weighing",
+        "description": "Weighing header records."
+      },
+      "stockConverts": {
+        "title": "Stock Convert",
+        "description": "Stock conversion header records."
+      },
+      "dailyWeathers": {
+        "title": "Daily Weather",
+        "description": "Project-based daily weather records."
+      },
+      "netOperations": {
+        "title": "Net Operations",
+        "description": "Net operation header records."
+      },
+      "batchMovements": {
+        "title": "Batch Movement",
+        "description": "Batch movement ledger report."
+      },
+      "cageBalances": {
+        "title": "Cage Balance",
+        "description": "Cage-based live count and biomass balance."
+      }
+    },
+    "fields": {
+      "projectCode": "Project Code",
+      "projectName": "Project Name",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "status": "Status",
+      "note": "Note",
+      "cageCode": "Cage Code",
+      "cageName": "Cage Name",
+      "capacityCount": "Capacity Count",
+      "capacityGram": "Capacity (Gram)",
+      "projectId": "Project ID",
+      "cageId": "Cage ID",
+      "assignedDate": "Assigned Date",
+      "releasedDate": "Released Date",
+      "code": "Code",
+      "name": "Name",
+      "score": "Score",
+      "receiptNo": "Receipt No",
+      "receiptDate": "Receipt Date",
+      "supplierId": "Supplier ID",
+      "warehouseId": "Warehouse ID",
+      "feedingNo": "Feeding No",
+      "feedingDate": "Feeding Date",
+      "feedingSlot": "Feeding Slot",
+      "sourceType": "Source Type",
+      "mortalityDate": "Mortality Date",
+      "transferNo": "Transfer No",
+      "transferDate": "Transfer Date",
+      "weighingNo": "Weighing No",
+      "weighingDate": "Weighing Date",
+      "convertNo": "Convert No",
+      "convertDate": "Convert Date",
+      "weatherDate": "Date",
+      "weatherTypeId": "Weather Type ID",
+      "weatherSeverityId": "Weather Severity ID",
+      "temperatureC": "Temperature (C)",
+      "windKnot": "Wind (knot)",
+      "operationTypeId": "Operation Type ID",
+      "operationNo": "Operation No",
+      "operationDate": "Operation Date",
+      "fishBatchId": "Fish Batch ID",
+      "projectCageId": "Project Cage ID",
+      "movementType": "Movement Type",
+      "signedCount": "Count Delta",
+      "signedBiomassGram": "Biomass Delta",
+      "movementDate": "Movement Date",
+      "liveCount": "Live Count",
+      "averageGram": "Average Gram",
+      "biomassGram": "Biomass Gram",
+      "asOfDate": "As Of Date"
+    }
+  }
 }

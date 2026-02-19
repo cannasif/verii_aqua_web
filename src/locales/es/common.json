@@ -287,7 +287,26 @@
     "waitingApprovalOrders": "Pedidos pendientes de aprobación",
     "orderList": "Lista de pedidos",
     "reportsList": "Lista",
-    "reportsCreate": "Crear nuevo"
+    "reportsCreate": "Crear nuevo",
+    "aquaDefinitions": "Definiciones Aqua",
+    "aquaProjects": "Proyectos",
+    "aquaCages": "Jaulas",
+    "aquaProjectCageAssignments": "Asignaciones Proyecto-Jaula",
+    "aquaWeatherSeverities": "Definiciones de Severidad Climática",
+    "aquaWeatherTypes": "Definiciones de Tipo de Clima",
+    "aquaNetOperationTypes": "Tipos de Operación de Red",
+    "aquaOperations": "Operaciones Aqua",
+    "aquaGoodsReceipts": "Recepción de Mercancía (Pez/Alimento)",
+    "aquaFeedings": "Alimentación (Mañana/Tarde)",
+    "aquaMortalities": "Mortalidad",
+    "aquaTransfers": "Transferencia",
+    "aquaWeighings": "Pesaje",
+    "aquaStockConverts": "Conversión de Stock",
+    "aquaDailyWeathers": "Clima Diario",
+    "aquaNetOperations": "Operaciones de Red",
+    "aquaReports": "Informes",
+    "aquaBatchMovements": "Movimientos de Lote",
+    "aquaCageBalances": "Balance de Jaula"
   },
   "dashboard": {
     "title": "Tablero",
@@ -4138,5 +4157,169 @@
     "deleteError": "No se pudo eliminar el límite de descuento",
     "updateSuccess": "Límite de descuento actualizado",
     "updateError": "No se pudo actualizar el límite de descuento"
+  },
+  "aqua": {
+    "common": {
+      "id": "ID",
+      "actions": "Acciones",
+      "loading": "Cargando...",
+      "noData": "Sin datos",
+      "refresh": "Actualizar",
+      "new": "Nuevo",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "post": "Publicar",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "createRecord": "Crear Registro",
+      "editRecord": "Editar Registro",
+      "select": "Seleccionar",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "saving": "Guardando...",
+      "confirmDelete": "¿Eliminar este registro?"
+    },
+    "toast": {
+      "created": "Registro creado",
+      "createFailed": "No se pudo crear el registro",
+      "updated": "Registro actualizado",
+      "updateFailed": "No se pudo actualizar el registro",
+      "deleted": "Registro eliminado",
+      "deleteFailed": "No se pudo eliminar el registro",
+      "posted": "Publicación completada",
+      "postFailed": "La publicación falló"
+    },
+    "status": {
+      "draft": "Borrador",
+      "posted": "Publicado",
+      "cancelled": "Cancelado"
+    },
+    "feedingSlot": {
+      "morning": "Mañana",
+      "evening": "Tarde"
+    },
+    "sourceType": {
+      "manual": "Manual",
+      "planned": "Planificado",
+      "auto": "Automático"
+    },
+    "pages": {
+      "projects": {
+        "title": "Proyectos",
+        "description": "Lista y gestión de proyectos Aqua."
+      },
+      "cages": {
+        "title": "Jaulas",
+        "description": "Definiciones de jaulas e información de capacidad."
+      },
+      "projectCageAssignments": {
+        "title": "Asignación Proyecto-Jaula",
+        "description": "Registros de asignación de proyecto y jaula."
+      },
+      "weatherSeverities": {
+        "title": "Definición de Severidad Climática",
+        "description": "Niveles de severidad del clima."
+      },
+      "weatherTypes": {
+        "title": "Definición de Tipo de Clima",
+        "description": "Definiciones de tipos de clima."
+      },
+      "netOperationTypes": {
+        "title": "Tipos de Operación de Red",
+        "description": "Definiciones de tipos de operación de red."
+      },
+      "goodsReceipts": {
+        "title": "Recepción de Mercancía (Pez/Alimento)",
+        "description": "Registros de cabecera de recepción."
+      },
+      "feedings": {
+        "title": "Alimentación (Mañana/Tarde)",
+        "description": "Registros de cabecera de alimentación."
+      },
+      "mortalities": {
+        "title": "Mortalidad",
+        "description": "Registros de cabecera de mortalidad."
+      },
+      "transfers": {
+        "title": "Transferencia",
+        "description": "Registros de cabecera de transferencias."
+      },
+      "weighings": {
+        "title": "Pesaje",
+        "description": "Registros de cabecera de pesaje."
+      },
+      "stockConverts": {
+        "title": "Conversión de Stock",
+        "description": "Registros de cabecera de conversión de stock."
+      },
+      "dailyWeathers": {
+        "title": "Clima Diario",
+        "description": "Registros diarios de clima por proyecto."
+      },
+      "netOperations": {
+        "title": "Operaciones de Red",
+        "description": "Registros de cabecera de operaciones de red."
+      },
+      "batchMovements": {
+        "title": "Movimientos de Lote",
+        "description": "Informe contable de movimientos de lote."
+      },
+      "cageBalances": {
+        "title": "Balance de Jaula",
+        "description": "Balance de biomasa y conteo vivo por jaula."
+      }
+    },
+    "fields": {
+      "projectCode": "Código de Proyecto",
+      "projectName": "Nombre de Proyecto",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "status": "Estado",
+      "note": "Nota",
+      "cageCode": "Código de Jaula",
+      "cageName": "Nombre de Jaula",
+      "capacityCount": "Capacidad (Cantidad)",
+      "capacityGram": "Capacidad (Gramo)",
+      "projectId": "ID de Proyecto",
+      "cageId": "ID de Jaula",
+      "assignedDate": "Fecha de Asignación",
+      "releasedDate": "Fecha de Liberación",
+      "code": "Código",
+      "name": "Nombre",
+      "score": "Puntuación",
+      "receiptNo": "N.º de Recibo",
+      "receiptDate": "Fecha de Recibo",
+      "supplierId": "ID de Proveedor",
+      "warehouseId": "ID de Almacén",
+      "feedingNo": "N.º de Alimentación",
+      "feedingDate": "Fecha de Alimentación",
+      "feedingSlot": "Turno de Alimentación",
+      "sourceType": "Tipo de Origen",
+      "mortalityDate": "Fecha de Mortalidad",
+      "transferNo": "N.º de Transferencia",
+      "transferDate": "Fecha de Transferencia",
+      "weighingNo": "N.º de Pesaje",
+      "weighingDate": "Fecha de Pesaje",
+      "convertNo": "N.º de Conversión",
+      "convertDate": "Fecha de Conversión",
+      "weatherDate": "Fecha",
+      "weatherTypeId": "ID de Tipo de Clima",
+      "weatherSeverityId": "ID de Severidad Climática",
+      "temperatureC": "Temperatura (C)",
+      "windKnot": "Viento (nudo)",
+      "operationTypeId": "ID de Tipo de Operación",
+      "operationNo": "N.º de Operación",
+      "operationDate": "Fecha de Operación",
+      "fishBatchId": "ID de Lote de Peces",
+      "projectCageId": "ID de Jaula de Proyecto",
+      "movementType": "Tipo de Movimiento",
+      "signedCount": "Delta de Cantidad",
+      "signedBiomassGram": "Delta de Biomasa",
+      "movementDate": "Fecha de Movimiento",
+      "liveCount": "Conteo Vivo",
+      "averageGram": "Promedio en Gramos",
+      "biomassGram": "Biomasa (Gramo)",
+      "asOfDate": "Fecha de Corte"
+    }
   }
 }

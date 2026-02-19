@@ -287,7 +287,26 @@
     "reportsList": "Liste",
     "reportsCreate": "Créer nouveau",
     "definitions": "Définitions",
-    "users": "Utilisateurs"
+    "users": "Utilisateurs",
+    "aquaDefinitions": "Définitions Aqua",
+    "aquaProjects": "Projets",
+    "aquaCages": "Cages",
+    "aquaProjectCageAssignments": "Affectations Projet-Cage",
+    "aquaWeatherSeverities": "Définitions de Sévérité Météo",
+    "aquaWeatherTypes": "Définitions de Type Météo",
+    "aquaNetOperationTypes": "Types d’Opérations de Filet",
+    "aquaOperations": "Opérations Aqua",
+    "aquaGoodsReceipts": "Réception Marchandise (Poisson/Aliment)",
+    "aquaFeedings": "Alimentation (Matin/Soir)",
+    "aquaMortalities": "Mortalité",
+    "aquaTransfers": "Transfert",
+    "aquaWeighings": "Pesée",
+    "aquaStockConverts": "Conversion de Stock",
+    "aquaDailyWeathers": "Météo Quotidienne",
+    "aquaNetOperations": "Opérations de Filet",
+    "aquaReports": "Rapports",
+    "aquaBatchMovements": "Mouvements de Lot",
+    "aquaCageBalances": "Solde de Cage"
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -4093,5 +4112,169 @@
     "deleteError": "Erreur lors de la suppression de la limite de remise",
     "updateSuccess": "Limite de remise mise à jour avec succès",
     "updateError": "Erreur lors de la mise à jour de la limite de remise"
+  },
+  "aqua": {
+    "common": {
+      "id": "ID",
+      "actions": "Actions",
+      "loading": "Chargement...",
+      "noData": "Aucune donnée",
+      "refresh": "Actualiser",
+      "new": "Nouveau",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "post": "Valider",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "createRecord": "Créer un enregistrement",
+      "editRecord": "Modifier l’enregistrement",
+      "select": "Sélectionner",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "saving": "Enregistrement...",
+      "confirmDelete": "Supprimer cet enregistrement ?"
+    },
+    "toast": {
+      "created": "Enregistrement créé",
+      "createFailed": "Impossible de créer l’enregistrement",
+      "updated": "Enregistrement mis à jour",
+      "updateFailed": "Impossible de mettre à jour l’enregistrement",
+      "deleted": "Enregistrement supprimé",
+      "deleteFailed": "Impossible de supprimer l’enregistrement",
+      "posted": "Validation terminée",
+      "postFailed": "Échec de la validation"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "posted": "Validé",
+      "cancelled": "Annulé"
+    },
+    "feedingSlot": {
+      "morning": "Matin",
+      "evening": "Soir"
+    },
+    "sourceType": {
+      "manual": "Manuel",
+      "planned": "Planifié",
+      "auto": "Automatique"
+    },
+    "pages": {
+      "projects": {
+        "title": "Projets",
+        "description": "Liste et gestion des projets Aqua."
+      },
+      "cages": {
+        "title": "Cages",
+        "description": "Définitions des cages et informations de capacité."
+      },
+      "projectCageAssignments": {
+        "title": "Affectation Projet-Cage",
+        "description": "Enregistrements d’affectation projet-cage."
+      },
+      "weatherSeverities": {
+        "title": "Définition de Sévérité Météo",
+        "description": "Niveaux de sévérité météorologique."
+      },
+      "weatherTypes": {
+        "title": "Définition de Type Météo",
+        "description": "Définitions des types météo."
+      },
+      "netOperationTypes": {
+        "title": "Types d’Opérations de Filet",
+        "description": "Définitions des types d’opérations de filet."
+      },
+      "goodsReceipts": {
+        "title": "Réception Marchandise (Poisson/Aliment)",
+        "description": "Enregistrements d’en-tête de réception."
+      },
+      "feedings": {
+        "title": "Alimentation (Matin/Soir)",
+        "description": "Enregistrements d’en-tête d’alimentation."
+      },
+      "mortalities": {
+        "title": "Mortalité",
+        "description": "Enregistrements d’en-tête de mortalité."
+      },
+      "transfers": {
+        "title": "Transfert",
+        "description": "Enregistrements d’en-tête de transfert."
+      },
+      "weighings": {
+        "title": "Pesée",
+        "description": "Enregistrements d’en-tête de pesée."
+      },
+      "stockConverts": {
+        "title": "Conversion de Stock",
+        "description": "Enregistrements d’en-tête de conversion de stock."
+      },
+      "dailyWeathers": {
+        "title": "Météo Quotidienne",
+        "description": "Enregistrements météo quotidiens par projet."
+      },
+      "netOperations": {
+        "title": "Opérations de Filet",
+        "description": "Enregistrements d’en-tête des opérations de filet."
+      },
+      "batchMovements": {
+        "title": "Mouvements de Lot",
+        "description": "Rapport de journal des mouvements de lot."
+      },
+      "cageBalances": {
+        "title": "Solde de Cage",
+        "description": "Solde biomasse et effectif vivant par cage."
+      }
+    },
+    "fields": {
+      "projectCode": "Code Projet",
+      "projectName": "Nom Projet",
+      "startDate": "Date Début",
+      "endDate": "Date Fin",
+      "status": "Statut",
+      "note": "Note",
+      "cageCode": "Code Cage",
+      "cageName": "Nom Cage",
+      "capacityCount": "Capacité (Nombre)",
+      "capacityGram": "Capacité (Gramme)",
+      "projectId": "ID Projet",
+      "cageId": "ID Cage",
+      "assignedDate": "Date d’Affectation",
+      "releasedDate": "Date de Libération",
+      "code": "Code",
+      "name": "Nom",
+      "score": "Score",
+      "receiptNo": "N° Réception",
+      "receiptDate": "Date Réception",
+      "supplierId": "ID Fournisseur",
+      "warehouseId": "ID Entrepôt",
+      "feedingNo": "N° Alimentation",
+      "feedingDate": "Date Alimentation",
+      "feedingSlot": "Créneau Alimentation",
+      "sourceType": "Type de Source",
+      "mortalityDate": "Date Mortalité",
+      "transferNo": "N° Transfert",
+      "transferDate": "Date Transfert",
+      "weighingNo": "N° Pesée",
+      "weighingDate": "Date Pesée",
+      "convertNo": "N° Conversion",
+      "convertDate": "Date Conversion",
+      "weatherDate": "Date",
+      "weatherTypeId": "ID Type Météo",
+      "weatherSeverityId": "ID Sévérité Météo",
+      "temperatureC": "Température (C)",
+      "windKnot": "Vent (nœud)",
+      "operationTypeId": "ID Type Opération",
+      "operationNo": "N° Opération",
+      "operationDate": "Date Opération",
+      "fishBatchId": "ID Lot Poisson",
+      "projectCageId": "ID Cage Projet",
+      "movementType": "Type Mouvement",
+      "signedCount": "Delta Quantité",
+      "signedBiomassGram": "Delta Biomasse",
+      "movementDate": "Date Mouvement",
+      "liveCount": "Effectif Vivant",
+      "averageGram": "Grammes Moyens",
+      "biomassGram": "Biomasse (Gramme)",
+      "asOfDate": "Date de Référence"
+    }
   }
 }
