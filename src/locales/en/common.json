@@ -322,6 +322,8 @@
     "aquaWeatherTypes": "Weather Type Definitions",
     "aquaNetOperationTypes": "Net Operation Types",
     "aquaOperations": "Aqua Operations",
+    "aquaQuickSetup": "Quick Setup",
+    "aquaQuickDailyEntry": "Quick Daily Entry",
     "aquaGoodsReceipts": "Goods Receipt (Fish/Feed)",
     "aquaFeedings": "Feeding (Morning/Evening)",
     "aquaMortalities": "Mortality",
@@ -4299,6 +4301,96 @@
       "averageGram": "Average Gram",
       "biomassGram": "Biomass Gram",
       "asOfDate": "As Of Date"
+    },
+    "quickSetup": {
+      "pageTitle": "Quick Setup",
+      "step1Title": "1. Project",
+      "step2Title": "2. Goods Receipt",
+      "step3Title": "3. Fish Distribution",
+      "code": "Code",
+      "name": "Name",
+      "startDate": "Start Date",
+      "createProject": "Create New Project",
+      "orSelectExisting": "or select existing project",
+      "selectProject": "Select project",
+      "selectProjectFirst": "Please select or create a project first.",
+      "receiptNo": "Receipt No",
+      "date": "Date",
+      "fishLine": "Fish line",
+      "stock": "Stock",
+      "selectStock": "Select stock",
+      "count": "Count",
+      "feedLineOptional": "Feed line (optional)",
+      "selectFeedStock": "Select feed stock",
+      "qty": "Quantity",
+      "createGoodsReceipt": "Create Goods Receipt",
+      "equalDistribute": "Distribute Equally",
+      "assignAllToSelectedCage": "Assign All to Selected Cage",
+      "distributionMatch": "Distribution Matches",
+      "distributionMismatch": "Distribution Mismatch",
+      "cage": "Cage",
+      "total": "Total",
+      "saveAndPost": "Save and Post",
+      "toast": {
+        "projectCreated": "Project created",
+        "projectCreateFailed": "Failed to create project",
+        "goodsReceiptCreated": "Goods receipt created",
+        "goodsReceiptCreateFailed": "Failed to create goods receipt",
+        "feedLineCreateFailed": "Feed line could not be added",
+        "savedAndPosted": "Saved and posted",
+        "operationFailed": "Operation failed"
+      }
+    },
+    "quickDailyEntry": {
+      "pageTitle": "Quick Daily Entry",
+      "project": "Project",
+      "selectProject": "Select project",
+      "cage": "Cage",
+      "selectCage": "Select cage",
+      "tabFeeding": "Feeding",
+      "tabMortality": "Mortality",
+      "tabWeather": "Weather",
+      "tabNetOperation": "Net Operation",
+      "feeding": {
+        "title": "Feeding",
+        "slot": "Slot",
+        "morning": "Morning",
+        "evening": "Evening",
+        "feedStock": "Feed Stock",
+        "selectStock": "Select stock",
+        "qty": "Quantity",
+        "save": "Save"
+      },
+      "mortality": {
+        "title": "Mortality",
+        "batch": "Batch",
+        "selectBatch": "Select batch",
+        "deadCount": "Dead Count",
+        "save": "Save"
+      },
+      "weather": {
+        "title": "Weather",
+        "severity": "Severity",
+        "selectSeverity": "Select severity",
+        "type": "Type",
+        "selectType": "Select type",
+        "description": "Description",
+        "save": "Save"
+      },
+      "netOperation": {
+        "title": "Net Operation",
+        "operationType": "Operation Type",
+        "selectType": "Select type",
+        "description": "Description",
+        "save": "Save"
+      },
+      "toast": {
+        "feedingSaved": "Feeding saved",
+        "mortalitySaved": "Mortality record created",
+        "weatherSaved": "Weather saved",
+        "netOperationSaved": "Net operation saved",
+        "saveFailed": "Save failed"
+      }
     }
   }
 }

@@ -323,6 +323,8 @@
     "aquaWeatherTypes": "Hava Durumu Tip Tanımı",
     "aquaNetOperationTypes": "Ağ İşlem Tipleri",
     "aquaOperations": "Aqua İşlemleri",
+    "aquaQuickSetup": "Hızlı Kurulum",
+    "aquaQuickDailyEntry": "Hızlı Günlük Giriş",
     "aquaGoodsReceipts": "Mal Kabul (Balık/Yem)",
     "aquaFeedings": "Besleme (Sabah/Akşam)",
     "aquaMortalities": "Ölüm",
@@ -498,6 +500,96 @@
       "averageGram": "Ortalama Gram",
       "biomassGram": "Biyokütle Gram",
       "asOfDate": "Tarih"
+    },
+    "quickSetup": {
+      "pageTitle": "Hızlı Kurulum",
+      "step1Title": "1. Proje",
+      "step2Title": "2. Mal Kabul",
+      "step3Title": "3. Balık Dağıtımı",
+      "code": "Kod",
+      "name": "Ad",
+      "startDate": "Başlangıç Tarihi",
+      "createProject": "Yeni Proje Oluştur",
+      "orSelectExisting": "veya mevcut proje seçin",
+      "selectProject": "Proje seçin",
+      "selectProjectFirst": "Önce bir proje seçin veya oluşturun.",
+      "receiptNo": "Fiş No",
+      "date": "Tarih",
+      "fishLine": "Balık satırı",
+      "stock": "Stok",
+      "selectStock": "Stok seçin",
+      "count": "Adet",
+      "feedLineOptional": "Yem satırı (isteğe bağlı)",
+      "selectFeedStock": "Yem stoku seçin",
+      "qty": "Miktar",
+      "createGoodsReceipt": "Mal Kabul Oluştur",
+      "equalDistribute": "Eşit Dağıt",
+      "assignAllToSelectedCage": "Tamamını Seçili Kafese Ata",
+      "distributionMatch": "Dağıtım Uyuşuyor",
+      "distributionMismatch": "Dağıtım Uyuşmuyor",
+      "cage": "Kafes",
+      "total": "Toplam",
+      "saveAndPost": "Kaydet ve Post Et",
+      "toast": {
+        "projectCreated": "Proje oluşturuldu",
+        "projectCreateFailed": "Proje oluşturulamadı",
+        "goodsReceiptCreated": "Mal kabul oluşturuldu",
+        "goodsReceiptCreateFailed": "Mal kabul oluşturulamadı",
+        "feedLineCreateFailed": "Yem satırı eklenemedi",
+        "savedAndPosted": "Kaydedildi ve post edildi",
+        "operationFailed": "İşlem başarısız"
+      }
+    },
+    "quickDailyEntry": {
+      "pageTitle": "Hızlı Günlük Giriş",
+      "project": "Proje",
+      "selectProject": "Proje seçin",
+      "cage": "Kafes",
+      "selectCage": "Kafes seçin",
+      "tabFeeding": "Besleme",
+      "tabMortality": "Ölüm",
+      "tabWeather": "Hava Durumu",
+      "tabNetOperation": "Ağ İşlemi",
+      "feeding": {
+        "title": "Besleme",
+        "slot": "Slot",
+        "morning": "Sabah",
+        "evening": "Akşam",
+        "feedStock": "Yem Stoku",
+        "selectStock": "Stok seçin",
+        "qty": "Miktar",
+        "save": "Kaydet"
+      },
+      "mortality": {
+        "title": "Ölüm",
+        "batch": "Batch",
+        "selectBatch": "Batch seçin",
+        "deadCount": "Ölü Adet",
+        "save": "Kaydet"
+      },
+      "weather": {
+        "title": "Hava Durumu",
+        "severity": "Şiddet",
+        "selectSeverity": "Şiddet seçin",
+        "type": "Tip",
+        "selectType": "Tip seçin",
+        "description": "Açıklama",
+        "save": "Kaydet"
+      },
+      "netOperation": {
+        "title": "Ağ İşlemi",
+        "operationType": "İşlem Tipi",
+        "selectType": "Tip seçin",
+        "description": "Açıklama",
+        "save": "Kaydet"
+      },
+      "toast": {
+        "feedingSaved": "Besleme kaydedildi",
+        "mortalitySaved": "Ölüm kaydı oluşturuldu",
+        "weatherSaved": "Hava durumu kaydedildi",
+        "netOperationSaved": "Ağ işlemi kaydedildi",
+        "saveFailed": "Kayıt başarısız"
+      }
     }
   },
   "pdfReportDesigner": {
