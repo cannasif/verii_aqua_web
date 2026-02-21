@@ -19,7 +19,6 @@ interface DropdownPageRequest {
   sortBy?: string;
   sortDirection?: string;
   filters?: PagedFilter[] | Record<string, unknown>;
-  signal: AbortSignal;
 }
 
 function normalizePagedResponse<T>(pagedData: PagedResponse<T> & { items?: T[] }): PagedResponse<T> {
@@ -34,7 +33,7 @@ function normalizePagedResponse<T>(pagedData: PagedResponse<T> & { items?: T[] }
 }
 
 function buildPagedQueryParams(
-  request: Omit<DropdownPageRequest, 'signal'>,
+  request: DropdownPageRequest,
   pageNumberParamName: 'pageNumber' | 'page'
 ): URLSearchParams {
   const queryParams = new URLSearchParams();
@@ -63,10 +62,7 @@ async function getDropdownPage<T>(
   pageNumberParamName: 'pageNumber' | 'page' = 'pageNumber'
 ): Promise<PagedResponse<T>> {
   const queryParams = buildPagedQueryParams(request, pageNumberParamName);
-  // Pass AbortSignal so stale dropdown requests are cancelled on new search terms.
-  const response = await api.get<ApiResponse<PagedResponse<T>>>(`${endpoint}?${queryParams.toString()}`, {
-    signal: request.signal,
-  });
+  const response = await api.get<ApiResponse<PagedResponse<T>>>(`${endpoint}?${queryParams.toString()}`);
 
   if (!response.success || !response.data) {
     throw new Error(response.message || 'Dropdown listesi yüklenemedi');
@@ -80,11 +76,9 @@ export const dropdownApi = {
     return getDropdownPage<DropdownCustomerDto>('/api/Customer', request, 'pageNumber');
   },
   getStockPage: (request: DropdownPageRequest): Promise<PagedResponse<StockGetDto>> => {
-    // Stock API expects `page` instead of `pageNumber` for dropdown requests.
     return getDropdownPage<StockGetDto>('/api/Stock', request, 'page');
   },
   getStockWithImagesPage: (request: DropdownPageRequest): Promise<PagedResponse<StockGetWithMainImageDto>> => {
-    // Stock-with-images endpoint follows the same `page` contract.
     return getDropdownPage<StockGetWithMainImageDto>('/api/Stock/withImages', request, 'page');
   },
 };

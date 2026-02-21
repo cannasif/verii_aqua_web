@@ -8,7 +8,6 @@ interface DropdownFetchPageParams {
   sortBy?: string;
   sortDirection?: string;
   filters?: PagedFilter[] | Record<string, unknown>;
-  signal: AbortSignal;
 }
 
 interface UseDropdownInfiniteSearchOptions<TItem> {
@@ -52,13 +51,11 @@ export function useDropdownInfiniteSearch<TItem>({
   const normalizedSearchTerm = searchTerm.trim();
   const isBrowseMode = normalizedSearchTerm.length === 0;
   const isSearchMode = normalizedSearchTerm.length >= minChars;
-  // Prevent request spam for partial inputs that did not reach the search threshold.
   const isThresholdMode = !isBrowseMode && !isSearchMode;
   const modeForQuery = isSearchMode ? 'search' : 'browse';
   const activeSearchTerm = isSearchMode ? normalizedSearchTerm : '';
 
   const query = useInfiniteQuery({
-    // Keep dropdown keys isolated so they never collide with grid pagination keys.
     queryKey: [
       entityKey,
       'dropdown',
@@ -71,14 +68,13 @@ export function useDropdownInfiniteSearch<TItem>({
     ],
     enabled,
     initialPageParam: 1,
-    queryFn: async ({ pageParam, signal }) => {
+    queryFn: async ({ pageParam }) => {
       return fetchPage({
         pageNumber: pageParam,
         pageSize,
         sortBy,
         sortDirection,
         filters: isSearchMode ? buildFilters(activeSearchTerm) : undefined,
-        signal,
       });
     },
     getNextPageParam: (lastPage) => {
