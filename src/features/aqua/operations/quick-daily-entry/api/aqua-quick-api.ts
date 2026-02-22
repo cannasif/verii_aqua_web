@@ -8,12 +8,16 @@ import type {
   WeatherSeverityDto,
   WeatherTypeDto,
   NetOperationTypeDto,
+  FeedingHeaderDto,
+  MortalityHeaderDto,
+  NetOperationHeaderDto,
   CreateFeedingPayload,
   CreateFeedingLinePayload,
   CreateMortalityPayload,
   CreateMortalityLinePayload,
   CreateDailyWeatherPayload,
   CreateNetOperationPayload,
+  CreateNetOperationLinePayload,
 } from '../types/quick-daily-entry-types';
 
 interface PagedResultRaw<T> {
@@ -114,8 +118,8 @@ export const aquaQuickDailyApi = {
     return extractPagedItems(raw);
   },
 
-  getWeatherTypes: async (severityId: number): Promise<WeatherTypeDto[]> => {
-    const query = buildPagedQuery(1, 500, [{ column: 'WeatherSeverityId', operator: 'eq', value: String(severityId) }]);
+  getWeatherTypes: async (): Promise<WeatherTypeDto[]> => {
+    const query = buildPagedQuery(1, 500);
     const response = await api.get<ApiResponse<PagedResultRaw<WeatherTypeDto>>>(`/api/aqua/WeatherType?${query}`);
     const raw = ensureSuccess(response, 'Hava tipleri yüklenemedi');
     return extractPagedItems(raw);
@@ -126,6 +130,48 @@ export const aquaQuickDailyApi = {
     const response = await api.get<ApiResponse<PagedResultRaw<NetOperationTypeDto>>>(`/api/aqua/NetOperationType?${query}`);
     const raw = ensureSuccess(response, 'Ağ işlem tipleri yüklenemedi');
     return extractPagedItems(raw);
+  },
+
+  findFeedingHeaderByProjectAndDate: async (
+    projectId: number,
+    feedingDate: string
+  ): Promise<FeedingHeaderDto | null> => {
+    const query = buildPagedQuery(1, 1, [
+      { column: 'ProjectId', operator: 'eq', value: String(projectId) },
+      { column: 'FeedingDate', operator: 'eq', value: feedingDate },
+    ]);
+    const response = await api.get<ApiResponse<PagedResultRaw<FeedingHeaderDto>>>(`/api/aqua/Feeding?${query}`);
+    const raw = ensureSuccess(response, 'Besleme başlığı sorgulanamadı');
+    const items = extractPagedItems(raw);
+    return items.length > 0 ? items[0] : null;
+  },
+
+  findMortalityHeaderByProjectAndDate: async (
+    projectId: number,
+    mortalityDate: string
+  ): Promise<MortalityHeaderDto | null> => {
+    const query = buildPagedQuery(1, 1, [
+      { column: 'ProjectId', operator: 'eq', value: String(projectId) },
+      { column: 'MortalityDate', operator: 'eq', value: mortalityDate },
+    ]);
+    const response = await api.get<ApiResponse<PagedResultRaw<MortalityHeaderDto>>>(`/api/aqua/Mortality?${query}`);
+    const raw = ensureSuccess(response, 'Ölüm başlığı sorgulanamadı');
+    const items = extractPagedItems(raw);
+    return items.length > 0 ? items[0] : null;
+  },
+
+  findNetOperationHeaderByProjectAndDate: async (
+    projectId: number,
+    operationDate: string
+  ): Promise<NetOperationHeaderDto | null> => {
+    const query = buildPagedQuery(1, 1, [
+      { column: 'ProjectId', operator: 'eq', value: String(projectId) },
+      { column: 'OperationDate', operator: 'eq', value: operationDate },
+    ]);
+    const response = await api.get<ApiResponse<PagedResultRaw<NetOperationHeaderDto>>>(`/api/aqua/NetOperation?${query}`);
+    const raw = ensureSuccess(response, 'Ağ işlemi başlığı sorgulanamadı');
+    const items = extractPagedItems(raw);
+    return items.length > 0 ? items[0] : null;
   },
 
   createFeeding: async (
@@ -186,5 +232,15 @@ export const aquaQuickDailyApi = {
       payload
     );
     return ensureSuccess(response, 'Ağ işlemi oluşturulamadı');
+  },
+
+  createNetOperationLine: async (
+    payload: CreateNetOperationLinePayload
+  ): Promise<{ id: number }> => {
+    const response = await api.post<ApiResponse<{ id: number }>>(
+      '/api/aqua/NetOperationLine',
+      payload
+    );
+    return ensureSuccess(response, 'Ağ işlemi satırı oluşturulamadı');
   },
 };

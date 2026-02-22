@@ -8,8 +8,10 @@ import type {
   CreateGoodsReceiptPayload,
   CreateGoodsReceiptLinePayload,
   CreateGoodsReceiptFishDistributionPayload,
+  CreateFishBatchPayload,
   GoodsReceiptCreateResult,
   GoodsReceiptLineCreateResult,
+  FishBatchCreateResult,
 } from '../types/quick-setup-types';
 
 interface PagedResultRaw<T> {
@@ -129,6 +131,16 @@ export const aquaQuickApi = {
       payload
     );
     return ensureSuccess(response, 'Dağıtım oluşturulamadı');
+  },
+
+  createFishBatch: async (
+    payload: CreateFishBatchPayload
+  ): Promise<FishBatchCreateResult> => {
+    const response = await api.post<ApiResponse<FishBatchCreateResult>>(
+      '/api/aqua/FishBatch',
+      payload
+    );
+    return ensureSuccess(response, 'Balık batch oluşturulamadı');
   },
 
   postGoodsReceipt: async (id: number): Promise<boolean> => {

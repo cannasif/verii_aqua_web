@@ -5,6 +5,7 @@ import type {
   CreateGoodsReceiptPayload,
   CreateGoodsReceiptLinePayload,
   CreateGoodsReceiptFishDistributionPayload,
+  CreateFishBatchPayload,
 } from '../types/quick-setup-types';
 
 const PROJECT_QUERY_KEY = ['aqua', 'quick-setup', 'projects'];
@@ -45,6 +46,12 @@ export function useCreateGoodsReceiptFishDistributionMutation() {
   });
 }
 
+export function useCreateFishBatchMutation() {
+  return useMutation({
+    mutationFn: (payload: CreateFishBatchPayload) => aquaQuickApi.createFishBatch(payload),
+  });
+}
+
 export function usePostGoodsReceiptMutation() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -59,18 +66,21 @@ export function useQuickSetupMutations(): {
   createProject: ReturnType<typeof useCreateProjectMutation>;
   createGoodsReceipt: ReturnType<typeof useCreateGoodsReceiptMutation>;
   createGoodsReceiptLine: ReturnType<typeof useCreateGoodsReceiptLineMutation>;
+  createFishBatch: ReturnType<typeof useCreateFishBatchMutation>;
   createFishDistribution: ReturnType<typeof useCreateGoodsReceiptFishDistributionMutation>;
   postGoodsReceipt: ReturnType<typeof usePostGoodsReceiptMutation>;
 } {
   const createProject = useCreateProjectMutation();
   const createGoodsReceipt = useCreateGoodsReceiptMutation();
   const createGoodsReceiptLine = useCreateGoodsReceiptLineMutation();
+  const createFishBatch = useCreateFishBatchMutation();
   const createFishDistribution = useCreateGoodsReceiptFishDistributionMutation();
   const postGoodsReceipt = usePostGoodsReceiptMutation();
   return {
     createProject,
     createGoodsReceipt,
     createGoodsReceiptLine,
+    createFishBatch,
     createFishDistribution,
     postGoodsReceipt,
   };

@@ -4,6 +4,7 @@ export const feedingQuickFormSchema = z.object({
   feedingSlot: z.coerce.number().int().min(0),
   stockId: z.coerce.number().int().positive('common.required'),
   qtyUnit: z.coerce.number().min(0, 'common.required'),
+  gramPerUnit: z.coerce.number().min(0, 'common.required'),
 });
 
 export const mortalityQuickFormSchema = z.object({
@@ -19,6 +20,9 @@ export const weatherQuickFormSchema = z.object({
 
 export const netOperationQuickFormSchema = z.object({
   netOperationTypeId: z.coerce.number().int().positive('common.required'),
+  fishBatchId: z.coerce.number().int().min(0),
+  quantity: z.coerce.number().positive('common.required'),
+  unitGram: z.coerce.number().min(0),
   description: z.string().optional(),
 });
 

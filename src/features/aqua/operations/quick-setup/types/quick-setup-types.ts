@@ -27,6 +27,10 @@ export interface GoodsReceiptLineCreateResult {
   id: number;
 }
 
+export interface FishBatchCreateResult {
+  id: number;
+}
+
 export interface CreateProjectPayload {
   projectCode: string;
   projectName: string;
@@ -52,7 +56,17 @@ export interface CreateGoodsReceiptLinePayload {
 export interface CreateGoodsReceiptFishDistributionPayload {
   goodsReceiptLineId: number;
   projectCageId: number;
+  fishBatchId: number;
   fishCount: number;
+}
+
+export interface CreateFishBatchPayload {
+  projectId: number;
+  batchCode: string;
+  fishStockId: number;
+  currentAverageGram: number;
+  startDate: string;
+  sourceGoodsReceiptLineId?: number;
 }
 
 export interface CageAllocationRow {

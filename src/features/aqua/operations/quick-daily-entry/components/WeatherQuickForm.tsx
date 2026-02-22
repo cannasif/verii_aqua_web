@@ -51,9 +51,7 @@ export function WeatherQuickForm({
     },
   });
 
-  const severityId = form.watch('weatherSeverityId');
-  const { data: types, isLoading: isLoadingTypes } =
-    useWeatherTypeListBySeverityQuery(severityId > 0 ? severityId : null);
+  const { data: types, isLoading: isLoadingTypes } = useWeatherTypeListBySeverityQuery();
 
   const handleSubmit: SubmitHandler<WeatherQuickFormSchema> = async (data) => {
     await onSubmit(data);
@@ -107,7 +105,7 @@ export function WeatherQuickForm({
                 <FormItem>
                   <FormLabel>{t('aqua.quickDailyEntry.weather.type')}</FormLabel>
                   <Select
-                    disabled={!severityId || isLoadingTypes}
+                    disabled={isLoadingTypes}
                     onValueChange={(v) => field.onChange(Number(v))}
                     value={field.value ? String(field.value) : undefined}
                   >

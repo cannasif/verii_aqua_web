@@ -7,6 +7,7 @@ import type {
   CreateMortalityLinePayload,
   CreateDailyWeatherPayload,
   CreateNetOperationPayload,
+  CreateNetOperationLinePayload,
 } from '../types/quick-daily-entry-types';
 
 const FEEDINGS_KEY = ['aqua', 'feedings'];
@@ -67,5 +68,12 @@ export function useCreateNetOperationMutation() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: NET_OPERATIONS_KEY });
     },
+  });
+}
+
+export function useCreateNetOperationLineMutation() {
+  return useMutation({
+    mutationFn: (payload: CreateNetOperationLinePayload) =>
+      aquaQuickDailyApi.createNetOperationLine(payload),
   });
 }

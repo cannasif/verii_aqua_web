@@ -61,7 +61,7 @@ export function GoodsReceiptStepCard({
 
   const fishForm = useForm<FishLineFormSchema>({
     resolver: zodResolver(fishLineFormSchema) as Resolver<FishLineFormSchema>,
-    defaultValues: { stockId: 0, fishCount: 0 },
+    defaultValues: { stockId: 0, fishCount: 0, batchCode: '', currentAverageGram: 0 },
   });
 
   const feedForm = useForm<FeedLineFormSchema>({
@@ -165,6 +165,32 @@ export function GoodsReceiptStepCard({
                           <FormLabel>{t('aqua.quickSetup.count')}</FormLabel>
                           <FormControl>
                             <Input type="number" min={1} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={fishForm.control}
+                      name="batchCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('aqua.quickSetup.batchCode')}</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={fishForm.control}
+                      name="currentAverageGram"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('aqua.quickSetup.currentAverageGram')}</FormLabel>
+                          <FormControl>
+                            <Input type="number" min={0} step="0.01" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

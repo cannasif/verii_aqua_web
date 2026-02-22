@@ -17,6 +17,7 @@ export function QuickSetupPage(): ReactElement {
   const [projectId, setProjectId] = useState<number | null>(null);
   const [goodsReceiptId, setGoodsReceiptId] = useState<number | null>(null);
   const [fishLineId, setFishLineId] = useState<number | null>(null);
+  const [fishBatchId, setFishBatchId] = useState<number | null>(null);
   const [fishCount, setFishCount] = useState<number>(0);
   const [allocations, setAllocations] = useState<CageAllocationRow[]>([]);
   const [selectedCageId, setSelectedCageId] = useState<number | null>(null);
@@ -29,6 +30,7 @@ export function QuickSetupPage(): ReactElement {
   useEffect(() => {
     setGoodsReceiptId(null);
     setFishLineId(null);
+    setFishBatchId(null);
     setFishCount(0);
     setAllocations([]);
     setSelectedCageId(null);
@@ -80,8 +82,17 @@ export function QuickSetupPage(): ReactElement {
         itemType: GOODS_RECEIPT_ITEM_TYPE_FISH,
         fishCount: data.fishLine.fishCount,
       });
+      const fishBatch = await mutations.createFishBatch.mutateAsync({
+        projectId,
+        batchCode: data.fishLine.batchCode,
+        fishStockId: data.fishLine.stockId,
+        currentAverageGram: data.fishLine.currentAverageGram,
+        startDate: data.receipt.receiptDate,
+        sourceGoodsReceiptLineId: line.id,
+      });
       setGoodsReceiptId(receipt.id);
       setFishLineId(line.id);
+      setFishBatchId(fishBatch.id);
       setFishCount(data.fishLine.fishCount);
       setAllocations([]);
       toast.success(t('aqua.quickSetup.toast.goodsReceiptCreated'));
@@ -105,13 +116,14 @@ export function QuickSetupPage(): ReactElement {
   };
 
   const handleSaveAndPost = async (): Promise<void> => {
-    if (goodsReceiptId == null || fishLineId == null) return;
+    if (goodsReceiptId == null || fishLineId == null || fishBatchId == null) return;
     try {
       for (const row of allocationRows) {
         if (row.fishCount <= 0) continue;
         await mutations.createFishDistribution.mutateAsync({
           goodsReceiptLineId: fishLineId,
           projectCageId: row.projectCageId,
+          fishBatchId,
           fishCount: row.fishCount,
         });
       }
@@ -119,6 +131,7 @@ export function QuickSetupPage(): ReactElement {
       toast.success(t('aqua.quickSetup.toast.savedAndPosted'));
       setGoodsReceiptId(null);
       setFishLineId(null);
+      setFishBatchId(null);
       setFishCount(0);
       setAllocations([]);
     } catch (e) {
@@ -142,7 +155,9 @@ export function QuickSetupPage(): ReactElement {
         isLoadingStocks={isLoadingStocks}
         onSubmitReceipt={handleReceiptSubmit}
         isSubmitting={
-          mutations.createGoodsReceipt.isPending || mutations.createGoodsReceiptLine.isPending
+          mutations.createGoodsReceipt.isPending ||
+          mutations.createGoodsReceiptLine.isPending ||
+          mutations.createFishBatch.isPending
         }
       />
       {projectId != null && goodsReceiptId != null && fishLineId != null && (

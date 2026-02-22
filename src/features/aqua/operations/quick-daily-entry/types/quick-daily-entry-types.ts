@@ -32,7 +32,6 @@ export interface WeatherSeverityDto {
 
 export interface WeatherTypeDto {
   id: number;
-  severityId?: number;
   code?: string;
   name?: string;
 }
@@ -41,6 +40,26 @@ export interface NetOperationTypeDto {
   id: number;
   code?: string;
   name?: string;
+}
+
+export interface FeedingHeaderDto {
+  id: number;
+  projectId: number;
+  feedingDate: string;
+  feedingSlot?: number;
+}
+
+export interface MortalityHeaderDto {
+  id: number;
+  projectId: number;
+  mortalityDate: string;
+}
+
+export interface NetOperationHeaderDto {
+  id: number;
+  projectId: number;
+  operationDate: string;
+  operationTypeId?: number;
 }
 
 export interface CreateFeedingPayload {
@@ -54,16 +73,17 @@ export interface CreateFeedingPayload {
 
 export interface CreateFeedingLinePayload {
   feedingId: number;
-  projectCageId: number;
   stockId: number;
   qtyUnit: number;
+  gramPerUnit: number;
+  totalGram: number;
 }
 
 export interface CreateMortalityPayload {
   projectId: number;
-  mortalityNo: string;
   mortalityDate: string;
   status?: number;
+  note?: string;
 }
 
 export interface CreateMortalityLinePayload {
@@ -83,9 +103,18 @@ export interface CreateDailyWeatherPayload {
 
 export interface CreateNetOperationPayload {
   projectId: number;
-  projectCageId: number;
   operationTypeId: number;
   operationNo: string;
   operationDate: string;
+  status?: number;
+  note?: string;
+}
+
+export interface CreateNetOperationLinePayload {
+  netOperationId: number;
+  projectCageId: number;
+  fishBatchId?: number;
+  quantity: number;
+  unitGram?: number;
   note?: string;
 }

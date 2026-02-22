@@ -19,6 +19,7 @@ import { useStockListQuery } from './hooks/useStockListQuery';
 import { useFishBatchListByProjectQuery } from './hooks/useFishBatchListByProjectQuery';
 import { useWeatherSeverityListQuery } from './hooks/useWeatherSeverityListQuery';
 import { useNetOperationTypeListQuery } from './hooks/useNetOperationTypeListQuery';
+import { aquaQuickDailyApi } from './api/aqua-quick-api';
 import {
   useCreateFeedingMutation,
   useCreateFeedingLineMutation,
@@ -26,6 +27,7 @@ import {
   useCreateMortalityLineMutation,
   useCreateDailyWeatherMutation,
   useCreateNetOperationMutation,
+  useCreateNetOperationLineMutation,
 } from './hooks/useQuickDailyEntryMutations';
 import type { FeedingQuickFormSchema } from './schema/quick-daily-entry-schema';
 import type { MortalityQuickFormSchema } from './schema/quick-daily-entry-schema';
@@ -33,10 +35,8 @@ import type { WeatherQuickFormSchema } from './schema/quick-daily-entry-schema';
 import type { NetOperationQuickFormSchema } from './schema/quick-daily-entry-schema';
 import {
   formatFeedingNo,
-  formatMortalityNo,
   formatNetOperationNo,
   localDateString,
-  localDateTimeString,
 } from './utils/quick-operations';
 
 export function QuickDailyEntryPage(): ReactElement {
@@ -58,6 +58,7 @@ export function QuickDailyEntryPage(): ReactElement {
   const createMortalityLine = useCreateMortalityLineMutation();
   const createDailyWeather = useCreateDailyWeatherMutation();
   const createNetOperation = useCreateNetOperationMutation();
+  const createNetOperationLine = useCreateNetOperationLineMutation();
 
   const handleProjectChange = (value: string): void => {
     const id = value ? Number(value) : null;
@@ -72,19 +73,27 @@ export function QuickDailyEntryPage(): ReactElement {
   const handleFeedingSubmit = async (data: FeedingQuickFormSchema): Promise<void> => {
     if (projectId == null || projectCageId == null) return;
     try {
-      const feeding = await createFeeding.mutateAsync({
+      const feedingDate = localDateString();
+      const existingHeader = await aquaQuickDailyApi.findFeedingHeaderByProjectAndDate(
         projectId,
-        feedingNo: formatFeedingNo(),
-        feedingDate: localDateTimeString(),
-        feedingSlot: data.feedingSlot,
-        sourceType: 0,
-        status: 0,
-      });
+        feedingDate
+      );
+      const feeding =
+        existingHeader ??
+        (await createFeeding.mutateAsync({
+          projectId,
+          feedingNo: formatFeedingNo(),
+          feedingDate,
+          feedingSlot: data.feedingSlot,
+          sourceType: 0,
+          status: 1,
+        }));
       await createFeedingLine.mutateAsync({
         feedingId: feeding.id,
-        projectCageId,
         stockId: data.stockId,
         qtyUnit: data.qtyUnit,
+        gramPerUnit: data.gramPerUnit,
+        totalGram: data.qtyUnit * data.gramPerUnit,
       });
       toast.success(t('aqua.quickDailyEntry.toast.feedingSaved'));
     } catch (e) {
@@ -96,12 +105,18 @@ export function QuickDailyEntryPage(): ReactElement {
   const handleMortalitySubmit = async (data: MortalityQuickFormSchema): Promise<void> => {
     if (projectId == null || projectCageId == null) return;
     try {
-      const mortality = await createMortality.mutateAsync({
+      const mortalityDate = localDateString();
+      const existingHeader = await aquaQuickDailyApi.findMortalityHeaderByProjectAndDate(
         projectId,
-        mortalityNo: formatMortalityNo(),
-        mortalityDate: localDateString(),
-        status: 0,
-      });
+        mortalityDate
+      );
+      const mortality =
+        existingHeader ??
+        (await createMortality.mutateAsync({
+          projectId,
+          mortalityDate,
+          status: 1,
+        }));
       await createMortalityLine.mutateAsync({
         mortalityId: mortality.id,
         fishBatchId: data.fishBatchId,
@@ -137,12 +152,27 @@ export function QuickDailyEntryPage(): ReactElement {
   ): Promise<void> => {
     if (projectId == null || projectCageId == null) return;
     try {
-      await createNetOperation.mutateAsync({
+      const operationDate = localDateString();
+      const existingHeader = await aquaQuickDailyApi.findNetOperationHeaderByProjectAndDate(
         projectId,
+        operationDate
+      );
+      const netOperation =
+        existingHeader ??
+        (await createNetOperation.mutateAsync({
+          projectId,
+          operationTypeId: data.netOperationTypeId,
+          operationNo: formatNetOperationNo(),
+          operationDate,
+          status: 1,
+          note: data.description,
+        }));
+      await createNetOperationLine.mutateAsync({
+        netOperationId: netOperation.id,
         projectCageId,
-        operationTypeId: data.netOperationTypeId,
-        operationNo: formatNetOperationNo(),
-        operationDate: localDateString(),
+        fishBatchId: data.fishBatchId > 0 ? data.fishBatchId : undefined,
+        quantity: data.quantity,
+        unitGram: data.unitGram > 0 ? data.unitGram : undefined,
         note: data.description,
       });
       toast.success(t('aqua.quickDailyEntry.toast.netOperationSaved'));
@@ -224,9 +254,10 @@ export function QuickDailyEntryPage(): ReactElement {
           <NetOperationQuickForm
             projectId={projectId}
             projectCageId={projectCageId}
+            fishBatches={fishBatches}
             netOperationTypes={netOperationTypes}
             onSubmit={handleNetOperationSubmit}
-            isSubmitting={createNetOperation.isPending}
+            isSubmitting={createNetOperation.isPending || createNetOperationLine.isPending}
           />
         }
       />

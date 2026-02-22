@@ -14,6 +14,8 @@ export const goodsReceiptFormSchema = z.object({
 export const fishLineFormSchema = z.object({
   stockId: z.coerce.number().int().positive('common.required'),
   fishCount: z.coerce.number().int().min(1, 'common.required'),
+  batchCode: z.string().min(1, 'common.required'),
+  currentAverageGram: z.coerce.number().min(0, 'common.required'),
 });
 
 export const feedLineFormSchema = z.object({
