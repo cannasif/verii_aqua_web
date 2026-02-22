@@ -1,7 +1,15 @@
 import { type ReactElement } from 'react';
-import { AquaCrudPage } from '@/features/aqua/shared/components/AquaCrudPage';
-import { goodsReceiptsConfig } from '../config/page-configs';
+import { AquaHeaderLineCrudPage } from './AquaHeaderLineCrudPage';
+import { goodsReceiptLinesConfig, goodsReceiptsConfig } from '../config/page-configs';
 
 export function GoodsReceiptsPage(): ReactElement {
-  return <AquaCrudPage config={goodsReceiptsConfig} />;
+  return (
+    <AquaHeaderLineCrudPage
+      headerConfig={goodsReceiptsConfig}
+      lineConfig={goodsReceiptLinesConfig}
+      lineForeignKey="goodsReceiptId"
+      lineSectionTitle="aqua.pages.goodsReceiptLines.title"
+      lineSectionDescription="aqua.common.linesForRecord"
+    />
+  );
 }

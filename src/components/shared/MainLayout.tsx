@@ -13,7 +13,7 @@ import {
   PackageIcon, 
   UserCircleIcon,
 } from 'hugeicons-react';
-import { Waves, BookOpen } from 'lucide-react';
+import { Waves, BookOpen, BarChart3 } from 'lucide-react';
 
 interface NavItem {
   title: string;
@@ -79,13 +79,15 @@ export function MainLayout({ navItems }: MainLayoutProps): ReactElement {
           { title: t('sidebar.aquaStockConverts', { defaultValue: 'Stock Convert' }), href: '/aqua/operations/stock-converts' },
           { title: t('sidebar.aquaDailyWeathers', { defaultValue: 'Günlük Hava Durumu' }), href: '/aqua/operations/daily-weathers' },
           { title: t('sidebar.aquaNetOperations', { defaultValue: 'Ağ İşlemleri' }), href: '/aqua/operations/net-operations' },
-          {
-            title: t('sidebar.aquaReports', { defaultValue: 'Raporlar' }),
-            children: [
-              { title: t('sidebar.aquaBatchMovements', { defaultValue: 'Batch Movement' }), href: '/aqua/reports/batch-movements' },
-              { title: t('sidebar.aquaCageBalances', { defaultValue: 'Kafes Balance' }), href: '/aqua/reports/cage-balances' },
-            ],
-          },
+        ],
+      },
+      {
+        title: t('sidebar.aquaReports', { defaultValue: 'Aqua Raporları' }),
+        icon: <BarChart3 size={iconSize} className="text-indigo-500" />,
+        children: [
+          { title: t('sidebar.aquaProjectDetailReport', { defaultValue: 'Proje Detay Raporu' }), href: '/aqua/reports/project-detail' },
+          { title: t('sidebar.aquaBatchMovements', { defaultValue: 'Batch Movement' }), href: '/aqua/reports/batch-movements' },
+          { title: t('sidebar.aquaCageBalances', { defaultValue: 'Kafes Balance' }), href: '/aqua/reports/cage-balances' },
         ],
       },
       {

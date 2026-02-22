@@ -1,7 +1,15 @@
 import { type ReactElement } from 'react';
-import { AquaCrudPage } from '@/features/aqua/shared/components/AquaCrudPage';
-import { feedingsConfig } from '../config/page-configs';
+import { AquaHeaderLineCrudPage } from './AquaHeaderLineCrudPage';
+import { feedingLinesConfig, feedingsConfig } from '../config/page-configs';
 
 export function FeedingsPage(): ReactElement {
-  return <AquaCrudPage config={feedingsConfig} />;
+  return (
+    <AquaHeaderLineCrudPage
+      headerConfig={feedingsConfig}
+      lineConfig={feedingLinesConfig}
+      lineForeignKey="feedingId"
+      lineSectionTitle="aqua.pages.feedingLines.title"
+      lineSectionDescription="aqua.common.linesForRecord"
+    />
+  );
 }

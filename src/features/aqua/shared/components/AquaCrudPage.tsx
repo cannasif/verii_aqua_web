@@ -30,11 +30,17 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Plus, RefreshCw } from 'lucide-react';
-import type { AquaCrudConfig, AquaFieldConfig } from '../types/aqua-crud';
+import type { AquaCrudConfig, AquaCrudContextFilter, AquaFieldConfig } from '../types/aqua-crud';
 import { aquaCrudApi } from '../api/aqua-crud-api';
 
 interface AquaCrudPageProps {
   config: AquaCrudConfig;
+  contextFilter?: AquaCrudContextFilter;
+  hidePageHeader?: boolean;
+  disablePageTitleSync?: boolean;
+  rowSelectionEnabled?: boolean;
+  selectedRowId?: number | null;
+  onRowSelect?: (row: Record<string, unknown>) => void;
 }
 
 const PAGE_SIZE = 20;
@@ -133,7 +139,15 @@ function resolveLookupLabel(
   return parts.join(field.lookup.labelSeparator ?? ' - ');
 }
 
-export function AquaCrudPage({ config }: AquaCrudPageProps): ReactElement {
+export function AquaCrudPage({
+  config,
+  contextFilter,
+  hidePageHeader = false,
+  disablePageTitleSync = false,
+  rowSelectionEnabled = false,
+  selectedRowId = null,
+  onRowSelect,
+}: AquaCrudPageProps): ReactElement {
   const { t } = useTranslation();
   const { setPageTitle } = useUIStore();
   const queryClient = useQueryClient();
@@ -146,20 +160,31 @@ export function AquaCrudPage({ config }: AquaCrudPageProps): ReactElement {
   const [formValues, setFormValues] = useState<Record<string, unknown>>(() => getInitialValues(config));
 
   useEffect(() => {
+    if (disablePageTitleSync) return;
     setPageTitle(localizedTitle);
     return () => setPageTitle(null);
-  }, [localizedTitle, setPageTitle]);
+  }, [disablePageTitleSync, localizedTitle, setPageTitle]);
+
+  const effectiveFilters = useMemo(() => {
+    if (!contextFilter || contextFilter.value == null) return undefined;
+    return [{ column: contextFilter.fieldKey, operator: 'eq', value: String(contextFilter.value) }];
+  }, [contextFilter]);
+
+  const canQueryList = contextFilter ? contextFilter.value != null : true;
 
   const listQuery = useQuery({
-    queryKey: ['aqua', config.key, pageNumber],
+    queryKey: ['aqua', config.key, pageNumber, contextFilter?.fieldKey, contextFilter?.value],
     queryFn: () =>
       aquaCrudApi.getList(config.endpoint, {
         pageNumber,
         pageSize: PAGE_SIZE,
         sortBy: 'Id',
         sortDirection: 'desc',
+        filters: effectiveFilters,
+        filterLogic: 'and',
       }),
     staleTime: config.listStaleTimeMs,
+    enabled: canQueryList,
   });
 
   const lookupFields = useMemo(
@@ -250,7 +275,7 @@ export function AquaCrudPage({ config }: AquaCrudPageProps): ReactElement {
     },
   });
 
-  const rows = listQuery.data?.data ?? [];
+  const rows = canQueryList ? listQuery.data?.data ?? [] : [];
   const totalCount = listQuery.data?.totalCount ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
@@ -298,9 +323,38 @@ export function AquaCrudPage({ config }: AquaCrudPageProps): ReactElement {
     return result;
   }, [lookupOptionsByField]);
 
+  const selectOptionLabelsByFieldAndValue = useMemo((): Record<string, Record<string, string>> => {
+    const result: Record<string, Record<string, string>> = {};
+
+    config.fields
+      .filter((field) => field.type === 'select' && !field.lookup)
+      .forEach((field) => {
+        const options =
+          field.options ?? (field.key.toLowerCase() === 'status' ? DOC_STATUS_OPTIONS : []);
+        result[field.key] = options.reduce<Record<string, string>>((acc, option) => {
+          acc[String(option.value)] = t(option.label);
+          return acc;
+        }, {});
+      });
+
+    return result;
+  }, [config.fields, t]);
+
+  const visibleFields = useMemo(() => {
+    return config.fields.filter((field) => !(contextFilter?.hideFieldInForm && contextFilter.fieldKey === field.key));
+  }, [config.fields, contextFilter]);
+
   const handleCreate = (): void => {
+    if (contextFilter?.lockValue && contextFilter.value == null) {
+      toast.error(t('aqua.common.requiredField'));
+      return;
+    }
     setEditingRow(null);
-    setFormValues(getInitialValues(config));
+    const initial = getInitialValues(config);
+    if (contextFilter?.lockValue && contextFilter.value != null) {
+      initial[contextFilter.fieldKey] = String(contextFilter.value);
+    }
+    setFormValues(initial);
     setFormOpen(true);
   };
 
@@ -328,7 +382,15 @@ export function AquaCrudPage({ config }: AquaCrudPageProps): ReactElement {
       payload[field.key] = normalizeFieldValue(field, formValues[field.key]);
     }
 
-    const firstMissingRequiredField = config.fields.find((field) =>
+    if (contextFilter?.lockValue) {
+      if (contextFilter.value == null) {
+        toast.error(t('aqua.common.requiredField'));
+        return;
+      }
+      payload[contextFilter.fieldKey] = contextFilter.value;
+    }
+
+    const firstMissingRequiredField = visibleFields.find((field) =>
       isRequiredFieldMissing(field, payload[field.key])
     );
 
@@ -355,29 +417,50 @@ export function AquaCrudPage({ config }: AquaCrudPageProps): ReactElement {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{localizedTitle}</h1>
-          <p className="text-sm text-muted-foreground mt-1">{localizedDescription}</p>
-        </div>
+      {!hidePageHeader && (
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">{localizedTitle}</h1>
+            <p className="text-sm text-muted-foreground mt-1">{localizedDescription}</p>
+          </div>
 
-        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => void listQuery.refetch()}
+              disabled={listQuery.isFetching || !canQueryList}
+            >
+              <RefreshCw size={16} className={listQuery.isFetching ? 'mr-2 animate-spin' : 'mr-2'} />
+              {t('aqua.common.refresh')}
+            </Button>
+            {!config.readOnly && (
+              <Button onClick={handleCreate} disabled={!canQueryList}>
+                <Plus size={16} className="mr-2" />
+                {t('aqua.common.new')}
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {hidePageHeader && (
+        <div className="flex items-center justify-end gap-2">
           <Button
             variant="outline"
             onClick={() => void listQuery.refetch()}
-            disabled={listQuery.isFetching}
+            disabled={listQuery.isFetching || !canQueryList}
           >
             <RefreshCw size={16} className={listQuery.isFetching ? 'mr-2 animate-spin' : 'mr-2'} />
             {t('aqua.common.refresh')}
           </Button>
           {!config.readOnly && (
-            <Button onClick={handleCreate}>
+            <Button onClick={handleCreate} disabled={!canQueryList}>
               <Plus size={16} className="mr-2" />
               {t('aqua.common.new')}
             </Button>
           )}
         </div>
-      </div>
+      )}
 
       <div className="rounded-xl border border-slate-200 dark:border-white/10 overflow-hidden bg-white dark:bg-[#0b0713]">
         <Table>
@@ -391,7 +474,13 @@ export function AquaCrudPage({ config }: AquaCrudPageProps): ReactElement {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {listQuery.isLoading ? (
+            {!canQueryList ? (
+              <TableRow>
+                <TableCell colSpan={columns.length + 2} className="text-center py-10">
+                  {t('aqua.common.noData')}
+                </TableCell>
+              </TableRow>
+            ) : listQuery.isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length + 2} className="text-center py-10">
                   {t('aqua.common.loading')}
@@ -409,14 +498,22 @@ export function AquaCrudPage({ config }: AquaCrudPageProps): ReactElement {
                 const status = Number(row.status ?? row.Status);
 
                 return (
-                  <TableRow key={id}>
+                  <TableRow
+                    key={id}
+                    className={rowSelectionEnabled && selectedRowId === id ? 'bg-sky-50 dark:bg-sky-900/20' : undefined}
+                    onClick={() => {
+                      if (!rowSelectionEnabled) return;
+                      onRowSelect?.(row);
+                    }}
+                  >
                     <TableCell>{id}</TableCell>
                     {columns.map((column) => (
                       <TableCell key={column.key}>
                         {(() => {
                           const rawValue = row[column.key];
                           const lookupLabel = lookupLabelsByFieldAndValue[column.key]?.[String(rawValue)];
-                          return lookupLabel ?? formatCellValue(rawValue, t);
+                          const selectLabel = selectOptionLabelsByFieldAndValue[column.key]?.[String(rawValue)];
+                          return lookupLabel ?? selectLabel ?? formatCellValue(rawValue, t);
                         })()}
                       </TableCell>
                     ))}
@@ -483,7 +580,7 @@ export function AquaCrudPage({ config }: AquaCrudPageProps): ReactElement {
             </DialogHeader>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {config.fields.map((field) => (
+              {visibleFields.map((field) => (
                 <div key={field.key} className={field.type === 'textarea' ? 'md:col-span-2' : ''}>
                   <Label htmlFor={field.key}>
                     {t(field.label)}

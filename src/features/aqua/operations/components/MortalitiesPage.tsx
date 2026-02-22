@@ -1,7 +1,15 @@
 import { type ReactElement } from 'react';
-import { AquaCrudPage } from '@/features/aqua/shared/components/AquaCrudPage';
-import { mortalitiesConfig } from '../config/page-configs';
+import { AquaHeaderLineCrudPage } from './AquaHeaderLineCrudPage';
+import { mortalitiesConfig, mortalityLinesConfig } from '../config/page-configs';
 
 export function MortalitiesPage(): ReactElement {
-  return <AquaCrudPage config={mortalitiesConfig} />;
+  return (
+    <AquaHeaderLineCrudPage
+      headerConfig={mortalitiesConfig}
+      lineConfig={mortalityLinesConfig}
+      lineForeignKey="mortalityId"
+      lineSectionTitle="aqua.pages.mortalityLines.title"
+      lineSectionDescription="aqua.common.linesForRecord"
+    />
+  );
 }

@@ -325,14 +325,24 @@
     "aquaQuickSetup": "Quick Setup",
     "aquaQuickDailyEntry": "Quick Daily Entry",
     "aquaGoodsReceipts": "Goods Receipt (Fish/Feed)",
+    "aquaGoodsReceiptLines": "Goods Receipt Lines",
+    "aquaGoodsReceiptFishDistributions": "Goods Receipt Fish Distributions",
     "aquaFeedings": "Feeding (Morning/Evening)",
+    "aquaFeedingLines": "Feeding Lines",
+    "aquaFeedingDistributions": "Feeding Distributions",
     "aquaMortalities": "Mortality",
+    "aquaMortalityLines": "Mortality Lines",
     "aquaTransfers": "Transfer",
+    "aquaTransferLines": "Transfer Lines",
     "aquaWeighings": "Weighing",
+    "aquaWeighingLines": "Weighing Lines",
     "aquaStockConverts": "Stock Convert",
+    "aquaStockConvertLines": "Stock Convert Lines",
     "aquaDailyWeathers": "Daily Weather",
     "aquaNetOperations": "Net Operations",
-    "aquaReports": "Reports",
+    "aquaNetOperationLines": "Net Operation Lines",
+    "aquaReports": "Aqua Reports",
+    "aquaProjectDetailReport": "Project Detail Report",
     "aquaBatchMovements": "Batch Movement",
     "aquaCageBalances": "Cage Balance"
   },
@@ -4158,7 +4168,8 @@
       "save": "Save",
       "saving": "Saving...",
       "confirmDelete": "Delete this record?",
-      "requiredField": "is required"
+      "requiredField": "is required",
+      "linesForRecord": "Lines for header #{{id}}"
     },
     "toast": {
       "created": "Record created",
@@ -4183,6 +4194,10 @@
       "manual": "Manual",
       "planned": "Planned",
       "auto": "Auto"
+    },
+    "goodsReceiptItemType": {
+      "feed": "Feed",
+      "fish": "Fish"
     },
     "pages": {
       "projects": {
@@ -4241,6 +4256,42 @@
         "title": "Net Operations",
         "description": "Net operation header records."
       },
+      "goodsReceiptLines": {
+        "title": "Goods Receipt Lines",
+        "description": "Goods receipt line records."
+      },
+      "goodsReceiptFishDistributions": {
+        "title": "Goods Receipt Fish Distributions",
+        "description": "Fish distribution records by cage for goods receipt lines."
+      },
+      "feedingLines": {
+        "title": "Feeding Lines",
+        "description": "Feeding line records."
+      },
+      "feedingDistributions": {
+        "title": "Feeding Distributions",
+        "description": "Fish batch/cage distribution records for feeding lines."
+      },
+      "transferLines": {
+        "title": "Transfer Lines",
+        "description": "Transfer line records."
+      },
+      "mortalityLines": {
+        "title": "Mortality Lines",
+        "description": "Mortality line records."
+      },
+      "weighingLines": {
+        "title": "Weighing Lines",
+        "description": "Weighing line records."
+      },
+      "stockConvertLines": {
+        "title": "Stock Convert Lines",
+        "description": "Stock convert line records."
+      },
+      "netOperationLines": {
+        "title": "Net Operation Lines",
+        "description": "Net operation line records."
+      },
       "batchMovements": {
         "title": "Batch Movement",
         "description": "Batch movement ledger report."
@@ -4272,16 +4323,33 @@
       "receiptDate": "Receipt Date",
       "supplierId": "Supplier ID",
       "warehouseId": "Warehouse ID",
+      "goodsReceiptId": "Goods Receipt ID",
+      "goodsReceiptLineId": "Goods Receipt Line ID",
+      "itemType": "Item Type",
+      "stockId": "Stock ID",
+      "qtyUnit": "Qty (Unit)",
+      "gramPerUnit": "Gram per Unit",
+      "totalGram": "Total Gram",
+      "fishAverageGram": "Fish Average Gram",
+      "fishTotalGram": "Fish Total Gram",
       "feedingNo": "Feeding No",
+      "feedingId": "Feeding ID",
+      "feedingLineId": "Feeding Line ID",
+      "feedGram": "Feed Gram",
       "feedingDate": "Feeding Date",
       "feedingSlot": "Feeding Slot",
       "sourceType": "Source Type",
       "mortalityDate": "Mortality Date",
+      "mortalityId": "Mortality ID",
+      "deadCount": "Dead Count",
       "transferNo": "Transfer No",
+      "transferId": "Transfer ID",
       "transferDate": "Transfer Date",
       "weighingNo": "Weighing No",
+      "weighingId": "Weighing ID",
       "weighingDate": "Weighing Date",
       "convertNo": "Convert No",
+      "stockConvertId": "Stock Convert ID",
       "convertDate": "Convert Date",
       "weatherDate": "Date",
       "weatherTypeId": "Weather Type ID",
@@ -4292,7 +4360,17 @@
       "operationNo": "Operation No",
       "operationDate": "Operation Date",
       "fishBatchId": "Fish Batch ID",
+      "fromFishBatchId": "From Fish Batch ID",
+      "toFishBatchId": "To Fish Batch ID",
       "projectCageId": "Project Cage ID",
+      "fromProjectCageId": "From Project Cage ID",
+      "toProjectCageId": "To Project Cage ID",
+      "measuredCount": "Measured Count",
+      "measuredAverageGram": "Measured Average Gram",
+      "measuredBiomassGram": "Measured Biomass Gram",
+      "netOperationId": "Net Operation ID",
+      "quantity": "Quantity",
+      "unitGram": "Unit Gram",
       "movementType": "Movement Type",
       "signedCount": "Count Delta",
       "signedBiomassGram": "Biomass Delta",
@@ -4320,6 +4398,8 @@
       "stock": "Stock",
       "selectStock": "Select stock",
       "count": "Count",
+      "batchCode": "Batch Code",
+      "currentAverageGram": "Current Average Gram",
       "feedLineOptional": "Feed line (optional)",
       "selectFeedStock": "Select feed stock",
       "qty": "Quantity",
@@ -4359,6 +4439,7 @@
         "feedStock": "Feed Stock",
         "selectStock": "Select stock",
         "qty": "Quantity",
+        "gramPerUnit": "Gram Per Unit",
         "save": "Save"
       },
       "mortality": {
@@ -4381,6 +4462,11 @@
         "title": "Net Operation",
         "operationType": "Operation Type",
         "selectType": "Select type",
+        "batch": "Batch",
+        "selectBatch": "Select batch",
+        "noBatch": "No batch",
+        "quantity": "Quantity",
+        "unitGram": "Unit Gram",
         "description": "Description",
         "save": "Save"
       },
@@ -4391,6 +4477,26 @@
         "netOperationSaved": "Net operation saved",
         "saveFailed": "Save failed"
       }
+    },
+    "projectDetailReport": {
+      "pageTitle": "Project Detail Report",
+      "description": "Project-based cage performance report with feeding and mortality details.",
+      "selectProject": "Select project",
+      "pickProjectFirst": "Please select a project to load report details.",
+      "totalCages": "Total cages",
+      "currentVsInitial": "Current / Initial",
+      "dead": "Dead",
+      "missingFeedDays": "Missing feeding days",
+      "missingFeedingDates": "Days Without Feeding",
+      "noMissingFeedDay": "No missing feeding day detected in selected date range.",
+      "dailyDetails": "Daily Detail",
+      "dailyDetailsHint": "Latest activity rows are listed by date.",
+      "date": "Date",
+      "feedGram": "Feed (gram)",
+      "deadCount": "Dead count",
+      "feedStatus": "Feeding status",
+      "fed": "Fed",
+      "notFed": "Not fed"
     }
   }
 }

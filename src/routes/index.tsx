@@ -41,8 +41,18 @@ const WeighingsPage = lazyImport(() => import('@/features/aqua'), 'WeighingsPage
 const StockConvertsPage = lazyImport(() => import('@/features/aqua'), 'StockConvertsPage');
 const DailyWeathersPage = lazyImport(() => import('@/features/aqua'), 'DailyWeathersPage');
 const NetOperationsPage = lazyImport(() => import('@/features/aqua'), 'NetOperationsPage');
+const GoodsReceiptLinesPage = lazyImport(() => import('@/features/aqua'), 'GoodsReceiptLinesPage');
+const GoodsReceiptFishDistributionsPage = lazyImport(() => import('@/features/aqua'), 'GoodsReceiptFishDistributionsPage');
+const FeedingLinesPage = lazyImport(() => import('@/features/aqua'), 'FeedingLinesPage');
+const FeedingDistributionsPage = lazyImport(() => import('@/features/aqua'), 'FeedingDistributionsPage');
+const TransferLinesPage = lazyImport(() => import('@/features/aqua'), 'TransferLinesPage');
+const MortalityLinesPage = lazyImport(() => import('@/features/aqua'), 'MortalityLinesPage');
+const WeighingLinesPage = lazyImport(() => import('@/features/aqua'), 'WeighingLinesPage');
+const StockConvertLinesPage = lazyImport(() => import('@/features/aqua'), 'StockConvertLinesPage');
+const NetOperationLinesPage = lazyImport(() => import('@/features/aqua'), 'NetOperationLinesPage');
 const BatchMovementsPage = lazyImport(() => import('@/features/aqua'), 'BatchMovementsPage');
 const CageBalancesPage = lazyImport(() => import('@/features/aqua'), 'CageBalancesPage');
+const ProjectDetailReportPage = lazyImport(() => import('@/features/aqua'), 'ProjectDetailReportPage');
 const QuickSetupPage = lazyImport(() => import('@/features/aqua/operations/quick-setup'), 'QuickSetupPage');
 const QuickDailyEntryPage = lazyImport(() => import('@/features/aqua/operations/quick-daily-entry'), 'QuickDailyEntryPage');
 
@@ -85,8 +95,18 @@ export const router = createBrowserRouter([
       { path: 'aqua/operations/stock-converts', element: <StockConvertsPage /> },
       { path: 'aqua/operations/daily-weathers', element: <DailyWeathersPage /> },
       { path: 'aqua/operations/net-operations', element: <NetOperationsPage /> },
+      { path: 'aqua/operations/goods-receipt-lines', element: <GoodsReceiptLinesPage /> },
+      { path: 'aqua/operations/goods-receipt-fish-distributions', element: <GoodsReceiptFishDistributionsPage /> },
+      { path: 'aqua/operations/feeding-lines', element: <FeedingLinesPage /> },
+      { path: 'aqua/operations/feeding-distributions', element: <FeedingDistributionsPage /> },
+      { path: 'aqua/operations/transfer-lines', element: <TransferLinesPage /> },
+      { path: 'aqua/operations/mortality-lines', element: <MortalityLinesPage /> },
+      { path: 'aqua/operations/weighing-lines', element: <WeighingLinesPage /> },
+      { path: 'aqua/operations/stock-convert-lines', element: <StockConvertLinesPage /> },
+      { path: 'aqua/operations/net-operation-lines', element: <NetOperationLinesPage /> },
       { path: 'aqua/reports/batch-movements', element: <BatchMovementsPage /> },
       { path: 'aqua/reports/cage-balances', element: <CageBalancesPage /> },
+      { path: 'aqua/reports/project-detail', element: <ProjectDetailReportPage /> },
     ],
   },
   {

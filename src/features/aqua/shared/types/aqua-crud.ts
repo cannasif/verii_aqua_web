@@ -44,6 +44,13 @@ export interface AquaCrudConfig {
   postingSlug?: 'goods-receipt' | 'transfer' | 'mortality' | 'weighing' | 'stock-convert' | 'net-operation';
 }
 
+export interface AquaCrudContextFilter {
+  fieldKey: string;
+  value: number | null;
+  lockValue?: boolean;
+  hideFieldInForm?: boolean;
+}
+
 export interface AquaListParams extends PagedParams {}
 
 export type AquaListResponse = PagedResponse<Record<string, unknown>>;
