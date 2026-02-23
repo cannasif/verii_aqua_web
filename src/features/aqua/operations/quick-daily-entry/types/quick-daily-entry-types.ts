@@ -10,6 +10,7 @@ export interface ProjectCageDto {
   projectId: number;
   cageCode?: string;
   cageName?: string;
+  releasedDate?: string | null;
 }
 
 export interface StockDto {
@@ -53,6 +54,7 @@ export interface MortalityHeaderDto {
   id: number;
   projectId: number;
   mortalityDate: string;
+  status?: number;
 }
 
 export interface NetOperationHeaderDto {
@@ -60,6 +62,14 @@ export interface NetOperationHeaderDto {
   projectId: number;
   operationDate: string;
   operationTypeId?: number;
+  status?: number;
+}
+
+export interface ActiveCageBatchSnapshot {
+  fishBatchId: number;
+  liveCount: number;
+  averageGram: number;
+  biomassGram: number;
 }
 
 export interface CreateFeedingPayload {
@@ -73,6 +83,13 @@ export interface CreateFeedingPayload {
 
 export interface CreateFeedingLinePayload {
   feedingId: number;
+  projectId?: number;
+  feedingDate?: string;
+  feedingSlot?: number;
+  sourceType?: number;
+  status?: number;
+  feedingNo?: string;
+  note?: string;
   stockId: number;
   qtyUnit: number;
   gramPerUnit: number;
@@ -114,7 +131,42 @@ export interface CreateNetOperationLinePayload {
   netOperationId: number;
   projectCageId: number;
   fishBatchId?: number;
-  quantity: number;
-  unitGram?: number;
   note?: string;
+}
+
+export interface CreateTransferPayload {
+  projectId: number;
+  transferNo: string;
+  transferDate: string;
+  status?: number;
+  note?: string;
+}
+
+export interface CreateTransferLinePayload {
+  transferId: number;
+  fishBatchId: number;
+  fromProjectCageId: number;
+  toProjectCageId: number;
+  fishCount: number;
+  averageGram: number;
+  biomassGram: number;
+}
+
+export interface CreateStockConvertPayload {
+  projectId: number;
+  convertNo: string;
+  convertDate: string;
+  status?: number;
+  note?: string;
+}
+
+export interface CreateStockConvertLinePayload {
+  stockConvertId: number;
+  fromFishBatchId: number;
+  toFishBatchId: number;
+  fromProjectCageId: number;
+  toProjectCageId: number;
+  fishCount: number;
+  averageGram: number;
+  biomassGram: number;
 }
