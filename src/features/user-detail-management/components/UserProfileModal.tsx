@@ -1,12 +1,7 @@
 import { type ReactElement, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage } from '@/lib/i18n';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import { 
   Mail02Icon, 
   Moon02Icon, 
@@ -88,7 +83,7 @@ export function UserProfileModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
-        "p-0 gap-0 border-none shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col w-[95vw] md:max-w-4xl lg:max-w-[1100px] max-h-[92dvh] md:max-h-[620px] rounded-[2rem] md:rounded-[2.5rem] transition-all duration-500 [&>button:last-of-type]:hidden",
+        "p-0 gap-0 border-none shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col w-[95vw] md:max-w-4xl lg:max-w-[1100px] max-h-[92dvh] md:max-h-[620px] rounded-4xl md:rounded-[2.5rem] transition-all duration-500 [&>button:last-of-type]:hidden",
         darkMode ? "bg-[#120c18] text-white" : "bg-white text-slate-900"
       )}>
         <DialogPrimitive.Close className={cn(
@@ -113,7 +108,7 @@ export function UserProfileModal({
             
             <div className="relative group mb-4 md:mb-6 mt-4 md:mt-0">
               <div className={cn(
-                "w-20 h-20 sm:w-24 sm:h-24 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border-4 rotate-2 transition-transform group-hover:rotate-0 duration-500 p-1 shadow-2xl",
+                "w-20 h-20 sm:w-24 sm:h-24 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-3xl md:rounded-4xl overflow-hidden border-4 rotate-2 transition-transform group-hover:rotate-0 duration-500 p-1 shadow-2xl",
                 darkMode ? "border-white/10 bg-white/5" : "border-white bg-white"
               )}>
                 {userDetail?.profilePictureUrl ? (
@@ -166,8 +161,8 @@ export function UserProfileModal({
             )}>
               <button
                 className={cn(
-                  "group w-full p-3 md:p-5 lg:p-6 flex items-center justify-between border rounded-[1.5rem] md:rounded-[2rem] transition-all duration-300",
-                  darkMode ? "border-white/5 bg-white/5 hover:bg-white/[0.08] hover:border-pink-500/30" : "border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-xl hover:border-pink-200"
+                  "group w-full p-3 md:p-5 lg:p-6 flex items-center justify-between border rounded-3xl md:rounded-4xl transition-all duration-300",
+                  darkMode ? "border-white/5 bg-white/5 hover:bg-white/8 hover:border-pink-500/30" : "border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-xl hover:border-pink-200"
                 )}
                 onClick={onOpenProfileDetails}
               >
@@ -184,7 +179,7 @@ export function UserProfileModal({
               </button>
 
               <div className={cn(
-                "group w-full p-3 md:p-5 lg:p-6 flex items-center justify-between border rounded-[1.5rem] md:rounded-[2rem] transition-all",
+                "group w-full p-3 md:p-5 lg:p-6 flex items-center justify-between border rounded-3xl md:rounded-4xl transition-all",
                 darkMode ? "border-white/5 bg-white/5" : "border-slate-100 bg-slate-50/50"
               )}>
                 <div className="flex items-center gap-3 md:gap-4 flex-1">
@@ -195,40 +190,28 @@ export function UserProfileModal({
                     <p className="font-bold text-sm md:text-base lg:text-lg">{t('language_choice')}</p>
                   </div>
                 </div>
-                <Select value={currentLanguage.code} onValueChange={handleLanguageChange} disabled={isChangingLanguage}>
-                  <SelectTrigger className={cn(
+                <Combobox
+                  options={languages.map((l) => ({
+                    value: l.code,
+                    label: `${l.flag} ${l.name}`,
+                  }))}
+                  value={currentLanguage.code}
+                  onValueChange={handleLanguageChange}
+                  placeholder={currentLanguage.short}
+                  searchPlaceholder={t('common.search')}
+                  emptyText={t('common.noResults')}
+                  disabled={isChangingLanguage}
+                  className={cn(
                     "w-16 md:w-24 lg:w-28 h-9 md:h-10 shadow-none focus:ring-0 font-black text-xs md:text-sm transition-all",
                     darkMode 
                       ? "bg-white/10 border-none hover:bg-white/20" 
                       : "bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-700"
-                  )}>
-                    <span>{currentLanguage.short}</span>
-                  </SelectTrigger>
-                  <SelectContent className={cn(
-                    "rounded-2xl border shadow-2xl",
-                    darkMode ? "bg-[#1a1025] border-white/10 text-white" : "bg-white border-slate-200 text-slate-900"
-                  )}>
-                    {languages.map((l) => (
-                      <SelectItem 
-                        key={l.code} 
-                        value={l.code}
-                        className={cn(
-                          "rounded-xl my-1 transition-colors focus:bg-pink-600 focus:text-white cursor-pointer",
-                          darkMode ? "hover:bg-white/5" : "hover:bg-slate-100"
-                        )}
-                      >
-                        <span className="flex items-center gap-2">
-                          <span>{l.flag}</span>
-                          <span className="font-medium">{l.name}</span>
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  )}
+                />
               </div>
 
               <div className={cn(
-                "group w-full p-3 md:p-5 lg:p-6 flex items-center justify-between border rounded-[1.5rem] md:rounded-[2rem] transition-all",
+                "group w-full p-3 md:p-5 lg:p-6 flex items-center justify-between border rounded-3xl md:rounded-4xl transition-all",
                 darkMode ? "border-white/5 bg-white/5" : "border-slate-100 bg-slate-50/50"
               )}>
                 <div className="flex items-center gap-3 md:gap-4">

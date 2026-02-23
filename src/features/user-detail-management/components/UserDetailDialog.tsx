@@ -18,13 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import {
   Accordion,
   AccordionContent,
@@ -252,16 +246,16 @@ export function UserDetailDialog({
         <div className="flex flex-col md:flex-row h-full overflow-hidden">
           
           {/* --- SOL TARAFLAR (SIDEBAR) --- */}
-          <div className="w-full md:w-80 bg-zinc-50/80 dark:bg-[#150a1f]/90 backdrop-blur-md border-b md:border-b-0 md:border-r border-zinc-100 dark:border-white/5 p-8 flex flex-col flex-shrink-0 gap-8 relative">
+          <div className="w-full md:w-80 bg-zinc-50/80 dark:bg-[#150a1f]/90 backdrop-blur-md border-b md:border-b-0 md:border-r border-zinc-100 dark:border-white/5 p-8 flex flex-col shrink-0 gap-8 relative">
             
             {/* Profil Resmi ve İsim */}
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <div className="relative group cursor-pointer mb-5" onClick={() => fileInputRef.current?.click()}>
-                <div className="w-28 h-28 rounded-full border-[4px] border-white dark:border-[#2a1d35] bg-zinc-200 dark:bg-slate-800 overflow-hidden relative shadow-lg">
+                <div className="w-28 h-28 rounded-full border-4 border-white dark:border-[#2a1d35] bg-zinc-200 dark:bg-slate-800 overflow-hidden relative shadow-lg">
                     {previewUrl ? (
                       <img src={previewUrl} alt="Profile" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-white bg-gradient-to-br from-pink-500 to-orange-500">
+                      <div className="w-full h-full flex items-center justify-center text-4xl font-bold text-white bg-linear-to-br from-pink-500 to-orange-500">
                          {user?.name?.[0]?.toUpperCase() || 'U'}
                       </div>
                     )}
@@ -273,7 +267,7 @@ export function UserDetailDialog({
               </div>
               
               <div className="w-full space-y-1">
-                 <h2 className="text-2xl font-bold text-zinc-900 dark:text-white break-words tracking-tight">{user?.name || 'Kullanıcı'}</h2>
+                 <h2 className="text-2xl font-bold text-zinc-900 dark:text-white wrap-break-word tracking-tight">{user?.name || 'Kullanıcı'}</h2>
                  <div className="flex items-center justify-center md:justify-start gap-2">
                     <Mail size={14} className="text-zinc-400 dark:text-slate-500" />
                     <p className="text-sm text-zinc-500 dark:text-slate-400 font-medium break-all">{user?.email}</p>
@@ -380,27 +374,24 @@ export function UserDetailDialog({
                               {t('userDetailManagement.gender')}
                           </FormLabel>
                           <div className="relative group">
-                            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-slate-600 z-10 group-focus-within:text-pink-600 dark:group-focus-within:text-pink-500 group-focus-within:animate-[wiggle_0.3s_ease-in-out] transition-colors" size={18} />
-                            <Select
-                                onValueChange={(value) => field.onChange(value && value !== 'none' ? parseInt(value) as Gender : undefined)}
-                                value={field.value !== undefined && field.value !== null ? field.value.toString() : undefined}
-                            >
-                                <FormControl>
-                                <SelectTrigger className="pl-12 bg-zinc-50/50 dark:bg-[#150a1f] border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-slate-200 focus:border-pink-500 dark:focus:border-pink-500 focus:ring-4 focus:ring-pink-500/10 rounded-xl h-12 w-full shadow-sm transition-all">
-                                    <SelectValue placeholder={t('userDetailManagement.selectGender')} />
-                                </SelectTrigger>
-                                </FormControl>
-                                <SelectContent className="bg-white dark:bg-[#1e1235] border-zinc-100 dark:border-white/10 text-zinc-900 dark:text-slate-300 shadow-xl">
-                                <SelectItem value="none" className="focus:bg-zinc-50 dark:focus:bg-white/5 cursor-pointer">
-                                    {t('userDetailManagement.noGenderSelected')}
-                                </SelectItem>
-                                {GENDER_OPTIONS.map((option) => (
-                                    <SelectItem key={option.value} value={option.value.toString()} className="focus:bg-zinc-50 dark:focus:bg-white/5 cursor-pointer">
-                                    {t(`userDetailManagement.gender${option.label}`, option.label)}
-                                    </SelectItem>
-                                ))}
-                                </SelectContent>
-                            </Select>
+                            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-slate-600 z-10 group-focus-within:text-pink-600 dark:group-focus-within:text-pink-500 group-focus-within:animate-[wiggle_0.3s_ease-in-out] transition-colors pointer-events-none" size={18} />
+                            <FormControl>
+                              <Combobox
+                                options={[
+                                  { value: 'none', label: t('userDetailManagement.noGenderSelected') },
+                                  ...GENDER_OPTIONS.map((option) => ({
+                                    value: option.value.toString(),
+                                    label: t(`userDetailManagement.gender${option.label}`, option.label),
+                                  })),
+                                ]}
+                                value={field.value !== undefined && field.value !== null ? field.value.toString() : 'none'}
+                                onValueChange={(value) => field.onChange(value && value !== 'none' ? (parseInt(value, 10) as Gender) : undefined)}
+                                placeholder={t('userDetailManagement.selectGender')}
+                                searchPlaceholder={t('common.search')}
+                                emptyText={t('common.noResults')}
+                                className="pl-12 bg-zinc-50/50 dark:bg-[#150a1f] border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-slate-200 focus:border-pink-500 dark:focus:border-pink-500 focus:ring-4 focus:ring-pink-500/10 rounded-xl h-12 w-full shadow-sm transition-all"
+                              />
+                            </FormControl>
                           </div>
                           <FormMessage className="text-red-500 text-xs" />
                         </FormItem>

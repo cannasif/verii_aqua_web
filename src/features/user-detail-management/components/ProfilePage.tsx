@@ -16,13 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import {
   Accordion,
   AccordionContent,
@@ -376,25 +370,24 @@ export function ProfilePage(): ReactElement {
                       {t('userDetailManagement.gender')}
                     </FormLabel>
                     <div className="relative group">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-muted-foreground group-focus-within:text-primary transition-colors size-4" />
-                      <Select
-                        onValueChange={(value) => field.onChange(value && value !== 'none' ? (parseInt(value, 10) as Gender) : undefined)}
-                        value={field.value !== undefined && field.value !== null ? String(field.value) : undefined}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="pl-10 h-11 bg-white/50 dark:bg-card/50 border-slate-200 dark:border-white/10 focus:ring-0 focus:ring-offset-0 focus:border-pink-500 dark:focus:border-pink-500 rounded-xl transition-all w-full">
-                            <SelectValue placeholder={t('userDetailManagement.selectGender')} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="none">{t('userDetailManagement.noGenderSelected')}</SelectItem>
-                          {GENDER_OPTIONS.map((option) => (
-                            <SelectItem key={option.value} value={String(option.value)}>
-                              {t(`userDetailManagement.gender${option.label}`, option.label)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 z-10 text-muted-foreground group-focus-within:text-primary transition-colors size-4 pointer-events-none" />
+                      <FormControl>
+                        <Combobox
+                          options={[
+                            { value: 'none', label: t('userDetailManagement.noGenderSelected') },
+                            ...GENDER_OPTIONS.map((option) => ({
+                              value: String(option.value),
+                              label: t(`userDetailManagement.gender${option.label}`, option.label),
+                            })),
+                          ]}
+                          value={field.value !== undefined && field.value !== null ? String(field.value) : 'none'}
+                          onValueChange={(value) => field.onChange(value && value !== 'none' ? (parseInt(value, 10) as Gender) : undefined)}
+                          placeholder={t('userDetailManagement.selectGender')}
+                          searchPlaceholder={t('common.search')}
+                          emptyText={t('common.noResults')}
+                          className="pl-10 h-11 bg-white/50 dark:bg-card/50 border-slate-200 dark:border-white/10 focus:ring-0 focus:ring-offset-0 focus:border-pink-500 dark:focus:border-pink-500 rounded-xl transition-all w-full"
+                        />
+                      </FormControl>
                     </div>
                     <FormMessage className="text-destructive text-xs" />
                   </FormItem>

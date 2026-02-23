@@ -21,13 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import {
   userFormSchema,
   userUpdateFormSchema,
@@ -344,26 +338,20 @@ export function UserForm({
                       {t('userManagement.form.role')}
                       {!isEditMode && <span className="text-destructive ml-1">*</span>}
                     </FormLabel>
-                    <Select
-                      value={field.value ? String(field.value) : ''}
-                      onValueChange={(v) => field.onChange(v ? parseInt(v, 10) : 0)}
-                      disabled={isLoading}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue
-                            placeholder={t('userManagement.form.rolePlaceholder')}
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {roleOptions.map((opt) => (
-                          <SelectItem key={opt.value} value={String(opt.value)}>
-                            {opt.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <Combobox
+                        options={roleOptions.map((opt) => ({
+                          value: String(opt.value),
+                          label: opt.label,
+                        }))}
+                        value={field.value ? String(field.value) : ''}
+                        onValueChange={(v) => field.onChange(v ? parseInt(v, 10) : 0)}
+                        placeholder={t('userManagement.form.rolePlaceholder')}
+                        searchPlaceholder={t('common.search')}
+                        emptyText={t('common.noResults')}
+                        disabled={isLoading}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

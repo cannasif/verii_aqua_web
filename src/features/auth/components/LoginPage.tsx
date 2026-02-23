@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation, Trans } from 'react-i18next';
@@ -17,13 +17,7 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import { AuthBackground } from './AuthBackground';
@@ -53,6 +47,10 @@ export function LoginPage(): React.JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: branches } = useBranches();
   const { mutate: login, isPending } = useLogin(branches);
+  const branchOptions = useMemo(
+    () => (branches ?? []).map((b) => ({ value: String(b.id), label: b.name })),
+    [branches]
+  );
   const { logout } = useAuthStore();
   
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -166,27 +164,22 @@ export function LoginPage(): React.JSX.Element {
                     <FormControl>
                       <div className="relative group">
                         <Location01Icon 
-                          className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-300 ${fieldState.invalid ? 'text-red-500' : 'text-slate-400 group-focus-within:text-orange-400'}`} 
+                          className={`absolute left-4 top-1/2 z-10 -translate-y-1/2 transition-colors duration-300 pointer-events-none ${fieldState.invalid ? 'text-red-500' : 'text-slate-400 group-focus-within:text-orange-400'}`} 
                           size={18} 
                         />
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger 
-                            className={`w-full h-auto bg-black/10 rounded-xl px-4 py-6 pl-12 text-sm text-white focus:ring-0 focus:ring-offset-0 transition-all duration-300
-                              ${fieldState.invalid 
-                                ? 'border-red-500/80 focus:border-red-500 hover:border-red-500 bg-red-950/10' 
-                                : 'border border-white/10 focus:border-pink-500 focus:bg-black/30'
-                              }`}
-                          >
-                            <SelectValue placeholder={t('auth.login.branchPlaceholder')} />
-                          </SelectTrigger>
-                          <SelectContent className="bg-black/90 backdrop-blur-xl border border-white/10 text-white">
-                            {branches?.map((branch) => (
-                              <SelectItem key={branch.id} value={branch.id} className="focus:bg-pink-500/20 focus:text-white cursor-pointer">
-                                {branch.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <Combobox
+                          options={branchOptions}
+                          value={field.value ?? ''}
+                          onValueChange={field.onChange}
+                          placeholder={t('auth.login.branchPlaceholder')}
+                          searchPlaceholder={t('common.search')}
+                          emptyText={t('common.noResults')}
+                          className={`w-full h-auto bg-black/10 rounded-xl px-4 py-6 pl-12 text-sm text-white focus:ring-0 focus:ring-offset-0 transition-all duration-300
+                            ${fieldState.invalid 
+                              ? 'border-red-500/80 focus:border-red-500 hover:border-red-500 bg-red-950/10' 
+                              : 'border border-white/10 focus:border-pink-500 focus:bg-black/30'
+                            }`}
+                        />
                       </div>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs font-medium pl-1 mt-1" />
