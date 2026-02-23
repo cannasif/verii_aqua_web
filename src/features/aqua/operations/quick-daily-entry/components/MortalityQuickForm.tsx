@@ -15,23 +15,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   mortalityQuickFormSchema,
   type MortalityQuickFormSchema,
 } from '../schema/quick-daily-entry-schema';
-import type { FishBatchDto } from '../types/quick-daily-entry-types';
 
 interface MortalityQuickFormProps {
   projectId: number | null;
   projectCageId: number | null;
-  fishBatches: FishBatchDto[] | undefined;
-  isLoadingBatches: boolean;
   onSubmit: (data: MortalityQuickFormSchema) => Promise<void>;
   isSubmitting: boolean;
 }
@@ -39,24 +29,22 @@ interface MortalityQuickFormProps {
 export function MortalityQuickForm({
   projectId,
   projectCageId,
-  fishBatches,
-  isLoadingBatches,
   onSubmit,
   isSubmitting,
 }: MortalityQuickFormProps): ReactElement {
   const { t } = useTranslation('common');
   const form = useForm<MortalityQuickFormSchema>({
     resolver: zodResolver(mortalityQuickFormSchema) as Resolver<MortalityQuickFormSchema>,
-    defaultValues: { fishBatchId: 0, deadCount: 0 },
+    defaultValues: { deadCount: 0 },
   });
 
   useEffect(() => {
-    form.reset({ fishBatchId: 0, deadCount: 0 });
+    form.reset({ deadCount: 0 });
   }, [projectId, projectCageId]);
 
   const handleSubmit: SubmitHandler<MortalityQuickFormSchema> = async (data) => {
     await onSubmit(data);
-    form.reset({ fishBatchId: 0, deadCount: 0 });
+    form.reset({ deadCount: 0 });
   };
 
   const disabled = projectId == null || projectCageId == null;
@@ -69,34 +57,11 @@ export function MortalityQuickForm({
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="fishBatchId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('aqua.quickDailyEntry.mortality.batch')}</FormLabel>
-                  <Select
-                    disabled={isLoadingBatches}
-                    onValueChange={(v) => field.onChange(Number(v))}
-                    value={field.value ? String(field.value) : undefined}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('aqua.quickDailyEntry.mortality.selectBatch')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {(Array.isArray(fishBatches) ? fishBatches : []).map((b) => (
-                        <SelectItem key={b.id} value={String(b.id)}>
-                          Batch #{b.id}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="rounded-md border border-dashed border-emerald-400/40 bg-emerald-500/10 p-3 text-sm text-emerald-200">
+              {t('aqua.quickDailyEntry.mortality.autoBatchInfo', {
+                defaultValue: 'Batch kafes eşleşmesine göre otomatik seçilecektir.',
+              })}
+            </div>
             <FormField
               control={form.control}
               name="deadCount"

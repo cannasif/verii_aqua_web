@@ -47,12 +47,12 @@ export function NetOperationQuickForm({
   const { t } = useTranslation('common');
   const form = useForm<NetOperationQuickFormSchema>({
     resolver: zodResolver(netOperationQuickFormSchema) as Resolver<NetOperationQuickFormSchema>,
-    defaultValues: { netOperationTypeId: 0, fishBatchId: 0, quantity: 0, unitGram: 0, description: '' },
+    defaultValues: { netOperationTypeId: 0, fishBatchId: 0, description: '' },
   });
 
   const handleSubmit: SubmitHandler<NetOperationQuickFormSchema> = async (data) => {
     await onSubmit(data);
-    form.reset({ netOperationTypeId: 0, fishBatchId: 0, quantity: 0, unitGram: 0, description: '' });
+    form.reset({ netOperationTypeId: 0, fishBatchId: 0, description: '' });
   };
 
   const disabled = projectId == null || projectCageId == null;
@@ -116,32 +116,6 @@ export function NetOperationQuickForm({
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="quantity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('aqua.quickDailyEntry.netOperation.quantity')}</FormLabel>
-                  <FormControl>
-                    <Input type="number" min={0.01} step="0.01" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="unitGram"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('aqua.quickDailyEntry.netOperation.unitGram')}</FormLabel>
-                  <FormControl>
-                    <Input type="number" min={0} step="0.01" {...field} />
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
