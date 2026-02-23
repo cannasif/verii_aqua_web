@@ -321,7 +321,7 @@ export function Sidebar({ items }: SidebarProps): ReactElement {
   return (
     <>
       {isSidebarOpen && <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={() => useUIStore.getState().setSidebarOpen(false)} />}
-      <aside className={cn('fixed lg:sticky top-0 h-screen z-50 flex flex-col transition-all duration-300 ease-in-out shrink-0 overflow-hidden shadow-2xl bg-white border-r border-slate-200 dark:bg-[#130822]/90 dark:border-white/5 dark:backdrop-blur-2xl', isSidebarOpen ? "w-72 translate-x-0" : "w-72 -translate-x-full lg:w-20 lg:translate-x-0")}>
+      <aside className={cn('fixed lg:sticky top-0 h-dvh z-50 flex flex-col transition-all duration-300 ease-in-out shrink-0 overflow-hidden shadow-2xl bg-white border-r border-slate-200 dark:bg-[#130822]/90 dark:border-white/5 dark:backdrop-blur-2xl', isSidebarOpen ? "w-72 translate-x-0" : "w-72 -translate-x-full lg:w-20 lg:translate-x-0")}>
         <div className={cn("h-24 flex items-center justify-center border-b border-slate-100 dark:border-white/5 shrink-0 relative", isSidebarOpen ? "px-4" : "px-0")}>
           {isSidebarOpen ? (
             <div className="w-full flex items-center justify-between">

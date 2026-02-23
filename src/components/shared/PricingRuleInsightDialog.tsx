@@ -50,7 +50,7 @@ export function PricingRuleInsightDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden p-0 gap-0">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:w-[calc(100vw-2rem)] max-w-2xl max-h-[85vh] overflow-hidden p-0 gap-0">
         <DialogHeader className="px-5 py-4 border-b bg-slate-50/60 dark:bg-slate-900/40">
           <DialogTitle className="flex items-center gap-2">
             <Tag className="h-4 w-4 text-pink-500" />
@@ -95,7 +95,7 @@ export function PricingRuleInsightDialog({
                         {t('common.pricingInsights.range')}: {rule.minQuantity} - {rule.maxQuantity ?? 'inf'}
                       </Badge>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-sm">
                       <div>
                         <span className="text-muted-foreground">{t('common.pricingInsights.fixedPrice')}</span>
                         <div className="font-medium">{rule.fixedUnitPrice ?? '-'}</div>
@@ -136,7 +136,7 @@ export function PricingRuleInsightDialog({
                   <span className="text-muted-foreground">{t('common.pricingInsights.limitGroup')}:</span>{' '}
                   <span className="font-medium">{discountLimit.erpProductGroupCode || '-'}</span>
                 </div>
-                <div className="grid grid-cols-3 gap-2 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
                   <div className="rounded-md border p-2">
                     <div className="text-muted-foreground">{t('common.pricingInsights.discount1')}</div>
                     <div className="font-semibold">%{discountLimit.maxDiscount1}</div>

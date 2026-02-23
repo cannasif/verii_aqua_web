@@ -120,11 +120,11 @@ function CustomerCard({
     <div
       onClick={onClick}
       className={cn(
-        "group flex items-center gap-4 p-3 rounded-xl border transition-all duration-200 cursor-pointer",
+        "group flex flex-col items-start gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer sm:flex-row sm:items-center sm:gap-4",
         "bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/10"
       )}
     >
-      <div className="flex items-center gap-3 min-w-[30%] max-w-[40%]">
+      <div className="flex w-full items-center gap-3 sm:w-auto sm:min-w-[30%] sm:max-w-[40%]">
         <div className={cn(
           "w-10 h-10 rounded-full flex items-center justify-center shrink-0",
           type === 'erp' 
@@ -152,7 +152,7 @@ function CustomerCard({
         </div>
       </div>
 
-      <ChevronRight className="w-5 h-5 text-slate-400 dark:text-zinc-600 group-hover:text-slate-600 dark:group-hover:text-zinc-400 transition-colors shrink-0" />
+      <ChevronRight className="hidden w-5 h-5 text-slate-400 dark:text-zinc-600 group-hover:text-slate-600 dark:group-hover:text-zinc-400 transition-colors shrink-0 sm:block" />
     </div>
   );
 }
@@ -461,22 +461,22 @@ export function CustomerSelectDialog({
               </div>
             </div>
 
-            <TabsList className="bg-slate-100 dark:bg-[#1a1025] p-1 h-auto w-full grid grid-cols-3 rounded-xl border border-slate-200 dark:border-white/5">
+            <TabsList className="bg-slate-100 dark:bg-[#1a1025] p-1 h-auto w-full flex overflow-x-auto rounded-xl border border-slate-200 dark:border-white/5">
               <TabsTrigger 
                 value="erp" 
-                className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-pink-500 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all py-2"
+                className="min-w-max rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-pink-500 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all py-2"
               >
                 {t('customerSelectDialog.erpCustomers')}
               </TabsTrigger>
               <TabsTrigger 
                 value="potential"
-                className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-pink-500 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all py-2"
+                className="min-w-max rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-pink-500 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all py-2"
               >
                 {t('customerSelectDialog.potentialCustomers')}
               </TabsTrigger>
               <TabsTrigger 
                 value="all"
-                className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-pink-500 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all py-2"
+                className="min-w-max rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-pink-500 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all py-2"
               >
                 {t('customerSelectDialog.allCustomers')}
               </TabsTrigger>
