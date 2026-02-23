@@ -2,13 +2,7 @@ import { type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import type { FilterRow, FilterColumnConfig } from '@/lib/advanced-filter-types';
 import {
   getOperatorsForColumn,
@@ -102,50 +96,44 @@ export function AdvancedFilter({
             const isDate = colConfig?.type === 'date';
             return (
               <div key={row.id} className="flex flex-wrap items-center gap-2">
-                <Select
+                <Combobox
+                  options={columns.map((c) => ({
+                    value: c.value,
+                    label: t(c.labelKey, { ns: translationNamespace, defaultValue: c.value }),
+                  }))}
                   value={row.column}
                   onValueChange={(v) => updateRow(row.id, { column: v })}
-                >
-                  <SelectTrigger className="w-full sm:w-[160px]">
-                    <SelectValue placeholder={getLabel('column')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {columns.map((c) => (
-                      <SelectItem key={c.value} value={c.value}>
-                        {t(c.labelKey, { ns: translationNamespace, defaultValue: c.value })}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select
+                  placeholder={getLabel('column')}
+                  searchPlaceholder={t('common.search')}
+                  emptyText={t('common.noResults')}
+                  className="w-full sm:w-[160px]"
+                />
+                <Combobox
+                  options={getOperatorsForColumn(row.column, columns).map((op) => ({
+                    value: op,
+                    label: t(`advancedFilter.operator${op}`, { ns: 'common', defaultValue: op }),
+                  }))}
                   value={row.operator}
                   onValueChange={(v) => updateRow(row.id, { operator: v })}
-                >
-                  <SelectTrigger className="w-full sm:w-[130px]">
-                    <SelectValue placeholder={getLabel('operator')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {getOperatorsForColumn(row.column, columns).map((op) => (
-                      <SelectItem key={op} value={op}>
-                        {t(`advancedFilter.operator${op}`, { ns: 'common', defaultValue: op })}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  placeholder={getLabel('operator')}
+                  searchPlaceholder={t('common.search')}
+                  emptyText={t('common.noResults')}
+                  className="w-full sm:w-[130px]"
+                />
                 {colConfig?.type === 'boolean' ? (
-                  <Select
+                  <Combobox
+                    options={[
+                      { value: '_none', label: getLabel('value') },
+                      { value: 'true', label: t('advancedFilter.true', { ns: 'common' }) },
+                      { value: 'false', label: t('advancedFilter.false', { ns: 'common' }) },
+                    ]}
                     value={row.value.toLowerCase() === 'true' ? 'true' : row.value.toLowerCase() === 'false' ? 'false' : '_none'}
                     onValueChange={(v) => updateRow(row.id, { value: v === '_none' ? '' : v })}
-                  >
-                    <SelectTrigger className="w-full sm:w-[160px]">
-                      <SelectValue placeholder={getLabel('value')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="_none">{getLabel('value')}</SelectItem>
-                      <SelectItem value="true">{t('advancedFilter.true', { ns: 'common' })}</SelectItem>
-                      <SelectItem value="false">{t('advancedFilter.false', { ns: 'common' })}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    placeholder={getLabel('value')}
+                    searchPlaceholder={t('common.search')}
+                    emptyText={t('common.noResults')}
+                    className="w-full sm:w-[160px]"
+                  />
                 ) : (
                   <Input
                     type={isDate ? 'date' : 'text'}
