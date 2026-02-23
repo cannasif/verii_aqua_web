@@ -89,30 +89,40 @@ export function FishDistributionStepCard({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {allocations.map((row) => (
-              <TableRow
-                key={row.projectCageId}
-                className={selectedCageId === row.projectCageId ? 'bg-muted/50' : undefined}
-                onClick={() =>
-                  onSelectCage(selectedCageId === row.projectCageId ? null : row.projectCageId)
-                }
-              >
-                <TableCell>
-                  {row.cageCode ?? row.cageName ?? String(row.projectCageId)}
-                </TableCell>
-                <TableCell onClick={(e) => e.stopPropagation()}>
-                  <Input
-                    type="number"
-                    min={0}
-                    step={1}
-                    value={row.fishCount}
-                    onChange={(e) =>
-                      setFishCount(row.projectCageId, e.target.value ? Number(e.target.value) : 0)
-                    }
-                  />
+            {allocations.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={2} className="text-muted-foreground">
+                  {t('aqua.quickSetup.noAvailableCages', {
+                    defaultValue: 'Bu proje için kullanılabilir kafes bulunamadı.',
+                  })}
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              allocations.map((row) => (
+                <TableRow
+                  key={row.projectCageId}
+                  className={selectedCageId === row.projectCageId ? 'bg-muted/50' : undefined}
+                  onClick={() =>
+                    onSelectCage(selectedCageId === row.projectCageId ? null : row.projectCageId)
+                  }
+                >
+                  <TableCell>
+                    {row.cageCode ?? row.cageName ?? String(row.projectCageId)}
+                  </TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <Input
+                      type="number"
+                      min={0}
+                      step={1}
+                      value={row.fishCount}
+                      onChange={(e) =>
+                        setFishCount(row.projectCageId, e.target.value ? Number(e.target.value) : 0)
+                      }
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
         <div className="text-sm text-muted-foreground">

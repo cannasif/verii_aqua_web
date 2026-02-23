@@ -1,4 +1,4 @@
-import { type ReactElement } from 'react';
+import { type ReactElement, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,12 +29,14 @@ import {
   type FishLineFormSchema,
   type FeedLineFormSchema,
 } from '../schema/quick-setup-schema';
-import type { StockDto } from '../types/quick-setup-types';
+import type { ExistingGoodsReceiptContext, StockDto } from '../types/quick-setup-types';
 
 interface GoodsReceiptStepCardProps {
   projectId: number | null;
   stocks: StockDto[] | undefined;
   isLoadingStocks: boolean;
+  existingReceipt: ExistingGoodsReceiptContext | null;
+  isCheckingExistingReceipt: boolean;
   onSubmitReceipt: (data: {
     receipt: GoodsReceiptFormSchema;
     fishLine: FishLineFormSchema;
@@ -47,6 +49,8 @@ export function GoodsReceiptStepCard({
   projectId,
   stocks,
   isLoadingStocks,
+  existingReceipt,
+  isCheckingExistingReceipt,
   onSubmitReceipt,
   isSubmitting,
 }: GoodsReceiptStepCardProps): ReactElement {
@@ -69,6 +73,41 @@ export function GoodsReceiptStepCard({
     defaultValues: { stockId: 0, qtyUnit: 0 },
   });
 
+  useEffect(() => {
+    if (projectId == null) {
+      receiptForm.reset({
+        receiptNo: '',
+        receiptDate: new Date().toISOString().slice(0, 10),
+      });
+      fishForm.reset({ stockId: 0, fishCount: 0, batchCode: '', currentAverageGram: 0 });
+      feedForm.reset({ stockId: 0, qtyUnit: 0 });
+      return;
+    }
+
+    if (existingReceipt && existingReceipt.status === 0) {
+      receiptForm.reset({
+        receiptNo: existingReceipt.receiptNo,
+        receiptDate: existingReceipt.receiptDate || new Date().toISOString().slice(0, 10),
+      });
+      fishForm.reset({
+        stockId: existingReceipt.fishStockId ?? 0,
+        fishCount: existingReceipt.fishCount > 0 ? existingReceipt.fishCount : 0,
+        batchCode:
+          existingReceipt.fishBatchCode ??
+          `${existingReceipt.receiptNo || 'GR'}-${existingReceipt.fishLineId ?? 'LINE'}`,
+        currentAverageGram: existingReceipt.fishAverageGram ?? 0,
+      });
+      feedForm.reset({ stockId: 0, qtyUnit: 0 });
+    } else if (!existingReceipt) {
+      receiptForm.reset({
+        receiptNo: '',
+        receiptDate: new Date().toISOString().slice(0, 10),
+      });
+      fishForm.reset({ stockId: 0, fishCount: 0, batchCode: '', currentAverageGram: 0 });
+      feedForm.reset({ stockId: 0, qtyUnit: 0 });
+    }
+  }, [projectId, existingReceipt, receiptForm, fishForm, feedForm]);
+
   const handleSubmit: SubmitHandler<GoodsReceiptFormSchema> = async (receiptData) => {
     const fishValid = await fishForm.trigger();
     if (!fishValid) return;
@@ -87,6 +126,18 @@ export function GoodsReceiptStepCard({
 
   const fishStocks = Array.isArray(stocks) ? stocks.filter((s) => s.id) : [];
   const feedStocks = fishStocks;
+  const fishStockLabel =
+    existingReceipt?.fishStockId != null
+      ? fishStocks.find((x) => x.id === existingReceipt.fishStockId)?.code ??
+        fishStocks.find((x) => x.id === existingReceipt.fishStockId)?.name ??
+        String(existingReceipt.fishStockId)
+      : '-';
+  const canContinueDistribution =
+    existingReceipt != null &&
+    existingReceipt.status === 0 &&
+    existingReceipt.fishLineId != null &&
+    existingReceipt.fishBatchId != null &&
+    existingReceipt.fishCount > 0;
 
   return (
     <Card>
@@ -96,9 +147,39 @@ export function GoodsReceiptStepCard({
       <CardContent className="space-y-4">
         {projectId == null ? (
           <p className="text-muted-foreground text-sm">{t('aqua.quickSetup.selectProjectFirst')}</p>
+        ) : isCheckingExistingReceipt ? (
+          <p className="text-muted-foreground text-sm">{t('common.loading')}</p>
+        ) : existingReceipt?.status === 1 ? (
+          <div className="rounded border border-emerald-200 bg-emerald-50 p-3 text-sm space-y-1">
+            <p className="font-medium text-emerald-800">{t('aqua.quickSetup.existingGoodsReceiptFound')}</p>
+            <p className="text-emerald-700">
+              {t('aqua.quickSetup.receiptNo')}: {existingReceipt.receiptNo}
+            </p>
+            <p className="text-emerald-700">
+              {t('aqua.quickSetup.date')}: {existingReceipt.receiptDate}
+            </p>
+            <p className="text-emerald-700">
+              {t('aqua.quickSetup.stock')}: {fishStockLabel}
+            </p>
+            <p className="text-emerald-700">
+              {t('aqua.quickSetup.count')}: {existingReceipt.fishCount}
+            </p>
+            <p className="text-emerald-700">
+              {t('aqua.quickSetup.currentAverageGram')}: {existingReceipt.fishAverageGram ?? 0}
+            </p>
+            {existingReceipt.status === 1 && (
+              <p className="text-amber-700">{t('aqua.quickSetup.existingGoodsReceiptPostedInfo')}</p>
+            )}
+            <p className="text-amber-700">{t('aqua.quickSetup.existingGoodsReceiptPostedInfo')}</p>
+          </div>
         ) : (
           <Form {...receiptForm}>
             <form onSubmit={receiptForm.handleSubmit(handleSubmit)} className="space-y-4">
+              {existingReceipt && (
+                <div className="rounded border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
+                  {t('aqua.quickSetup.existingGoodsReceiptFound')}
+                </div>
+              )}
               <FormField
                 control={receiptForm.control}
                 name="receiptNo"
@@ -128,7 +209,7 @@ export function GoodsReceiptStepCard({
               <div className="rounded border p-3 space-y-3">
                 <span className="text-sm font-medium">{t('aqua.quickSetup.fishLine')}</span>
                 <Form {...fishForm}>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                     <FormField
                       control={fishForm.control}
                       name="stockId"
@@ -202,7 +283,7 @@ export function GoodsReceiptStepCard({
               <div className="rounded border p-3 space-y-3">
                 <span className="text-sm font-medium">{t('aqua.quickSetup.feedLineOptional')}</span>
                 <Form {...feedForm}>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                     <FormField
                       control={feedForm.control}
                       name="stockId"
@@ -248,8 +329,11 @@ export function GoodsReceiptStepCard({
                 </Form>
               </div>
               <Button type="submit" disabled={isSubmitting}>
-                {t('aqua.quickSetup.createGoodsReceipt')}
+                {existingReceipt ? t('common.save') : t('aqua.quickSetup.createGoodsReceipt')}
               </Button>
+              {existingReceipt && canContinueDistribution && (
+                <p className="text-sm text-emerald-700">{t('aqua.quickSetup.readyForDistribution')}</p>
+              )}
             </form>
           </Form>
         )}

@@ -17,10 +17,24 @@ export interface ProjectCageDto {
   projectId: number;
   cageCode?: string;
   cageName?: string;
+  releasedDate?: string | null;
 }
 
 export interface GoodsReceiptCreateResult {
   id: number;
+}
+
+export interface ExistingGoodsReceiptContext {
+  receiptId: number;
+  receiptNo: string;
+  receiptDate: string;
+  status: number;
+  fishStockId: number | null;
+  fishAverageGram: number | null;
+  fishLineId: number | null;
+  fishBatchId: number | null;
+  fishBatchCode: string | null;
+  fishCount: number;
 }
 
 export interface GoodsReceiptLineCreateResult {
@@ -50,7 +64,12 @@ export interface CreateGoodsReceiptLinePayload {
   stockId: number;
   itemType?: number;
   fishCount?: number;
+  fishAverageGram?: number;
+  fishTotalGram?: number;
+  fishBatchId?: number;
   qtyUnit?: number;
+  gramPerUnit?: number;
+  totalGram?: number;
 }
 
 export interface CreateGoodsReceiptFishDistributionPayload {
