@@ -1,5 +1,6 @@
 import { type ReactElement, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +11,11 @@ import { cn } from '@/lib/utils';
 interface StockImageUploadProps {
   stockId: number;
 }
+
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+const MAX_IMAGE_SIZE_MB = MAX_IMAGE_SIZE_BYTES / (1024 * 1024);
+const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/webp'];
 
 export function StockImageUpload({ stockId }: StockImageUploadProps): ReactElement {
   const { t } = useTranslation();
@@ -40,9 +46,55 @@ export function StockImageUpload({ stockId }: StockImageUploadProps): ReactEleme
     }
   };
 
+  const validateFiles = (files: File[]): File[] => {
+    const validFiles: File[] = [];
+    let invalidTypeCount = 0;
+    let oversizedCount = 0;
+
+    for (const file of files) {
+      const extensionIndex = file.name.lastIndexOf('.');
+      const extension = extensionIndex >= 0 ? file.name.slice(extensionIndex).toLowerCase() : '';
+      const hasValidType = ALLOWED_MIME_TYPES.includes(file.type) && ALLOWED_EXTENSIONS.includes(extension);
+      if (!hasValidType) {
+        invalidTypeCount += 1;
+        continue;
+      }
+
+      if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        oversizedCount += 1;
+        continue;
+      }
+
+      validFiles.push(file);
+    }
+
+    if (invalidTypeCount > 0) {
+      toast.error(
+        t('stock.images.invalidFileType', {
+          count: invalidTypeCount,
+          formats: ALLOWED_EXTENSIONS.join(', ').toUpperCase(),
+        })
+      );
+    }
+
+    if (oversizedCount > 0) {
+      toast.error(
+        t('stock.images.fileTooLarge', {
+          count: oversizedCount,
+          maxSizeMb: MAX_IMAGE_SIZE_MB,
+        })
+      );
+    }
+
+    return validFiles;
+  };
+
   const addFiles = (files: File[]) => {
-    setSelectedFiles((prev) => [...prev, ...files]);
-    setAltTexts((prev) => [...prev, ...files.map(() => '')]);
+    const validFiles = validateFiles(files);
+    if (validFiles.length === 0) return;
+
+    setSelectedFiles((prev) => [...prev, ...validFiles]);
+    setAltTexts((prev) => [...prev, ...validFiles.map(() => '')]);
   };
 
   const handleRemoveFile = (index: number): void => {
@@ -91,9 +143,7 @@ export function StockImageUpload({ stockId }: StockImageUploadProps): ReactEleme
     e.stopPropagation();
     setIsDragging(false);
     
-    const files = Array.from(e.dataTransfer.files).filter((file) =>
-      file.type.startsWith('image/')
-    );
+    const files = Array.from(e.dataTransfer.files);
     
     if (files.length > 0) {
       addFiles(files);
@@ -137,7 +187,7 @@ export function StockImageUpload({ stockId }: StockImageUploadProps): ReactEleme
         <Input
           ref={fileInputRef}
           type="file"
-          accept="image/*"
+          accept={ALLOWED_MIME_TYPES.join(',')}
           multiple
           onChange={handleFileSelect}
           className="hidden"

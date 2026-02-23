@@ -107,7 +107,7 @@ export function StockBasicInfo({ stock }: StockBasicInfoProps): ReactElement {
       <div className="space-y-4">
          <SectionHeader icon={ListFilter} title={t('stock.detail.specialCodes')} />
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             {specialCodes.map((item) => (
                 <div 
                     key={item.id} 

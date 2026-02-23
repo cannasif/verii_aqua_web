@@ -121,7 +121,7 @@ export function StockRelationForm({ stockId }: StockRelationFormProps): ReactEle
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-[350px] p-0 rounded-xl shadow-xl border-zinc-200 dark:border-zinc-800 overflow-hidden">
+                <PopoverContent className="w-[calc(100vw-2rem)] sm:w-[350px] max-w-[350px] p-0 rounded-xl shadow-xl border-zinc-200 dark:border-zinc-800 overflow-hidden">
                   <Command className="bg-white dark:bg-zinc-900">
                     <CommandInput placeholder={t('stock.relations.search')} className="h-11 border-none focus:ring-0" />
                     <CommandList>

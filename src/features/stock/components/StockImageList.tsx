@@ -56,7 +56,7 @@ export function StockImageList({ stockId }: StockImageListProps): ReactElement {
 
   if (isLoading || isFetching) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map((i) => (
           <div key={i} className="space-y-3">
              <Skeleton className="h-48 w-full rounded-xl" />
@@ -97,7 +97,7 @@ export function StockImageList({ stockId }: StockImageListProps): ReactElement {
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {sortedImages.map((image) => (
           <div
             key={image.id}
