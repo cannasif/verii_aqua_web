@@ -35,37 +35,6 @@ export function MainLayout({ navItems }: MainLayoutProps): ReactElement {
 
     const logicalMenuStructure: NavItem[] = [
       {
-        title: t('sidebar.productAndStock'),
-        icon: <PackageIcon size={iconSize} className="text-pink-500" />,
-        children: [
-          { title: t('sidebar.stockManagement'), href: '/stocks' },
-        ],
-      },
-      {
-        title: t('sidebar.accessControl'),
-        icon: <Shield01Icon size={iconSize} className="text-violet-500" />,
-        children: [
-          { title: t('sidebar.userManagement'), href: '/user-management' },
-          { title: t('sidebar.mailSettings'), href: '/users/mail-settings' },
-          { title: t('sidebar.permissionDefinitions'), href: '/access-control/permission-definitions' },
-          { title: t('sidebar.permissionGroups'), href: '/access-control/permission-groups' },
-          { title: t('sidebar.userGroupAssignments'), href: '/access-control/user-group-assignments' },
-          { title: t('menu', { ns: 'hangfire-monitoring', defaultValue: 'Hangfire İzleme' }), href: '/hangfire-monitoring' },
-        ],
-      },
-      {
-        title: t('sidebar.aquaDefinitions', { defaultValue: 'Aqua Tanımları' }),
-        icon: <BookOpen size={iconSize} className="text-cyan-500" />,
-        children: [
-          { title: t('sidebar.aquaProjects', { defaultValue: 'Projeler' }), href: '/aqua/definitions/projects' },
-          { title: t('sidebar.aquaCages', { defaultValue: 'Kafesler' }), href: '/aqua/definitions/cages' },
-          { title: t('sidebar.aquaProjectCageAssignments', { defaultValue: 'Proje-Kafes Atama' }), href: '/aqua/definitions/project-cage-assignments' },
-          { title: t('sidebar.aquaWeatherSeverities', { defaultValue: 'Hava Durumu Şiddet Tanımı' }), href: '/aqua/definitions/weather-severities' },
-          { title: t('sidebar.aquaWeatherTypes', { defaultValue: 'Hava Durumu Tip Tanımı' }), href: '/aqua/definitions/weather-types' },
-          { title: t('sidebar.aquaNetOperationTypes', { defaultValue: 'Ağ İşlem Tipleri' }), href: '/aqua/definitions/net-operation-types' },
-        ],
-      },
-      {
         title: t('sidebar.aquaOperations', { defaultValue: 'Aqua İşlemleri' }),
         icon: <Waves size={iconSize} className="text-emerald-500" />,
         children: [
@@ -88,6 +57,37 @@ export function MainLayout({ navItems }: MainLayoutProps): ReactElement {
           { title: t('sidebar.aquaProjectDetailReport', { defaultValue: 'Proje Detay Raporu' }), href: '/aqua/reports/project-detail' },
           { title: t('sidebar.aquaBatchMovements', { defaultValue: 'Batch Movement' }), href: '/aqua/reports/batch-movements' },
           { title: t('sidebar.aquaCageBalances', { defaultValue: 'Kafes Balance' }), href: '/aqua/reports/cage-balances' },
+        ],
+      },
+      {
+        title: t('sidebar.aquaDefinitions', { defaultValue: 'Aqua Tanımları' }),
+        icon: <BookOpen size={iconSize} className="text-cyan-500" />,
+        children: [
+          { title: t('sidebar.aquaProjects', { defaultValue: 'Projeler' }), href: '/aqua/definitions/projects' },
+          { title: t('sidebar.aquaCages', { defaultValue: 'Kafesler' }), href: '/aqua/definitions/cages' },
+          { title: t('sidebar.aquaProjectCageAssignments', { defaultValue: 'Proje-Kafes Atama' }), href: '/aqua/definitions/project-cage-assignments' },
+          { title: t('sidebar.aquaWeatherSeverities', { defaultValue: 'Hava Durumu Şiddet Tanımı' }), href: '/aqua/definitions/weather-severities' },
+          { title: t('sidebar.aquaWeatherTypes', { defaultValue: 'Hava Durumu Tip Tanımı' }), href: '/aqua/definitions/weather-types' },
+          { title: t('sidebar.aquaNetOperationTypes', { defaultValue: 'Ağ İşlem Tipleri' }), href: '/aqua/definitions/net-operation-types' },
+        ],
+      },
+      {
+        title: t('sidebar.productAndStock'),
+        icon: <PackageIcon size={iconSize} className="text-pink-500" />,
+        children: [
+          { title: t('sidebar.stockManagement'), href: '/stocks' },
+        ],
+      },
+      {
+        title: t('sidebar.accessControl'),
+        icon: <Shield01Icon size={iconSize} className="text-violet-500" />,
+        children: [
+          { title: t('sidebar.userManagement'), href: '/user-management' },
+          { title: t('sidebar.mailSettings'), href: '/users/mail-settings' },
+          { title: t('sidebar.permissionDefinitions'), href: '/access-control/permission-definitions' },
+          { title: t('sidebar.permissionGroups'), href: '/access-control/permission-groups' },
+          { title: t('sidebar.userGroupAssignments'), href: '/access-control/user-group-assignments' },
+          { title: t('menu', { ns: 'hangfire-monitoring', defaultValue: 'Hangfire İzleme' }), href: '/hangfire-monitoring' },
         ],
       },
       {
