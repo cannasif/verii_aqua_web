@@ -14,13 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import {
   stockChangeQuickFormSchema,
   type StockChangeQuickFormSchema,
@@ -59,6 +53,11 @@ export function StockChangeQuickForm({
     [fishBatches, sourceBatch]
   );
 
+  const targetBatchOptions = useMemo(
+    () => targetBatches.map((b) => ({ value: String(b.id), label: `Batch #${b.id}` })),
+    [targetBatches]
+  );
+
   const handleSubmit: SubmitHandler<StockChangeQuickFormSchema> = async (data) => {
     await onSubmit(data);
     form.reset({ toFishBatchId: 0, fishCount: 0, description: '' });
@@ -79,6 +78,8 @@ export function StockChangeQuickForm({
             <div className="rounded-md border border-dashed border-amber-400/40 bg-amber-500/10 p-3 text-sm text-amber-100">
               {sourceBatch
                 ? t('aqua.quickDailyEntry.stockChange.sourceInfo', {
+                    fishBatchId: sourceBatch.fishBatchId,
+                    liveCount: sourceBatch.liveCount,
                     defaultValue: `Kaynak batch #${sourceBatch.fishBatchId} - Canlı: ${sourceBatch.liveCount}`,
                   })
                 : t('aqua.quickDailyEntry.stockChange.noSourceBatch', {
@@ -93,23 +94,16 @@ export function StockChangeQuickForm({
                   <FormLabel>
                     {t('aqua.quickDailyEntry.stockChange.targetBatch', { defaultValue: 'Hedef Batch' })}
                   </FormLabel>
-                  <Select
-                    onValueChange={(v) => field.onChange(Number(v))}
-                    value={field.value ? String(field.value) : undefined}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('aqua.quickDailyEntry.netOperation.selectBatch')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {targetBatches.map((b) => (
-                        <SelectItem key={b.id} value={String(b.id)}>
-                          Batch #{b.id}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Combobox
+                      options={targetBatchOptions}
+                      value={field.value ? String(field.value) : ''}
+                      onValueChange={(v) => field.onChange(v ? Number(v) : 0)}
+                      placeholder={t('aqua.quickDailyEntry.netOperation.selectBatch')}
+                      searchPlaceholder={t('common.search')}
+                      emptyText={t('common.noResults')}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

@@ -14,13 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import {
   transferQuickFormSchema,
   type TransferQuickFormSchema,
@@ -72,9 +66,22 @@ export function TransferQuickForm({
           const aHasBatch = activeBatchByCageId[a.id] != null;
           const bHasBatch = activeBatchByCageId[b.id] != null;
           if (aHasBatch === bHasBatch) return 0;
-          return aHasBatch ? 1 : -1; // Empty cages first
+          return aHasBatch ? 1 : -1;
         }),
     [projectCages, projectCageId, activeBatchByCageId]
+  );
+
+  const targetCageOptions = useMemo(
+    () =>
+      targetCages.map((pc) => ({
+        value: String(pc.id),
+        label:
+          (pc.cageCode ?? pc.cageName ?? String(pc.id)) +
+          (activeBatchByCageId[pc.id]
+            ? ` (${t('aqua.quickDailyEntry.transfer.occupied', { defaultValue: 'Dolu' })})`
+            : ` (${t('aqua.quickDailyEntry.transfer.empty', { defaultValue: 'Boş' })})`),
+      })),
+    [targetCages, activeBatchByCageId, t]
   );
 
   const handleSubmit: SubmitHandler<TransferQuickFormSchema> = async (data) => {
@@ -97,6 +104,8 @@ export function TransferQuickForm({
             <div className="rounded-md border border-dashed border-cyan-400/40 bg-cyan-500/10 p-3 text-sm text-cyan-100">
               {sourceBatch
                 ? t('aqua.quickDailyEntry.transfer.sourceInfo', {
+                    fishBatchId: sourceBatch.fishBatchId,
+                    liveCount: sourceBatch.liveCount,
                     defaultValue: `Kaynak batch #${sourceBatch.fishBatchId} - Canlı: ${sourceBatch.liveCount}`,
                   })
                 : t('aqua.quickDailyEntry.transfer.noSourceBatch', {
@@ -111,26 +120,16 @@ export function TransferQuickForm({
                   <FormLabel>
                     {t('aqua.quickDailyEntry.transfer.targetCage', { defaultValue: 'Hedef Kafes' })}
                   </FormLabel>
-                  <Select
-                    onValueChange={(v) => field.onChange(Number(v))}
-                    value={field.value ? String(field.value) : undefined}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('aqua.quickDailyEntry.selectCage')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {targetCages.map((pc) => (
-                        <SelectItem key={pc.id} value={String(pc.id)}>
-                          {(pc.cageCode ?? pc.cageName ?? String(pc.id)) +
-                            (activeBatchByCageId[pc.id]
-                              ? ` (${t('aqua.quickDailyEntry.transfer.occupied', { defaultValue: 'Dolu' })})`
-                              : ` (${t('aqua.quickDailyEntry.transfer.empty', { defaultValue: 'Boş' })})`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Combobox
+                      options={targetCageOptions}
+                      value={field.value ? String(field.value) : ''}
+                      onValueChange={(v) => field.onChange(v ? Number(v) : 0)}
+                      placeholder={t('aqua.quickDailyEntry.selectCage')}
+                      searchPlaceholder={t('common.search')}
+                      emptyText={t('common.noResults')}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
