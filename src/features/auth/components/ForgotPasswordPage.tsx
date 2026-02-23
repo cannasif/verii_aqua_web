@@ -34,7 +34,7 @@ export function ForgotPasswordPage(): React.JSX.Element {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[#0f0518] text-white font-['Plus_Jakarta_Sans']">
+    <div className="relative w-full min-h-dvh overflow-hidden bg-[#0f0518] text-white font-['Plus_Jakarta_Sans']">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
       `}</style>
@@ -45,13 +45,13 @@ export function ForgotPasswordPage(): React.JSX.Element {
         <LanguageSwitcher variant="icon" />
       </div>
 
-      <div className="relative z-10 w-full h-full flex flex-col items-center px-4 py-8 overflow-y-auto">
-        <div className="w-full max-w-md p-10 rounded-3xl bg-[#140a1e]/70 backdrop-blur-xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_0_20px_rgba(255,255,255,0.07)] animate-[fadeIn_0.8s_ease-out] my-auto">
+      <div className="relative z-10 w-full min-h-dvh flex flex-col items-center px-4 py-8 overflow-y-auto">
+        <div className="w-full max-w-md p-6 sm:p-10 rounded-3xl bg-[#140a1e]/70 backdrop-blur-xl border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_0_20px_rgba(255,255,255,0.07)] animate-[fadeIn_0.8s_ease-out] my-auto">
           <div className="text-center mb-8">
             <img
               src={loginImage}
               alt={t('auth.forgotPassword.logoAlt')}
-              className="inline-flex items-center justify-center w-80 h-50 object-contain p-2"
+              className="inline-flex items-center justify-center w-56 sm:w-72 h-auto object-contain p-2"
             />
             <p className="text-slate-400 text-xs uppercase tracking-[0.15em] mt-2 font-medium">
               {t('auth.forgotPassword.title')}
