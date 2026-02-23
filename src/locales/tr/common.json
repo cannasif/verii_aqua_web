@@ -750,6 +750,7 @@
       "weighings": "Tartım",
       "stockConverts": "Dönüşüm",
       "noOperationDetail": "Bu gün için detay bulunamadı.",
+      "detailRecords": "{{count}} kayıt",
       "feedStatus": "Besleme durumu",
       "fed": "Beslendi",
       "notFed": "Beslenmedi",

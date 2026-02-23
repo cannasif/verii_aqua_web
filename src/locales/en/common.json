@@ -4553,6 +4553,7 @@
       "weighings": "Weighings",
       "stockConverts": "Stock converts",
       "noOperationDetail": "No detail found for this day.",
+      "detailRecords": "{{count}} record",
       "feedStatus": "Feeding status",
       "fed": "Fed",
       "notFed": "Not fed",
