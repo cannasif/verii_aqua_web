@@ -10,13 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import { OperationTypeTabs } from './components/OperationTypeTabs';
 import { FeedingQuickForm } from './components/FeedingQuickForm';
 import { MortalityQuickForm } from './components/MortalityQuickForm';
@@ -189,6 +183,24 @@ export function QuickDailyEntryPage(): ReactElement {
         return snapshot != null && snapshot.liveCount > 0;
       }),
     [projectCages, sourceBatchByCageId, projectId]
+  );
+
+  const projectOptions = useMemo(
+    () =>
+      (Array.isArray(projects) ? projects : []).map((p) => ({
+        value: String(p.id),
+        label: `${p.projectCode ?? ''} - ${p.projectName ?? ''}`,
+      })),
+    [projects]
+  );
+
+  const cageOptions = useMemo(
+    () =>
+      sourceProjectCages.map((pc) => ({
+        value: String(pc.id),
+        label: pc.cageCode ?? pc.cageName ?? String(pc.id),
+      })),
+    [sourceProjectCages]
   );
 
   useEffect(() => {
@@ -438,37 +450,28 @@ export function QuickDailyEntryPage(): ReactElement {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2 w-full">
             <label className="text-sm font-medium">{t('aqua.quickDailyEntry.project')}</label>
-            <Select value={projectId != null ? String(projectId) : undefined} onValueChange={handleProjectChange}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={t('aqua.quickDailyEntry.selectProject')} />
-              </SelectTrigger>
-              <SelectContent>
-                {(Array.isArray(projects) ? projects : []).map((p) => (
-                  <SelectItem key={p.id} value={String(p.id)}>
-                    {p.projectCode} - {p.projectName}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Combobox
+              options={projectOptions}
+              value={projectId != null ? String(projectId) : ''}
+              onValueChange={handleProjectChange}
+              placeholder={t('aqua.quickDailyEntry.selectProject')}
+              searchPlaceholder={t('common.search')}
+              emptyText={t('common.noResults')}
+              className="w-full"
+            />
           </div>
           <div className="space-y-2 w-full">
             <label className="text-sm font-medium">{t('aqua.quickDailyEntry.cage')}</label>
-            <Select
-              value={projectCageId != null ? String(projectCageId) : undefined}
+            <Combobox
+              options={cageOptions}
+              value={projectCageId != null ? String(projectCageId) : ''}
               onValueChange={handleCageChange}
+              placeholder={t('aqua.quickDailyEntry.selectCage')}
+              searchPlaceholder={t('common.search')}
+              emptyText={t('common.noResults')}
               disabled={!projectId}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={t('aqua.quickDailyEntry.selectCage')} />
-              </SelectTrigger>
-              <SelectContent>
-                {sourceProjectCages.map((pc) => (
-                  <SelectItem key={pc.id} value={String(pc.id)}>
-                    {pc.cageCode ?? pc.cageName ?? String(pc.id)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              className="w-full"
+            />
           </div>
         </div>
         <OperationTypeTabs

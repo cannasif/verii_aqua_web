@@ -14,13 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import { feedingQuickFormSchema, type FeedingQuickFormSchema } from '../schema/quick-daily-entry-schema';
 import type { StockDto } from '../types/quick-daily-entry-types';
 
@@ -59,6 +53,15 @@ export function FeedingQuickForm({
 
   const disabled = projectId == null || projectCageId == null;
 
+  const feedingSlotOptions = [
+    { value: '0', label: t('aqua.quickDailyEntry.feeding.morning') },
+    { value: '1', label: t('aqua.quickDailyEntry.feeding.evening') },
+  ];
+  const stockOptions = (Array.isArray(stocks) ? stocks : []).map((s) => ({
+    value: String(s.id),
+    label: s.code ?? s.name ?? String(s.id),
+  }));
+
   return (
     <Card>
       <CardHeader>
@@ -73,20 +76,16 @@ export function FeedingQuickForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('aqua.quickDailyEntry.feeding.slot')}</FormLabel>
-                  <Select
-                    onValueChange={(v) => field.onChange(Number(v))}
-                    value={String(field.value)}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="0">{t('aqua.quickDailyEntry.feeding.morning')}</SelectItem>
-                      <SelectItem value="1">{t('aqua.quickDailyEntry.feeding.evening')}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Combobox
+                      options={feedingSlotOptions}
+                      value={String(field.value)}
+                      onValueChange={(v) => field.onChange(Number(v))}
+                      placeholder={t('aqua.quickDailyEntry.feeding.slot')}
+                      searchPlaceholder={t('common.search')}
+                      emptyText={t('common.noResults')}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -97,24 +96,17 @@ export function FeedingQuickForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('aqua.quickDailyEntry.feeding.feedStock')}</FormLabel>
-                  <Select
-                    disabled={isLoadingStocks}
-                    onValueChange={(v) => field.onChange(Number(v))}
-                    value={field.value ? String(field.value) : undefined}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('aqua.quickDailyEntry.feeding.selectStock')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {(Array.isArray(stocks) ? stocks : []).map((s) => (
-                        <SelectItem key={s.id} value={String(s.id)}>
-                          {s.code ?? s.name ?? String(s.id)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Combobox
+                      options={stockOptions}
+                      value={field.value ? String(field.value) : ''}
+                      onValueChange={(v) => field.onChange(v ? Number(v) : 0)}
+                      placeholder={t('aqua.quickDailyEntry.feeding.selectStock')}
+                      searchPlaceholder={t('common.search')}
+                      emptyText={t('common.noResults')}
+                      disabled={isLoadingStocks}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

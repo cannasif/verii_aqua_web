@@ -14,13 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import {
   weatherQuickFormSchema,
   type WeatherQuickFormSchema,
@@ -60,6 +54,15 @@ export function WeatherQuickForm({
 
   const disabled = projectId == null;
 
+  const severityOptions = (Array.isArray(severities) ? severities : []).map((s) => ({
+    value: String(s.id),
+    label: s.code ?? s.name ?? String(s.id),
+  }));
+  const typeOptions = (Array.isArray(types) ? types : []).map((typeItem) => ({
+    value: String(typeItem.id),
+    label: typeItem.code ?? typeItem.name ?? String(typeItem.id),
+  }));
+
   return (
     <Card>
       <CardHeader>
@@ -74,26 +77,19 @@ export function WeatherQuickForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('aqua.quickDailyEntry.weather.severity')}</FormLabel>
-                  <Select
-                    onValueChange={(v) => {
-                      field.onChange(Number(v));
-                      form.setValue('weatherTypeId', 0);
-                    }}
-                    value={field.value ? String(field.value) : undefined}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('aqua.quickDailyEntry.weather.selectSeverity')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {(Array.isArray(severities) ? severities : []).map((s) => (
-                        <SelectItem key={s.id} value={String(s.id)}>
-                          {s.code ?? s.name ?? String(s.id)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Combobox
+                      options={severityOptions}
+                      value={field.value ? String(field.value) : ''}
+                      onValueChange={(v) => {
+                        field.onChange(v ? Number(v) : 0);
+                        form.setValue('weatherTypeId', 0);
+                      }}
+                      placeholder={t('aqua.quickDailyEntry.weather.selectSeverity')}
+                      searchPlaceholder={t('common.search')}
+                      emptyText={t('common.noResults')}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -104,24 +100,17 @@ export function WeatherQuickForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('aqua.quickDailyEntry.weather.type')}</FormLabel>
-                  <Select
-                    disabled={isLoadingTypes}
-                    onValueChange={(v) => field.onChange(Number(v))}
-                    value={field.value ? String(field.value) : undefined}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('aqua.quickDailyEntry.weather.selectType')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {(Array.isArray(types) ? types : []).map((t) => (
-                        <SelectItem key={t.id} value={String(t.id)}>
-                          {t.code ?? t.name ?? String(t.id)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Combobox
+                      options={typeOptions}
+                      value={field.value ? String(field.value) : ''}
+                      onValueChange={(v) => field.onChange(v ? Number(v) : 0)}
+                      placeholder={t('aqua.quickDailyEntry.weather.selectType')}
+                      searchPlaceholder={t('common.search')}
+                      emptyText={t('common.noResults')}
+                      disabled={isLoadingTypes}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

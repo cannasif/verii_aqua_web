@@ -14,13 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import {
   netOperationQuickFormSchema,
   type NetOperationQuickFormSchema,
@@ -57,6 +51,15 @@ export function NetOperationQuickForm({
 
   const disabled = projectId == null || projectCageId == null;
 
+  const netOperationTypeOptions = (Array.isArray(netOperationTypes) ? netOperationTypes : []).map((typeItem) => ({
+    value: String(typeItem.id),
+    label: typeItem.code ?? typeItem.name ?? String(typeItem.id),
+  }));
+  const fishBatchOptions = [
+    { value: '0', label: t('aqua.quickDailyEntry.netOperation.noBatch') },
+    ...(Array.isArray(fishBatches) ? fishBatches : []).map((b) => ({ value: String(b.id), label: String(b.id) })),
+  ];
+
   return (
     <Card>
       <CardHeader>
@@ -71,23 +74,16 @@ export function NetOperationQuickForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('aqua.quickDailyEntry.netOperation.operationType')}</FormLabel>
-                  <Select
-                    onValueChange={(v) => field.onChange(Number(v))}
-                    value={field.value ? String(field.value) : undefined}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('aqua.quickDailyEntry.netOperation.selectType')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {(Array.isArray(netOperationTypes) ? netOperationTypes : []).map((t) => (
-                        <SelectItem key={t.id} value={String(t.id)}>
-                          {t.code ?? t.name ?? String(t.id)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Combobox
+                      options={netOperationTypeOptions}
+                      value={field.value ? String(field.value) : ''}
+                      onValueChange={(v) => field.onChange(v ? Number(v) : 0)}
+                      placeholder={t('aqua.quickDailyEntry.netOperation.selectType')}
+                      searchPlaceholder={t('common.search')}
+                      emptyText={t('common.noResults')}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -98,24 +94,16 @@ export function NetOperationQuickForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('aqua.quickDailyEntry.netOperation.batch')}</FormLabel>
-                  <Select
-                    onValueChange={(v) => field.onChange(Number(v))}
-                    value={field.value ? String(field.value) : undefined}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('aqua.quickDailyEntry.netOperation.selectBatch')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="0">{t('aqua.quickDailyEntry.netOperation.noBatch')}</SelectItem>
-                      {(Array.isArray(fishBatches) ? fishBatches : []).map((b) => (
-                        <SelectItem key={b.id} value={String(b.id)}>
-                          {b.id}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Combobox
+                      options={fishBatchOptions}
+                      value={field.value ? String(field.value) : ''}
+                      onValueChange={(v) => field.onChange(v ? Number(v) : 0)}
+                      placeholder={t('aqua.quickDailyEntry.netOperation.selectBatch')}
+                      searchPlaceholder={t('common.search')}
+                      emptyText={t('common.noResults')}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
