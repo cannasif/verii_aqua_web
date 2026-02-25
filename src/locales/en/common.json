@@ -151,7 +151,8 @@
     "selectImage": "select image",
     "imageSettings": "Image Properties",
     "imageUrl": "Image URL",
-    "uploadFromFile": "Load from file"
+    "uploadFromFile": "Load from file",
+    "inactive": "Pasif"
   },
   "auth": {
     "login": {

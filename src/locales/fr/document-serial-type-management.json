@@ -55,5 +55,11 @@
     "serialIncrement.min": "L'incrément de série doit être d'au moins 1",
     "serialIncrementPlaceholder": "Entrez la valeur d'incrément de série"
   },
-  "totalRecords": "Total {{count}} enregistrements"
+  "totalRecords": "Total {{count}} enregistrements",
+  "advancedFilter": {
+    "columnSerialPrefix": "Seri Öneki",
+    "columnCustomerTypeName": "Müşteri Tipi",
+    "columnSalesRepFullName": "Satış Temsilcisi",
+    "columnRuleType": "Kural Tipi"
+  }
 }

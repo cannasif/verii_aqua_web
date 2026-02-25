@@ -79,5 +79,11 @@
   "deleting": "جارٍ الحذف...",
   "deleteConfirmTitle": "تأكيد الحذف",
   "deleteConfirmDescription": "هل أنت متأكد من حذف هذا السجل؟ لا يمكن التراجع عن هذا الإجراء.",
-  "totalRecords": "الإجمالي {{count}} سجل"
+  "totalRecords": "الإجمالي {{count}} سجل",
+  "advancedFilter": {
+    "columnSerialPrefix": "Seri Öneki",
+    "columnCustomerTypeName": "Müşteri Tipi",
+    "columnSalesRepFullName": "Satış Temsilcisi",
+    "columnRuleType": "Kural Tipi"
+  }
 }

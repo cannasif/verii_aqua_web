@@ -114,5 +114,13 @@
     "updateError": "Impossibile aggiornare il cliente",
     "deleteSuccess": "Cliente eliminato con successo",
     "deleteError": "Impossibile eliminare il cliente"
+  },
+  "advancedFilter": {
+    "columnName": "Müşteri Adı",
+    "columnCustomerCode": "Müşteri Kodu",
+    "columnEmail": "E-posta",
+    "columnPhone": "Telefon",
+    "columnTaxNumber": "Vergi No",
+    "columnCityName": "Şehir"
   }
 }

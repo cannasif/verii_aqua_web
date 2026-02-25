@@ -62,5 +62,9 @@
   "header": {
     "title": "Gestión de títulos",
     "description": "Puede gestionar las definiciones de títulos aquí."
+  },
+  "advancedFilter": {
+    "columnTitleName": "Ünvan Adı",
+    "columnCode": "Kod"
   }
 }

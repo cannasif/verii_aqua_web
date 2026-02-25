@@ -128,7 +128,31 @@
     "imageSettings": "Propriétés de l'image",
     "imageUrl": "URL de l'image",
     "uploadFromFile": "Charger à partir d'un fichier",
-    "imageUrlPlaceholder": "https://... veya /logo.png"
+    "imageUrlPlaceholder": "https://... veya /logo.png",
+    "dropdown": {
+      "minCharsHint": "En az {{count}} karakter"
+    },
+    "advancedFilter": {
+      "title": "Gelişmiş Filtre",
+      "add": "Filtre Ekle",
+      "column": "Sütun",
+      "operator": "Operatör",
+      "value": "Değer",
+      "search": "Ara",
+      "clear": "Temizle",
+      "remove": "Kaldır",
+      "operatorContains": "İçerir",
+      "operatorStartsWith": "Şununla başlar",
+      "operatorEndsWith": "Şununla biter",
+      "operatorEquals": "Eşittir",
+      "operator>": ">",
+      "operator>=": ">=",
+      "operator<": "<",
+      "operator<=": "<=",
+      "true": "Evet",
+      "false": "Hayır"
+    },
+    "inactive": "Pasif"
   },
   "auth": {
     "login": {
@@ -311,7 +335,17 @@
     "aquaReports": "Rapports",
     "aquaProjectDetailReport": "Rapport détaillé du projet",
     "aquaBatchMovements": "Mouvements de Lot",
-    "aquaCageBalances": "Solde de Cage"
+    "aquaCageBalances": "Solde de Cage",
+    "aquaGoodsReceiptLines": "Mal Kabul Satırları",
+    "aquaGoodsReceiptFishDistributions": "Mal Kabul Balık Dağılımı",
+    "aquaFeedingLines": "Besleme Satırları",
+    "aquaFeedingDistributions": "Besleme Dağılımı",
+    "aquaMortalityLines": "Ölüm Satırları",
+    "aquaTransferLines": "Transfer Satırları",
+    "aquaShipmentLines": "Sevkiyat Satırları",
+    "aquaWeighingLines": "Tartım Satırları",
+    "aquaStockConvertLines": "Stok Dönüşüm Satırları",
+    "aquaNetOperationLines": "Ağ İşlem Satırları"
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -3970,7 +4004,9 @@
       "uploadHint": "JPG, PNG, WEBP (maximum 5 Mo)",
       "selectedFiles": "Fichiers à télécharger",
       "uploading": "Chargement...",
-      "uploadButton": "Télécharger la sélection"
+      "uploadButton": "Télécharger la sélection",
+      "invalidFileType": "Geçersiz dosya tipi. Sadece {{formats}} yükleyebilirsiniz.",
+      "fileTooLarge": "Dosya boyutu çok büyük. Maksimum {{maxSizeMb}} MB olmalıdır."
     },
     "list": {
       "title": "Gestion des stocks",
@@ -4138,7 +4174,8 @@
       "save": "Enregistrer",
       "saving": "Enregistrement...",
       "confirmDelete": "Supprimer cet enregistrement ?",
-      "requiredField": "est obligatoire"
+      "requiredField": "est obligatoire",
+      "linesForRecord": "Header #{{id}} için satırlar"
     },
     "toast": {
       "created": "Enregistrement créé",
@@ -4228,6 +4265,50 @@
       "cageBalances": {
         "title": "Solde de Cage",
         "description": "Solde biomasse et effectif vivant par cage."
+      },
+      "shipments": {
+        "title": "Sevkiyat",
+        "description": "Sevkiyat başlık kayıtları."
+      },
+      "goodsReceiptLines": {
+        "title": "Mal Kabul Satırları",
+        "description": "Mal kabul satır kayıtları."
+      },
+      "goodsReceiptFishDistributions": {
+        "title": "Mal Kabul Balık Dağılımı",
+        "description": "Mal kabul satırlarının kafes bazlı balık dağıtımı."
+      },
+      "feedingLines": {
+        "title": "Besleme Satırları",
+        "description": "Besleme satır kayıtları."
+      },
+      "feedingDistributions": {
+        "title": "Besleme Dağılımı",
+        "description": "Besleme satırlarının parti/kafes dağıtımı."
+      },
+      "transferLines": {
+        "title": "Transfer Satırları",
+        "description": "Transfer satır kayıtları."
+      },
+      "shipmentLines": {
+        "title": "Sevkiyat Satırları",
+        "description": "Sevkiyat satır kayıtları."
+      },
+      "mortalityLines": {
+        "title": "Ölüm Satırları",
+        "description": "Ölüm satır kayıtları."
+      },
+      "weighingLines": {
+        "title": "Tartım Satırları",
+        "description": "Tartım satır kayıtları."
+      },
+      "stockConvertLines": {
+        "title": "Stok Dönüşüm Satırları",
+        "description": "Stok dönüşüm satır kayıtları."
+      },
+      "netOperationLines": {
+        "title": "Ağ İşlem Satırları",
+        "description": "Ağ işlem satır kayıtları."
       }
     },
     "fields": {
@@ -4280,7 +4361,42 @@
       "liveCount": "Effectif Vivant",
       "averageGram": "Grammes Moyens",
       "biomassGram": "Biomasse (Gramme)",
-      "asOfDate": "Date de Référence"
+      "asOfDate": "Date de Référence",
+      "goodsReceiptId": "Mal Kabul ID",
+      "goodsReceiptLineId": "Mal Kabul Satır ID",
+      "itemType": "Ürün Tipi",
+      "stockId": "Stok ID",
+      "qtyUnit": "Miktar (Birim)",
+      "gramPerUnit": "Birim Gram",
+      "totalGram": "Toplam Gram",
+      "fishCount": "Balık Adet",
+      "fishAverageGram": "Balık Ortalama Gram",
+      "fishTotalGram": "Balık Toplam Gram",
+      "feedingId": "Besleme ID",
+      "feedingLineId": "Besleme Satır ID",
+      "feedGram": "Yem Gram",
+      "mortalityId": "Ölüm ID",
+      "deadCount": "Ölü Adet",
+      "transferId": "Transfer ID",
+      "shipmentNo": "Sevkiyat No",
+      "shipmentId": "Sevkiyat ID",
+      "shipmentDate": "Sevkiyat Tarihi",
+      "weighingId": "Tartım ID",
+      "stockConvertId": "Stok Dönüşüm ID",
+      "fromFishBatchId": "Kaynak Balık Partisi ID",
+      "toFishBatchId": "Hedef Balık Partisi ID",
+      "fromProjectCageId": "Kaynak Proje Kafes ID",
+      "toProjectCageId": "Hedef Proje Kafes ID",
+      "fromStockId": "Kaynak Stok ID",
+      "toStockId": "Hedef Stok ID",
+      "fromAverageGram": "Kaynak Ortalama Gram",
+      "toAverageGram": "Hedef Ortalama Gram",
+      "measuredCount": "Ölçülen Adet",
+      "measuredAverageGram": "Ölçülen Ortalama Gram",
+      "measuredBiomassGram": "Ölçülen Biyokütle Gram",
+      "netOperationId": "Ağ İşlem ID",
+      "quantity": "Miktar",
+      "unitGram": "Birim Gram"
     },
     "quickSetup": {
       "pageTitle": "Configuration rapide",
@@ -4311,7 +4427,34 @@
       "cage": "Cage",
       "total": "Total",
       "saveAndPost": "Enregistrer et comptabiliser",
-      "toast": { "projectCreated": "Projet créé", "projectCreateFailed": "Échec création projet", "goodsReceiptCreated": "Réception créée", "goodsReceiptCreateFailed": "Échec création réception", "feedLineCreateFailed": "Ligne d'aliment non ajoutée", "savedAndPosted": "Enregistré et comptabilisé", "operationFailed": "Opération échouée" }
+      "toast": {
+        "projectCreated": "Projet créé",
+        "projectCreateFailed": "Échec création projet",
+        "goodsReceiptCreated": "Réception créée",
+        "goodsReceiptCreateFailed": "Échec création réception",
+        "feedLineCreateFailed": "Ligne d'aliment non ajoutée",
+        "savedAndPosted": "Enregistré et comptabilisé",
+        "operationFailed": "Opération échouée",
+        "goodsReceiptUpdated": "Mal kabul güncellendi",
+        "existingGoodsReceiptFound": "Mevcut taslak mal kabul bulundu, kurulum bu kayıtla devam ediyor",
+        "existingGoodsReceiptCheckFailed": "Mevcut mal kabul kontrolü yapılamadı",
+        "existingGoodsReceiptMissingBatch": "Mevcut mal kabulde batch bilgisi eksik. Balık satırında ortalama gram girip tekrar deneyin.",
+        "cageAdded": "Kafes projeye eklendi",
+        "cageAddFailed": "Kafes eklenemedi"
+      },
+      "batchCode": "Batch Kodu",
+      "currentAverageGram": "Mevcut Ortalama Gram",
+      "existingGoodsReceiptFound": "Bu proje için mevcut taslak mal kabul bulundu. Bu adım otomatik atlandı.",
+      "existingGoodsReceiptPostedInfo": "Bu mal kabul post edilmiş durumda. Yeni mal kabul oluşturulamaz.",
+      "existingGoodsReceiptMissingFishLine": "Bu mal kabulde balık satırı bulunamadı. Balık satırını ekledikten sonra devam edin.",
+      "existingGoodsReceiptMissingFishCount": "Balık adedi 0 veya eksik. Dağıtım için adet bilgisi girilmeli.",
+      "existingGoodsReceiptMissingBatchCard": "Batch bilgisi eksik. Dağıtıma geçmeden önce batch oluşturulmalı.",
+      "readyForDistribution": "Dağıtım için hazır. Aşağıdaki 3. adımda kafeslere dağıtabilirsiniz.",
+      "completeGoodsReceiptInfoFirst": "Devam etmek için mal kabul balık satırı bilgilerini tamamlayın.",
+      "openGoodsReceiptLines": "Mal Kabul Satırlarını Aç",
+      "selectAvailableCage": "Boştaki kafes seçin",
+      "addCage": "+ Kafes Ekle",
+      "noAvailableCages": "Bu proje için kullanılabilir kafes bulunamadı."
     },
     "quickDailyEntry": {
       "pageTitle": "Saisie quotidienne rapide",
@@ -4323,13 +4466,152 @@
       "tabMortality": "Mortalité",
       "tabWeather": "Météo",
       "tabNetOperation": "Opération filet",
-      "feeding": { "title": "Alimentation", "slot": "Créneau", "morning": "Matin", "evening": "Soir", "feedStock": "Stock aliment", "selectStock": "Sélectionner stock", "qty": "Quantité", "save": "Enregistrer" },
-      "mortality": { "title": "Mortalité", "batch": "Lot", "selectBatch": "Sélectionner lot", "deadCount": "Nombre morts", "save": "Enregistrer" },
-      "weather": { "title": "Météo", "severity": "Sévérité", "selectSeverity": "Sélectionner sévérité", "type": "Type", "selectType": "Sélectionner type", "description": "Description", "save": "Enregistrer" },
-      "netOperation": { "title": "Opération filet", "operationType": "Type d'opération", "selectType": "Sélectionner type", "description": "Description", "save": "Enregistrer" },
-      "stockChange": { "title": "Changement de stock", "sourceInfo": "Lot source #{{fishBatchId}} - Vivants : {{liveCount}}", "noSourceBatch": "Aucun lot actif dans la cage sélectionnée.", "targetBatch": "Lot cible", "fishCount": "Quantité", "description": "Description", "save": "Enregistrer" },
-      "transfer": { "title": "Transfert de cage", "sourceInfo": "Lot source #{{fishBatchId}} - Vivants : {{liveCount}}", "noSourceBatch": "Aucun lot actif dans la cage sélectionnée.", "targetCage": "Cage cible", "occupied": "Occupée", "empty": "Vide", "fishCount": "Quantité", "fishCountAutoInfo": "La quantité est prise automatiquement du nombre de vivants dans la cage source.", "description": "Description", "save": "Enregistrer" },
-      "toast": { "feedingSaved": "Alimentation enregistrée", "mortalitySaved": "Mortalité enregistrée", "weatherSaved": "Météo enregistrée", "netOperationSaved": "Opération enregistrée", "saveFailed": "Échec enregistrement" }
+      "feeding": {
+        "title": "Alimentation",
+        "slot": "Créneau",
+        "morning": "Matin",
+        "evening": "Soir",
+        "feedStock": "Stock aliment",
+        "selectStock": "Sélectionner stock",
+        "qty": "Quantité",
+        "save": "Enregistrer",
+        "gramPerUnit": "Birim Başına Gram"
+      },
+      "mortality": {
+        "title": "Mortalité",
+        "batch": "Lot",
+        "selectBatch": "Sélectionner lot",
+        "deadCount": "Nombre morts",
+        "save": "Enregistrer"
+      },
+      "weather": {
+        "title": "Météo",
+        "severity": "Sévérité",
+        "selectSeverity": "Sélectionner sévérité",
+        "type": "Type",
+        "selectType": "Sélectionner type",
+        "description": "Description",
+        "save": "Enregistrer"
+      },
+      "netOperation": {
+        "title": "Opération filet",
+        "operationType": "Type d'opération",
+        "selectType": "Sélectionner type",
+        "description": "Description",
+        "save": "Enregistrer",
+        "batch": "Batch",
+        "selectBatch": "Batch seçin",
+        "noBatch": "Batch yok",
+        "quantity": "Miktar",
+        "unitGram": "Birim Gram"
+      },
+      "stockChange": {
+        "title": "Changement de stock",
+        "sourceInfo": "Lot source #{{fishBatchId}} - Vivants : {{liveCount}}",
+        "noSourceBatch": "Aucun lot actif dans la cage sélectionnée.",
+        "targetBatch": "Lot cible",
+        "fishCount": "Quantité",
+        "description": "Description",
+        "save": "Enregistrer",
+        "newAverageGram": "Eklenecek Gram",
+        "gramInfo": "Mevcut gram: {{oldGram}} | Eklenecek: {{increase}} | Yeni toplam: {{newGram}}"
+      },
+      "transfer": {
+        "title": "Transfert de cage",
+        "sourceInfo": "Lot source #{{fishBatchId}} - Vivants : {{liveCount}}",
+        "noSourceBatch": "Aucun lot actif dans la cage sélectionnée.",
+        "targetCage": "Cage cible",
+        "occupied": "Occupée",
+        "empty": "Vide",
+        "fishCount": "Quantité",
+        "fishCountAutoInfo": "La quantité est prise automatiquement du nombre de vivants dans la cage source.",
+        "description": "Description",
+        "save": "Enregistrer"
+      },
+      "toast": {
+        "feedingSaved": "Alimentation enregistrée",
+        "mortalitySaved": "Mortalité enregistrée",
+        "weatherSaved": "Météo enregistrée",
+        "netOperationSaved": "Opération enregistrée",
+        "saveFailed": "Échec enregistrement",
+        "invalidNewAverageGram": "Eklenecek gram 0'dan büyük olmalı."
+      }
+    },
+    "goodsReceiptItemType": {
+      "feed": "Yem",
+      "fish": "Balık"
+    },
+    "projectDetailReport": {
+      "pageTitle": "Proje Detay Raporu",
+      "description": "Proje bazında kafes performansını, besleme ve ölüm detaylarıyla gösterir.",
+      "selectProject": "Proje seçin",
+      "pickProjectFirst": "Rapor detaylarını görmek için proje seçin.",
+      "totalCages": "Toplam kafes",
+      "currentVsInitial": "Mevcut / Başlangıç",
+      "initialFish": "Başlangıç Balık",
+      "currentFish": "Mevcut Balık",
+      "initialAverageGram": "Başlangıç Ort. Gram",
+      "currentAverageGram": "Mevcut Ort. Gram",
+      "initialBiomassGram": "Başlangıç Biyokütle (g)",
+      "currentBiomassGram": "Mevcut Biyokütle (g)",
+      "totalDead": "Toplam Ölüm",
+      "totalFeedGram": "Toplam Besleme (g)",
+      "totalCountDelta": "Toplam Adet Delta",
+      "totalBiomassDelta": "Toplam Biyokütle Delta (g)",
+      "dead": "Ölü",
+      "missingFeedDays": "Besleme yapılmayan gün",
+      "missingFeedingDates": "Besleme Yapılmayan Günler",
+      "noMissingFeedDay": "Seçili tarih aralığında besleme eksik günü bulunmadı.",
+      "dailyDetails": "Günlük Detay",
+      "dailyDetailsHint": "En güncel hareket satırları tarihe göre listelenir.",
+      "date": "Tarih",
+      "feedGram": "Yem (gram)",
+      "deadCount": "Ölü adet",
+      "countDelta": "Adet delta",
+      "biomassDelta": "Biyokütle delta (g)",
+      "weather": "Hava",
+      "netOps": "Ağ işlemi",
+      "transfers": "Transfer",
+      "shipments": "Sevkiyat",
+      "shipmentQty": "Sevk Miktarı",
+      "feedStocks": "Yem Stokları",
+      "stockCountShort": "{{count}} stok",
+      "feedingDetails": "Besleme Detayı",
+      "weighings": "Tartım",
+      "stockConverts": "Dönüşüm",
+      "noOperationDetail": "Bu gün için detay bulunamadı.",
+      "detailRecords": "{{count}} kayıt",
+      "feedStatus": "Besleme durumu",
+      "fed": "Beslendi",
+      "notFed": "Beslenmedi",
+      "noActiveCages": "Aktif kafes bulunamadı.",
+      "cageHistoryTitle": "Kafes Geçmişi (Buydu/Bu Oldu)",
+      "cageHistoryDescription": "Projede daha önce kullanılmış ancak şu an aktif olmayan kafesler.",
+      "cage": "Kafes",
+      "assignedDate": "Atanma Tarihi",
+      "releasedDate": "Ayrılma Tarihi",
+      "status": "Durum",
+      "inactive": "Pasif",
+      "currentSnapshotTitle": "Ana Detay (Şu Anki Anlık Durum)",
+      "snapshotDate": "Anlık tarih",
+      "liveRate": "Canlılık Oranı",
+      "aliveFishNow": "Şu An Canlı Balık",
+      "cagesFedToday": "Bugün Beslenen Aktif Kafes",
+      "readGuideTitle": "Raporu Nasıl Okurum?",
+      "readGuideDescription": "Kartlar proje toplamını, alt açılır satırlar kafes bazlı günlük hareketleri gösterir.",
+      "readGuideCurrentFish": "Mevcut Balık: Başlangıçtan ölüm ve sevkiyatlar düşülmüş canlı adettir.",
+      "readGuideShipment": "Sevk Miktarı: solda adet, sağda gram biyokütle toplamıdır.",
+      "readGuideDelta": "Delta kolonları gün içi net değişimi gösterir (+/-).",
+      "readGuideButtons": "Transfer/Sevkiyat/Dönüşüm butonuna tıklayınca o günün detay satırları açılır.",
+      "consistencyFormula": "Hesap kontrolü: Başlangıç - Ölüm - Sevk = Mevcut",
+      "consistent": "Tutarlı",
+      "inconsistent": "Tutarsız"
     }
+  },
+  "welcome": {
+    "title": "Hoş Geldiniz",
+    "greeting": "Merhaba, {{name}}",
+    "subtitle": "Sol menüden işlemlere ve raporlara erişebilirsiniz.",
+    "userFallback": "Kullanıcı"
   }
 }

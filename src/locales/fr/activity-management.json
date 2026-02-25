@@ -167,6 +167,13 @@
     "columnActivityTypeId": "Type d'activité Non",
     "columnPriority": "Priorité",
     "columnDueDate": "Date de fin",
-    "columnIsCompleted": "Terminé"
+    "columnIsCompleted": "Terminé",
+    "filterButton": "Gelişmiş Filtre"
+  },
+  "columnCustomization": {
+    "hiddenColumns": "Gizlenen Sütunlar",
+    "visibleColumns": "Gösterilecek Sütunlar",
+    "moveUp": "Yukarı",
+    "moveDown": "Aşağı"
   }
 }

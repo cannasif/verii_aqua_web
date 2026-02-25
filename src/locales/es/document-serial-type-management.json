@@ -79,5 +79,11 @@
   "deleting": "Eliminando...",
   "deleteConfirmTitle": "Confirmación de eliminación",
   "deleteConfirmDescription": "¿Seguro que desea eliminar este registro? Esta acción no se puede deshacer.",
-  "totalRecords": "Total {{count}} registros"
+  "totalRecords": "Total {{count}} registros",
+  "advancedFilter": {
+    "columnSerialPrefix": "Seri Öneki",
+    "columnCustomerTypeName": "Müşteri Tipi",
+    "columnSalesRepFullName": "Satış Temsilcisi",
+    "columnRuleType": "Kural Tipi"
+  }
 }

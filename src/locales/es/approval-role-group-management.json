@@ -32,5 +32,9 @@
     "namePlaceholder": "Ingrese nombre del grupo",
     "nameRequired": "El nombre del grupo es obligatorio",
     "nameMaxLength": "El nombre puede tener máx. 100 caracteres"
+  },
+  "advancedFilter": {
+    "columnName": "Grup Adı",
+    "columnCreatedBy": "Oluşturan"
   }
 }

@@ -60,5 +60,9 @@
   "deleteSuccess": "تم حذف نوع الدفع بنجاح",
   "createError": "حدث خطأ أثناء إنشاء نوع الدفع",
   "updateError": "حدث خطأ أثناء تحديث نوع الدفع",
-  "deleteError": "حدث خطأ أثناء حذف نوع الدفع"
+  "deleteError": "حدث خطأ أثناء حذف نوع الدفع",
+  "advancedFilter": {
+    "columnName": "Ad",
+    "columnDescription": "Açıklama"
+  }
 }

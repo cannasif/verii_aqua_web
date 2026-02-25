@@ -32,5 +32,9 @@
     "namePlaceholder": "Enter group name",
     "nameRequired": "Group name is required",
     "nameMaxLength": "Group name can be at most 100 characters"
+  },
+  "advancedFilter": {
+    "columnName": "Grup Adı",
+    "columnCreatedBy": "Oluşturan"
   }
 }

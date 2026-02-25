@@ -46,6 +46,11 @@
       "cancel": "Cancelar",
       "save": "Guardar",
       "saving": "Guardando..."
+    },
+    "advancedFilter": {
+      "columnName": "Rol Adı",
+      "columnApprovalRoleGroupName": "Rol Grubu",
+      "columnMaxAmount": "Maks. Tutar"
     }
   }
 }

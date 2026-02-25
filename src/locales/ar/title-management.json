@@ -62,5 +62,9 @@
   "header": {
     "title": "إدارة الألقاب",
     "description": "يمكنك إدارة تعريفات الألقاب من هنا."
+  },
+  "advancedFilter": {
+    "columnTitleName": "Ünvan Adı",
+    "columnCode": "Kod"
   }
 }

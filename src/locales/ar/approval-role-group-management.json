@@ -32,5 +32,9 @@
     "namePlaceholder": "أدخل اسم المجموعة",
     "nameRequired": "اسم المجموعة مطلوب",
     "nameMaxLength": "الاسم يمكن أن يكون بحد أقصى 100 حرف"
+  },
+  "advancedFilter": {
+    "columnName": "Grup Adı",
+    "columnCreatedBy": "Oluşturan"
   }
 }

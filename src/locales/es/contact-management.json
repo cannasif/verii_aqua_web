@@ -91,5 +91,15 @@
     "updateError": "No se pudo actualizar el contacto",
     "deleteSuccess": "Contacto eliminado con éxito",
     "deleteError": "No se pudo eliminar el contacto"
+  },
+  "advancedFilter": {
+    "columnFullName": "Ad Soyad",
+    "columnFirstName": "Ad",
+    "columnLastName": "Soyad",
+    "columnEmail": "E-posta",
+    "columnPhone": "Telefon",
+    "columnMobile": "Mobil",
+    "columnCustomerName": "Müşteri",
+    "columnTitleName": "Ünvan"
   }
 }

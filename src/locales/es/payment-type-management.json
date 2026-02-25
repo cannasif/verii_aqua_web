@@ -60,5 +60,9 @@
   "deleteSuccess": "Tipo de pago eliminado correctamente",
   "createError": "Ocurrió un error al crear el tipo de pago",
   "updateError": "Ocurrió un error al actualizar el tipo de pago",
-  "deleteError": "Ocurrió un error al eliminar el tipo de pago"
+  "deleteError": "Ocurrió un error al eliminar el tipo de pago",
+  "advancedFilter": {
+    "columnName": "Ad",
+    "columnDescription": "Açıklama"
+  }
 }

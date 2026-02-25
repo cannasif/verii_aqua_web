@@ -47,5 +47,9 @@
       "maxLength": "La description peut comporter au plus 500 caractères"
     }
   },
-  "headerDescription": "Gérez et modifiez les types de paiement"
+  "headerDescription": "Gérez et modifiez les types de paiement",
+  "advancedFilter": {
+    "columnName": "Ad",
+    "columnDescription": "Açıklama"
+  }
 }

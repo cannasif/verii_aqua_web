@@ -48,6 +48,12 @@
       "offer": "Oferta",
       "request": "Solicitud",
       "order": "Pedido"
+    },
+    "advancedFilter": {
+      "columnDocumentType": "Belge Tipi",
+      "columnDescription": "Açıklama",
+      "columnIsActive": "Aktif",
+      "columnCreatedBy": "Oluşturan"
     }
   },
   "approvalFlowStep": {

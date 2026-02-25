@@ -55,5 +55,11 @@
     "serialIncrement.min": "Serieninkrement muss mindestens 1 sein",
     "serialIncrementPlaceholder": "Geben Sie den Serieninkrementwert ein"
   },
-  "totalRecords": "Gesamt {{count}} Einträge"
+  "totalRecords": "Gesamt {{count}} Einträge",
+  "advancedFilter": {
+    "columnSerialPrefix": "Seri Öneki",
+    "columnCustomerTypeName": "Müşteri Tipi",
+    "columnSalesRepFullName": "Satış Temsilcisi",
+    "columnRuleType": "Kural Tipi"
+  }
 }

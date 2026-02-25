@@ -114,5 +114,13 @@
     "updateError": "Échec de la mise à jour du client",
     "deleteSuccess": "Client supprimé avec succès",
     "deleteError": "Échec de la suppression du client"
+  },
+  "advancedFilter": {
+    "columnName": "Müşteri Adı",
+    "columnCustomerCode": "Müşteri Kodu",
+    "columnEmail": "E-posta",
+    "columnPhone": "Telefon",
+    "columnTaxNumber": "Vergi No",
+    "columnCityName": "Şehir"
   }
 }

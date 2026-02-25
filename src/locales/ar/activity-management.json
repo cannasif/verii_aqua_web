@@ -166,6 +166,13 @@
     "columnActivityTypeId": "نوع النشاط رقم",
     "columnPriority": "الأولوية",
     "columnDueDate": "تاريخ الانتهاء",
-    "columnIsCompleted": "مكتمل"
+    "columnIsCompleted": "مكتمل",
+    "filterButton": "Gelişmiş Filtre"
+  },
+  "columnCustomization": {
+    "hiddenColumns": "Gizlenen Sütunlar",
+    "visibleColumns": "Gösterilecek Sütunlar",
+    "moveUp": "Yukarı",
+    "moveDown": "Aşağı"
   }
 }

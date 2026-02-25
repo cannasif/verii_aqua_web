@@ -41,5 +41,9 @@
     "cancel": "Annuler",
     "save": "Enregistrer",
     "saving": "Enregistrement..."
+  },
+  "advancedFilter": {
+    "columnTitleName": "Ünvan Adı",
+    "columnCode": "Kod"
   }
 }

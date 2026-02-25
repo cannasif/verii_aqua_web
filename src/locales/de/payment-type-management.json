@@ -47,5 +47,9 @@
       "maxLength": "Beschreibung darf maximal 500 Zeichen lang sein"
     }
   },
-  "headerDescription": "Zahlungstypen verwalten und bearbeiten"
+  "headerDescription": "Zahlungstypen verwalten und bearbeiten",
+  "advancedFilter": {
+    "columnName": "Ad",
+    "columnDescription": "Açıklama"
+  }
 }

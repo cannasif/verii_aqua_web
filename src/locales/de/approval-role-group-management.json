@@ -34,5 +34,9 @@
     "name.maxLength": "Gruppenname darf höchstens 100 Zeichen lang sein",
     "nameRequired": "Group name is required",
     "nameMaxLength": "Group name can be at most 100 characters"
+  },
+  "advancedFilter": {
+    "columnName": "Grup Adı",
+    "columnCreatedBy": "Oluşturan"
   }
 }

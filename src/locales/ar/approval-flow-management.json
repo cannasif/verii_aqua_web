@@ -48,6 +48,12 @@
       "offer": "عرض",
       "request": "طلب",
       "order": "طلب شراء"
+    },
+    "advancedFilter": {
+      "columnDocumentType": "Belge Tipi",
+      "columnDescription": "Açıklama",
+      "columnIsActive": "Aktif",
+      "columnCreatedBy": "Oluşturan"
     }
   },
   "approvalFlowStep": {

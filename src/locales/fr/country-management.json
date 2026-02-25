@@ -61,5 +61,10 @@
   },
   "deleteConfirm": {
     "confirmMessage": "Êtes-vous sûr de vouloir supprimer le pays {{name}} ?"
+  },
+  "advancedFilter": {
+    "columnName": "Ülke Adı",
+    "columnCode": "Ülke Kodu",
+    "columnErpCode": "ERP Kodu"
   }
 }

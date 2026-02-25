@@ -114,5 +114,13 @@
     "updateError": "تعذر تحديث العميل",
     "deleteSuccess": "تم حذف العميل بنجاح",
     "deleteError": "تعذر حذف العميل"
+  },
+  "advancedFilter": {
+    "columnName": "Müşteri Adı",
+    "columnCustomerCode": "Müşteri Kodu",
+    "columnEmail": "E-posta",
+    "columnPhone": "Telefon",
+    "columnTaxNumber": "Vergi No",
+    "columnCityName": "Şehir"
   }
 }
