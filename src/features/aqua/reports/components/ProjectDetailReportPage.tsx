@@ -35,13 +35,18 @@ import { projectDetailReportApi } from '../api/project-detail-report-api';
 import type { CageDailyRow, CageProjectReport } from '../types/project-detail-report-types';
 
 const REPORT_QUERY_KEY = ['aqua', 'reports', 'project-detail'] as const;
-type DetailType = 'netOperation' | 'transfer' | 'weighing' | 'stockConvert';
+type DetailType = 'feeding' | 'netOperation' | 'transfer' | 'stockConvert' | 'shipment';
 
 interface DetailDialogState {
   open: boolean;
   title: string;
   description: string;
   items: string[];
+}
+
+interface ReportConsistency {
+  expectedCurrentFish: number;
+  isConsistent: boolean;
 }
 
 function formatNumber(value: number): string {
@@ -53,6 +58,46 @@ function clampPercent(value: number): number {
   if (value < 0) return 0;
   if (value > 100) return 100;
   return value;
+}
+
+function ReportGuideCard({ t }: { t: (key: string, options?: Record<string, unknown>) => string }): ReactElement {
+  return (
+    <Card className="border-teal-200/70 bg-linear-to-r from-teal-50 via-white to-cyan-50">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base font-semibold text-slate-800">
+          {t('aqua.projectDetailReport.readGuideTitle', { defaultValue: 'Raporu Nasıl Okurum?' })}
+        </CardTitle>
+        <CardDescription>
+          {t('aqua.projectDetailReport.readGuideDescription', {
+            defaultValue:
+              'Kartlar proje toplamını, alt açılır satırlar ise kafes bazlı günlük hareketleri gösterir.',
+          })}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-2 text-xs text-slate-700 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="rounded-md border border-slate-200 bg-white/80 p-2">
+          {t('aqua.projectDetailReport.readGuideCurrentFish', {
+            defaultValue: 'Mevcut Balık: Başlangıçtan ölüm ve sevkiyatlar düşülmüş canlı adettir.',
+          })}
+        </div>
+        <div className="rounded-md border border-slate-200 bg-white/80 p-2">
+          {t('aqua.projectDetailReport.readGuideShipment', {
+            defaultValue: 'Sevk Miktarı: solda adet, sağda gram biyokütle toplamıdır.',
+          })}
+        </div>
+        <div className="rounded-md border border-slate-200 bg-white/80 p-2">
+          {t('aqua.projectDetailReport.readGuideDelta', {
+            defaultValue: 'Delta kolonları gün içi net değişimi gösterir (+/-).',
+          })}
+        </div>
+        <div className="rounded-md border border-slate-200 bg-white/80 p-2">
+          {t('aqua.projectDetailReport.readGuideButtons', {
+            defaultValue: 'Transfer/Sevkiyat/Dönüşüm butonuna tıklayınca o günün detay satırları açılır.',
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 
 function CageSummaryCards({ cage, t }: { cage: CageProjectReport; t: (key: string) => string }): ReactElement {
@@ -156,6 +201,273 @@ function CageSummaryCards({ cage, t }: { cage: CageProjectReport; t: (key: strin
   );
 }
 
+function ProjectSummaryCards({
+  activeCageCount,
+  inactiveCageCount,
+  totalInitialFish,
+  totalCurrentFish,
+  totalDead,
+  totalFeedGram,
+  totalCurrentBiomass,
+  avgCurrentGram,
+  totalShipmentFish,
+  totalShipmentBiomass,
+  lastShipmentDate,
+  t,
+}: {
+  activeCageCount: number;
+  inactiveCageCount: number;
+  totalInitialFish: number;
+  totalCurrentFish: number;
+  totalDead: number;
+  totalFeedGram: number;
+  totalCurrentBiomass: number;
+  avgCurrentGram: number;
+  totalShipmentFish: number;
+  totalShipmentBiomass: number;
+  lastShipmentDate: string;
+  t: (key: string, options?: Record<string, unknown>) => string;
+}): ReactElement {
+  const stockRatio =
+    totalInitialFish > 0 ? clampPercent((totalCurrentFish / totalInitialFish) * 100) : 0;
+
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <Card className="border-cyan-200/60 bg-linear-to-br from-cyan-500/10 to-cyan-500/5 ring-1 ring-cyan-500/20">
+        <CardContent className="pt-4">
+          <p className="text-xs font-medium text-cyan-700/90">
+            {t('aqua.projectDetailReport.activeCages', { defaultValue: 'Aktif Kafes' })}
+          </p>
+          <p className="mt-1 text-2xl font-bold tabular-nums text-cyan-800">{formatNumber(activeCageCount)}</p>
+        </CardContent>
+      </Card>
+      <Card className="border-slate-200/60 bg-linear-to-br from-slate-500/10 to-slate-500/5 ring-1 ring-slate-500/20">
+        <CardContent className="pt-4">
+          <p className="text-xs font-medium text-slate-700/90">
+            {t('aqua.projectDetailReport.inactiveCages', { defaultValue: 'Pasif Kafes' })}
+          </p>
+          <p className="mt-1 text-2xl font-bold tabular-nums text-slate-800">{formatNumber(inactiveCageCount)}</p>
+        </CardContent>
+      </Card>
+      <Card className="border-emerald-200/60 bg-linear-to-br from-emerald-500/10 to-emerald-500/5 ring-1 ring-emerald-500/20">
+        <CardContent className="pt-4">
+          <p className="text-xs font-medium text-emerald-700/90">
+            {t('aqua.projectDetailReport.initialFishTotal', { defaultValue: 'Başlangıç Toplam Balık' })}
+          </p>
+          <p className="mt-1 text-2xl font-bold tabular-nums text-emerald-800">{formatNumber(totalInitialFish)}</p>
+        </CardContent>
+      </Card>
+      <Card className="border-sky-200/60 bg-linear-to-br from-sky-500/10 to-sky-500/5 ring-1 ring-sky-500/20">
+        <CardContent className="pt-4">
+          <p className="text-xs font-medium text-sky-700/90">
+            {t('aqua.projectDetailReport.currentFishTotal', { defaultValue: 'Mevcut Toplam Balık' })}
+          </p>
+          <p className="mt-1 text-2xl font-bold tabular-nums text-sky-800">{formatNumber(totalCurrentFish)}</p>
+          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-sky-200/60">
+            <div className="h-full rounded-full bg-sky-500 transition-[width]" style={{ width: `${stockRatio}%` }} />
+          </div>
+        </CardContent>
+      </Card>
+      <Card className="border-rose-200/60 bg-linear-to-br from-rose-500/10 to-rose-500/5 ring-1 ring-rose-500/20">
+        <CardContent className="pt-4">
+          <p className="text-xs font-medium text-rose-700/90">
+            {t('aqua.projectDetailReport.totalDead', { defaultValue: 'Toplam Ölüm' })}
+          </p>
+          <p className="mt-1 text-2xl font-bold tabular-nums text-rose-800">{formatNumber(totalDead)}</p>
+        </CardContent>
+      </Card>
+      <Card className="border-amber-200/60 bg-linear-to-br from-amber-500/10 to-amber-500/5 ring-1 ring-amber-500/20">
+        <CardContent className="pt-4">
+          <p className="text-xs font-medium text-amber-700/90">
+            {t('aqua.projectDetailReport.totalFeedGram', { defaultValue: 'Toplam Besleme (Gram)' })}
+          </p>
+          <p className="mt-1 text-2xl font-bold tabular-nums text-amber-800">{formatNumber(totalFeedGram)}</p>
+        </CardContent>
+      </Card>
+      <Card className="border-blue-200/60 bg-linear-to-br from-blue-500/10 to-blue-500/5 ring-1 ring-blue-500/20">
+        <CardContent className="pt-4">
+          <p className="text-xs font-medium text-blue-700/90">
+            {t('aqua.projectDetailReport.currentBiomassTotal', { defaultValue: 'Mevcut Toplam Biyokütle (Gram)' })}
+          </p>
+          <p className="mt-1 text-2xl font-bold tabular-nums text-blue-800">{formatNumber(totalCurrentBiomass)}</p>
+        </CardContent>
+      </Card>
+      <Card className="border-violet-200/60 bg-linear-to-br from-violet-500/10 to-violet-500/5 ring-1 ring-violet-500/20">
+        <CardContent className="pt-4">
+          <p className="text-xs font-medium text-violet-700/90">
+            {t('aqua.projectDetailReport.currentAvgGramTotal', { defaultValue: 'Mevcut Ortalama Gram' })}
+          </p>
+          <p className="mt-1 text-2xl font-bold tabular-nums text-violet-800">{formatNumber(avgCurrentGram)}</p>
+        </CardContent>
+      </Card>
+      <Card className="border-orange-200/60 bg-linear-to-br from-orange-500/10 to-orange-500/5 ring-1 ring-orange-500/20">
+        <CardContent className="pt-4">
+          <p className="text-xs font-medium text-orange-700/90">
+            {t('aqua.projectDetailReport.totalShipmentFish', { defaultValue: 'Toplam Sevk Balık' })}
+          </p>
+          <p className="mt-1 text-2xl font-bold tabular-nums text-orange-800">{formatNumber(totalShipmentFish)}</p>
+        </CardContent>
+      </Card>
+      <Card className="border-rose-200/60 bg-linear-to-br from-rose-500/10 to-rose-500/5 ring-1 ring-rose-500/20">
+        <CardContent className="pt-4">
+          <p className="text-xs font-medium text-rose-700/90">
+            {t('aqua.projectDetailReport.totalShipmentBiomass', { defaultValue: 'Toplam Sevk Biyokütle (Gram)' })}
+          </p>
+          <p className="mt-1 text-2xl font-bold tabular-nums text-rose-800">{formatNumber(totalShipmentBiomass)}</p>
+          <p className="mt-1 text-xs text-rose-700/80">
+            {t('aqua.projectDetailReport.lastShipmentDate', { defaultValue: 'Son Sevk Tarihi' })}: {lastShipmentDate}
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function ProjectCurrentSnapshotCards({
+  projectCode,
+  projectName,
+  snapshotDate,
+  liveRatePercent,
+  aliveFishCount,
+  deadFishCount,
+  missingFeedCageCountToday,
+  activeCageCount,
+  totalShipmentFish,
+  totalShipmentBiomass,
+  lastShipmentDate,
+  consistency,
+  t,
+}: {
+  projectCode: string;
+  projectName: string;
+  snapshotDate: string;
+  liveRatePercent: number;
+  aliveFishCount: number;
+  deadFishCount: number;
+  missingFeedCageCountToday: number;
+  activeCageCount: number;
+  totalShipmentFish: number;
+  totalShipmentBiomass: number;
+  lastShipmentDate: string;
+  consistency: ReportConsistency;
+  t: (key: string, options?: Record<string, unknown>) => string;
+}): ReactElement {
+  const safeRate = clampPercent(liveRatePercent);
+  const hasSnapshotDate = snapshotDate !== '-';
+  const activeWithFeedCount = hasSnapshotDate
+    ? Math.max(0, activeCageCount - missingFeedCageCountToday)
+    : 0;
+
+  return (
+    <Card className="border-cyan-200/70 bg-linear-to-r from-cyan-50 via-white to-indigo-50 shadow-sm">
+      <CardHeader className="pb-3">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <CardTitle className="text-base font-semibold text-slate-800">
+              {t('aqua.projectDetailReport.currentSnapshotTitle', { defaultValue: 'Ana Detay (Şu Anki Anlık Durum)' })}
+            </CardTitle>
+            <CardDescription className="mt-1">
+              {projectCode} — {projectName}
+            </CardDescription>
+          </div>
+          <Badge variant="outline" className="border-cyan-300 text-cyan-700">
+            {t('aqua.projectDetailReport.snapshotDate', { defaultValue: 'Anlık tarih' })}: {snapshotDate}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <Card className="border-emerald-200/70 bg-emerald-50/70">
+            <CardContent className="pt-4">
+              <p className="text-xs font-medium text-emerald-700">
+                {t('aqua.projectDetailReport.liveRate', { defaultValue: 'Canlılık Oranı' })}
+              </p>
+              <p className="mt-1 text-2xl font-bold tabular-nums text-emerald-800">
+                {formatNumber(safeRate)}%
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="border-sky-200/70 bg-sky-50/70">
+            <CardContent className="pt-4">
+              <p className="text-xs font-medium text-sky-700">
+                {t('aqua.projectDetailReport.aliveFishNow', { defaultValue: 'Şu An Canlı Balık' })}
+              </p>
+              <p className="mt-1 text-2xl font-bold tabular-nums text-sky-800">{formatNumber(aliveFishCount)}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-rose-200/70 bg-rose-50/70">
+            <CardContent className="pt-4">
+              <p className="text-xs font-medium text-rose-700">
+                {t('aqua.projectDetailReport.totalDead', { defaultValue: 'Toplam Ölüm' })}
+              </p>
+              <p className="mt-1 text-2xl font-bold tabular-nums text-rose-800">{formatNumber(deadFishCount)}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-amber-200/70 bg-amber-50/70">
+            <CardContent className="pt-4">
+              <p className="text-xs font-medium text-amber-700">
+                {t('aqua.projectDetailReport.cagesFedToday', { defaultValue: 'Bugün Beslenen Aktif Kafes' })}
+              </p>
+              <p className="mt-1 text-2xl font-bold tabular-nums text-amber-800">
+                {formatNumber(activeWithFeedCount)} / {formatNumber(activeCageCount)}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="h-2 w-full overflow-hidden rounded-full bg-emerald-100">
+          <div className="h-full rounded-full bg-emerald-500 transition-[width]" style={{ width: `${safeRate}%` }} />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Card className="border-orange-200/70 bg-orange-50/70">
+            <CardContent className="pt-4">
+              <p className="text-xs font-medium text-orange-700">
+                {t('aqua.projectDetailReport.totalShipmentFish', { defaultValue: 'Toplam Sevk Balık' })}
+              </p>
+              <p className="mt-1 text-2xl font-bold tabular-nums text-orange-800">{formatNumber(totalShipmentFish)}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-rose-200/70 bg-rose-50/70">
+            <CardContent className="pt-4">
+              <p className="text-xs font-medium text-rose-700">
+                {t('aqua.projectDetailReport.totalShipmentBiomass', { defaultValue: 'Toplam Sevk Biyokütle (Gram)' })}
+              </p>
+              <p className="mt-1 text-2xl font-bold tabular-nums text-rose-800">{formatNumber(totalShipmentBiomass)}</p>
+              <p className="mt-1 text-xs text-rose-700/80">
+                {t('aqua.projectDetailReport.lastShipmentDate', { defaultValue: 'Son Sevk Tarihi' })}: {lastShipmentDate}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+        <Card className="border-slate-200/70 bg-white/70">
+          <CardContent className="pt-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-xs font-medium text-slate-700">
+                {t('aqua.projectDetailReport.consistencyFormula', {
+                  defaultValue: 'Hesap kontrolü: Başlangıç - Ölüm - Sevk = Mevcut',
+                })}
+              </p>
+              <Badge
+                className={
+                  consistency.isConsistent
+                    ? 'bg-emerald-600 hover:bg-emerald-600'
+                    : 'bg-rose-600 hover:bg-rose-600'
+                }
+              >
+                {consistency.isConsistent
+                  ? t('aqua.projectDetailReport.consistent', { defaultValue: 'Tutarlı' })
+                  : t('aqua.projectDetailReport.inconsistent', { defaultValue: 'Tutarsız' })}
+              </Badge>
+            </div>
+            <p className="mt-2 text-sm font-semibold tabular-nums text-slate-800">
+              {formatNumber(aliveFishCount)} = {formatNumber(consistency.expectedCurrentFish)}
+            </p>
+          </CardContent>
+        </Card>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function ProjectDetailReportPage(): ReactElement {
   const { t } = useTranslation('common');
   const [projectId, setProjectId] = useState<number | null>(null);
@@ -168,16 +480,18 @@ export function ProjectDetailReportPage(): ReactElement {
 
   const openDetailDialog = (cage: CageProjectReport, row: CageDailyRow, type: DetailType): void => {
     const titleMap: Record<DetailType, string> = {
+      feeding: t('aqua.projectDetailReport.feedingDetails', { defaultValue: 'Besleme Detayı' }),
       netOperation: t('aqua.projectDetailReport.netOps'),
       transfer: t('aqua.projectDetailReport.transfers'),
-      weighing: t('aqua.projectDetailReport.weighings'),
       stockConvert: t('aqua.projectDetailReport.stockConverts'),
+      shipment: t('aqua.projectDetailReport.shipments'),
     };
     const detailMap: Record<DetailType, string[]> = {
+      feeding: row.feedDetails,
       netOperation: row.netOperationDetails,
       transfer: row.transferDetails,
-      weighing: row.weighingDetails,
       stockConvert: row.stockConvertDetails,
+      shipment: row.shipmentDetails,
     };
     const items = detailMap[type];
     if (items.length === 0) return;
@@ -216,6 +530,82 @@ export function ProjectDetailReportPage(): ReactElement {
       })),
     [sortedProjects]
   );
+
+  const projectSummary = useMemo(() => {
+    if (!reportQuery.data) return null;
+    const cages = reportQuery.data.cages;
+    const totalInitialFish = cages.reduce((acc, x) => acc + Number(x.initialFishCount ?? 0), 0);
+    const totalCurrentFish = cages.reduce((acc, x) => acc + Number(x.currentFishCount ?? 0), 0);
+    const totalDead = cages.reduce((acc, x) => acc + Number(x.totalDeadCount ?? 0), 0);
+    const totalFeedGram = cages.reduce((acc, x) => acc + Number(x.totalFeedGram ?? 0), 0);
+    const totalCurrentBiomass = cages.reduce((acc, x) => acc + Number(x.currentBiomassGram ?? 0), 0);
+    const totalShipmentFish = cages.reduce(
+      (acc, x) => acc + x.dailyRows.reduce((sum, row) => sum + Number(row.shipmentFishCount ?? 0), 0),
+      0
+    );
+    const totalShipmentBiomass = cages.reduce(
+      (acc, x) => acc + x.dailyRows.reduce((sum, row) => sum + Number(row.shipmentBiomassGram ?? 0), 0),
+      0
+    );
+    const shipmentDates = cages
+      .flatMap((x) => x.dailyRows)
+      .filter((row) => row.shipmentCount > 0 || row.shipmentFishCount > 0 || row.shipmentBiomassGram > 0)
+      .map((row) => row.date)
+      .sort((a, b) => b.localeCompare(a));
+    const avgCurrentGram = totalCurrentFish > 0 ? totalCurrentBiomass / totalCurrentFish : 0;
+    const expectedCurrentFish = Math.max(0, totalInitialFish - totalDead - totalShipmentFish);
+    const isConsistent = expectedCurrentFish === totalCurrentFish;
+
+    return {
+      activeCageCount: cages.length,
+      inactiveCageCount: reportQuery.data.cageHistory.length,
+      totalInitialFish,
+      totalCurrentFish,
+      totalDead,
+      totalFeedGram,
+      totalCurrentBiomass,
+      avgCurrentGram,
+      totalShipmentFish,
+      totalShipmentBiomass,
+      lastShipmentDate: shipmentDates[0] ?? '-',
+      expectedCurrentFish,
+      isConsistent,
+    };
+  }, [reportQuery.data]);
+
+  const projectCurrentSnapshot = useMemo(() => {
+    if (!reportQuery.data || !projectSummary) return null;
+    const cages = reportQuery.data.cages;
+    const latestDate = cages
+      .flatMap((x) => x.dailyRows.map((r) => r.date))
+      .sort((a, b) => b.localeCompare(a))[0];
+    const snapshotDate = latestDate || '-';
+    const liveRatePercent =
+      projectSummary.totalInitialFish > 0
+        ? (projectSummary.totalCurrentFish / projectSummary.totalInitialFish) * 100
+        : 0;
+
+    return {
+      projectCode: reportQuery.data.project.projectCode ?? '',
+      projectName: reportQuery.data.project.projectName ?? '',
+      snapshotDate,
+      liveRatePercent,
+      aliveFishCount: projectSummary.totalCurrentFish,
+      deadFishCount: projectSummary.totalDead,
+      missingFeedCageCountToday:
+        latestDate != null
+          ? cages.filter((cage) => cage.missingFeedingDays.includes(latestDate)).length
+          : 0,
+      activeCageCount: projectSummary.activeCageCount,
+      totalShipmentFish: projectSummary.totalShipmentFish,
+      totalShipmentBiomass: projectSummary.totalShipmentBiomass,
+      lastShipmentDate: projectSummary.lastShipmentDate,
+      consistency: {
+        expectedCurrentFish: projectSummary.expectedCurrentFish,
+        isConsistent: projectSummary.isConsistent,
+      },
+    };
+  }, [projectSummary, reportQuery.data]);
 
   return (
     <div className="min-h-[60vh] space-y-6 pb-8">
@@ -305,6 +695,62 @@ export function ProjectDetailReportPage(): ReactElement {
             </div>
           </CardHeader>
           <CardContent className="p-0">
+            <div className="border-b border-slate-100 px-4 pb-4 pt-4">
+              <ReportGuideCard t={t} />
+            </div>
+            {projectCurrentSnapshot && (
+              <div className="border-b border-slate-100 bg-white px-4 pb-4 pt-4">
+                <ProjectCurrentSnapshotCards
+                  projectCode={projectCurrentSnapshot.projectCode}
+                  projectName={projectCurrentSnapshot.projectName}
+                  snapshotDate={projectCurrentSnapshot.snapshotDate}
+                  liveRatePercent={projectCurrentSnapshot.liveRatePercent}
+                  aliveFishCount={projectCurrentSnapshot.aliveFishCount}
+                  deadFishCount={projectCurrentSnapshot.deadFishCount}
+                  missingFeedCageCountToday={projectCurrentSnapshot.missingFeedCageCountToday}
+                  activeCageCount={projectCurrentSnapshot.activeCageCount}
+                  totalShipmentFish={projectCurrentSnapshot.totalShipmentFish}
+                  totalShipmentBiomass={projectCurrentSnapshot.totalShipmentBiomass}
+                  lastShipmentDate={projectCurrentSnapshot.lastShipmentDate}
+                  consistency={projectCurrentSnapshot.consistency}
+                  t={t}
+                />
+              </div>
+            )}
+
+            {projectSummary && (
+              <div className="border-b border-slate-100 bg-slate-50/40 px-4 pb-4 pt-4">
+                <Card className="border-indigo-200/70 bg-linear-to-r from-indigo-50 via-white to-cyan-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base font-semibold">
+                      {t('aqua.projectDetailReport.mainSummaryTitle', { defaultValue: 'Ana Detay (Anlık Durum)' })}
+                    </CardTitle>
+                    <CardDescription>
+                      {t('aqua.projectDetailReport.mainSummaryDescription', {
+                        defaultValue: 'Projedeki aktif kafeslerin toplam anlık durumu.',
+                      })}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ProjectSummaryCards
+                      activeCageCount={projectSummary.activeCageCount}
+                      inactiveCageCount={projectSummary.inactiveCageCount}
+                      totalInitialFish={projectSummary.totalInitialFish}
+                      totalCurrentFish={projectSummary.totalCurrentFish}
+                      totalDead={projectSummary.totalDead}
+                      totalFeedGram={projectSummary.totalFeedGram}
+                      totalCurrentBiomass={projectSummary.totalCurrentBiomass}
+                      avgCurrentGram={projectSummary.avgCurrentGram}
+                      totalShipmentFish={projectSummary.totalShipmentFish}
+                      totalShipmentBiomass={projectSummary.totalShipmentBiomass}
+                      lastShipmentDate={projectSummary.lastShipmentDate}
+                      t={t}
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
             {reportQuery.data.cages.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-3 py-16">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-slate-400">
@@ -389,13 +835,17 @@ export function ProjectDetailReportPage(): ReactElement {
                               <TableRow className="border-slate-200 bg-slate-50/80 hover:bg-slate-50/80">
                                 <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.date')}</TableHead>
                                 <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.feedGram')}</TableHead>
+                                <TableHead className="font-semibold text-slate-700">
+                                  {t('aqua.projectDetailReport.feedStocks', { defaultValue: 'Yem Stokları' })}
+                                </TableHead>
                                 <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.deadCount')}</TableHead>
                                 <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.countDelta')}</TableHead>
                                 <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.biomassDelta')}</TableHead>
                                 <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.weather')}</TableHead>
                                 <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.netOps')}</TableHead>
                                 <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.transfers')}</TableHead>
-                                <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.weighings')}</TableHead>
+                                <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.shipments')}</TableHead>
+                                <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.shipmentQty')}</TableHead>
                                 <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.stockConverts')}</TableHead>
                                 <TableHead className="font-semibold text-slate-700">{t('aqua.projectDetailReport.feedStatus')}</TableHead>
                               </TableRow>
@@ -403,7 +853,7 @@ export function ProjectDetailReportPage(): ReactElement {
                             <TableBody>
                             {cage.dailyRows.length === 0 && (
                               <TableRow>
-                                <TableCell colSpan={11} className="py-8 text-center text-muted-foreground">
+                                <TableCell colSpan={13} className="py-8 text-center text-muted-foreground">
                                   {t('common.noData')}
                                 </TableCell>
                               </TableRow>
@@ -415,6 +865,29 @@ export function ProjectDetailReportPage(): ReactElement {
                               >
                                 <TableCell className="font-medium tabular-nums">{row.date}</TableCell>
                                 <TableCell className="tabular-nums">{formatNumber(row.feedGram)}</TableCell>
+                                <TableCell>
+                                  {row.feedDetails.length > 0 ? (
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      size="sm"
+                                      className="h-8 px-2 font-medium"
+                                      onClick={() => openDetailDialog(cage, row, 'feeding')}
+                                    >
+                                      {t('aqua.projectDetailReport.stockCountShort', {
+                                        defaultValue: '{{count}} stok',
+                                        count: row.feedStockCount,
+                                      })}
+                                    </Button>
+                                  ) : (
+                                    <span className="text-muted-foreground">
+                                      {t('aqua.projectDetailReport.stockCountShort', {
+                                        defaultValue: '{{count}} stok',
+                                        count: row.feedStockCount,
+                                      })}
+                                    </span>
+                                  )}
+                                </TableCell>
                                 <TableCell className="tabular-nums">{formatNumber(row.deadCount)}</TableCell>
                                 <TableCell className="tabular-nums">{formatNumber(row.countDelta)}</TableCell>
                                 <TableCell className="tabular-nums">{formatNumber(row.biomassDelta)}</TableCell>
@@ -450,19 +923,24 @@ export function ProjectDetailReportPage(): ReactElement {
                                   )}
                                 </TableCell>
                                 <TableCell>
-                                  {row.weighingCount > 0 ? (
+                                  {row.shipmentCount > 0 ? (
                                     <Button
                                       type="button"
                                       variant="outline"
                                       size="sm"
                                       className="h-8 px-2 font-medium"
-                                      onClick={() => openDetailDialog(cage, row, 'weighing')}
+                                      onClick={() => openDetailDialog(cage, row, 'shipment')}
                                     >
-                                      {formatNumber(row.weighingCount)}
+                                      {formatNumber(row.shipmentCount)}
                                     </Button>
                                   ) : (
                                     <span className="text-muted-foreground">0</span>
                                   )}
+                                </TableCell>
+                                <TableCell className="tabular-nums">
+                                  {row.shipmentFishCount > 0 || row.shipmentBiomassGram > 0
+                                    ? `${formatNumber(row.shipmentFishCount)} / ${formatNumber(row.shipmentBiomassGram)}g`
+                                    : '-'}
                                 </TableCell>
                                 <TableCell>
                                   {row.stockConvertCount > 0 ? (

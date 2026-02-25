@@ -44,7 +44,7 @@ export function MainLayout({ navItems }: MainLayoutProps): ReactElement {
           { title: t('sidebar.aquaFeedings', { defaultValue: 'Besleme (Sabah/Akşam)' }), href: '/aqua/operations/feedings' },
           { title: t('sidebar.aquaMortalities', { defaultValue: 'Ölüm' }), href: '/aqua/operations/mortalities' },
           { title: t('sidebar.aquaTransfers', { defaultValue: 'Transfer' }), href: '/aqua/operations/transfers' },
-          { title: t('sidebar.aquaWeighings', { defaultValue: 'Tartım' }), href: '/aqua/operations/weighings' },
+          { title: t('sidebar.aquaShipments', { defaultValue: 'Sevkiyat' }), href: '/aqua/operations/shipments' },
           { title: t('sidebar.aquaStockConverts', { defaultValue: 'Stock Convert' }), href: '/aqua/operations/stock-converts' },
           { title: t('sidebar.aquaDailyWeathers', { defaultValue: 'Günlük Hava Durumu' }), href: '/aqua/operations/daily-weathers' },
           { title: t('sidebar.aquaNetOperations', { defaultValue: 'Ağ İşlemleri' }), href: '/aqua/operations/net-operations' },

@@ -37,7 +37,7 @@ const GoodsReceiptsPage = lazyImport(() => import('@/features/aqua'), 'GoodsRece
 const FeedingsPage = lazyImport(() => import('@/features/aqua'), 'FeedingsPage');
 const MortalitiesPage = lazyImport(() => import('@/features/aqua'), 'MortalitiesPage');
 const TransfersPage = lazyImport(() => import('@/features/aqua'), 'TransfersPage');
-const WeighingsPage = lazyImport(() => import('@/features/aqua'), 'WeighingsPage');
+const ShipmentsPage = lazyImport(() => import('@/features/aqua'), 'ShipmentsPage');
 const StockConvertsPage = lazyImport(() => import('@/features/aqua'), 'StockConvertsPage');
 const DailyWeathersPage = lazyImport(() => import('@/features/aqua'), 'DailyWeathersPage');
 const NetOperationsPage = lazyImport(() => import('@/features/aqua'), 'NetOperationsPage');
@@ -46,8 +46,8 @@ const GoodsReceiptFishDistributionsPage = lazyImport(() => import('@/features/aq
 const FeedingLinesPage = lazyImport(() => import('@/features/aqua'), 'FeedingLinesPage');
 const FeedingDistributionsPage = lazyImport(() => import('@/features/aqua'), 'FeedingDistributionsPage');
 const TransferLinesPage = lazyImport(() => import('@/features/aqua'), 'TransferLinesPage');
+const ShipmentLinesPage = lazyImport(() => import('@/features/aqua'), 'ShipmentLinesPage');
 const MortalityLinesPage = lazyImport(() => import('@/features/aqua'), 'MortalityLinesPage');
-const WeighingLinesPage = lazyImport(() => import('@/features/aqua'), 'WeighingLinesPage');
 const StockConvertLinesPage = lazyImport(() => import('@/features/aqua'), 'StockConvertLinesPage');
 const NetOperationLinesPage = lazyImport(() => import('@/features/aqua'), 'NetOperationLinesPage');
 const BatchMovementsPage = lazyImport(() => import('@/features/aqua'), 'BatchMovementsPage');
@@ -55,6 +55,7 @@ const CageBalancesPage = lazyImport(() => import('@/features/aqua'), 'CageBalanc
 const ProjectDetailReportPage = lazyImport(() => import('@/features/aqua'), 'ProjectDetailReportPage');
 const QuickSetupPage = lazyImport(() => import('@/features/aqua/operations/quick-setup'), 'QuickSetupPage');
 const QuickDailyEntryPage = lazyImport(() => import('@/features/aqua/operations/quick-daily-entry'), 'QuickDailyEntryPage');
+const WelcomePage = lazyImport(() => import('@/features/welcome'), 'WelcomePage');
 
 const WINDO_FORM_ROUTE = '/';
 
@@ -68,7 +69,8 @@ export const router = createBrowserRouter([
     ),
     errorElement: <RouteErrorFallback />,
     children: [
-      { index: true, element: <Navigate to="/stocks" replace /> },
+      { index: true, element: <Navigate to="/welcome" replace /> },
+      { path: 'welcome', element: <WelcomePage /> },
       { path: 'forbidden', element: <ForbiddenPage /> },
       { path: 'user-management', element: <UserManagementPage /> },
       { path: 'users/mail-settings', element: <MailSettingsPage /> },
@@ -91,7 +93,8 @@ export const router = createBrowserRouter([
       { path: 'aqua/operations/feedings', element: <FeedingsPage /> },
       { path: 'aqua/operations/mortalities', element: <MortalitiesPage /> },
       { path: 'aqua/operations/transfers', element: <TransfersPage /> },
-      { path: 'aqua/operations/weighings', element: <WeighingsPage /> },
+      { path: 'aqua/operations/shipments', element: <ShipmentsPage /> },
+      { path: 'aqua/operations/weighings', element: <Navigate to="/aqua/operations/stock-converts" replace /> },
       { path: 'aqua/operations/stock-converts', element: <StockConvertsPage /> },
       { path: 'aqua/operations/daily-weathers', element: <DailyWeathersPage /> },
       { path: 'aqua/operations/net-operations', element: <NetOperationsPage /> },
@@ -100,8 +103,9 @@ export const router = createBrowserRouter([
       { path: 'aqua/operations/feeding-lines', element: <FeedingLinesPage /> },
       { path: 'aqua/operations/feeding-distributions', element: <FeedingDistributionsPage /> },
       { path: 'aqua/operations/transfer-lines', element: <TransferLinesPage /> },
+      { path: 'aqua/operations/shipment-lines', element: <ShipmentLinesPage /> },
       { path: 'aqua/operations/mortality-lines', element: <MortalityLinesPage /> },
-      { path: 'aqua/operations/weighing-lines', element: <WeighingLinesPage /> },
+      { path: 'aqua/operations/weighing-lines', element: <Navigate to="/aqua/operations/stock-convert-lines" replace /> },
       { path: 'aqua/operations/stock-convert-lines', element: <StockConvertLinesPage /> },
       { path: 'aqua/operations/net-operation-lines', element: <NetOperationLinesPage /> },
       { path: 'aqua/reports/batch-movements', element: <BatchMovementsPage /> },

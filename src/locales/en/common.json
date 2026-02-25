@@ -199,6 +199,12 @@
   "nav": {
     "customersConflictInbox": "Conflict Inbox"
   },
+  "welcome": {
+    "title": "Welcome",
+    "greeting": "Hello, {{name}}",
+    "subtitle": "Use the sidebar to access operations and reports.",
+    "userFallback": "User"
+  },
   "powerbiRls": {
     "title": "Power BI RLS Management",
     "description": "Map report + user role and define RLS roles.",
@@ -334,6 +340,8 @@
     "aquaMortalityLines": "Mortality Lines",
     "aquaTransfers": "Transfer",
     "aquaTransferLines": "Transfer Lines",
+    "aquaShipments": "Shipment",
+    "aquaShipmentLines": "Shipment Lines",
     "aquaWeighings": "Weighing",
     "aquaWeighingLines": "Weighing Lines",
     "aquaStockConverts": "Stock Convert",
@@ -4242,6 +4250,10 @@
         "title": "Transfer",
         "description": "Transfer header records."
       },
+      "shipments": {
+        "title": "Shipment",
+        "description": "Shipment header records."
+      },
       "weighings": {
         "title": "Weighing",
         "description": "Weighing header records."
@@ -4277,6 +4289,10 @@
       "transferLines": {
         "title": "Transfer Lines",
         "description": "Transfer line records."
+      },
+      "shipmentLines": {
+        "title": "Shipment Lines",
+        "description": "Shipment line records."
       },
       "mortalityLines": {
         "title": "Mortality Lines",
@@ -4348,6 +4364,9 @@
       "transferNo": "Transfer No",
       "transferId": "Transfer ID",
       "transferDate": "Transfer Date",
+      "shipmentNo": "Shipment No",
+      "shipmentId": "Shipment ID",
+      "shipmentDate": "Shipment Date",
       "weighingNo": "Weighing No",
       "weighingId": "Weighing ID",
       "weighingDate": "Weighing Date",
@@ -4368,6 +4387,10 @@
       "projectCageId": "Project Cage ID",
       "fromProjectCageId": "From Project Cage ID",
       "toProjectCageId": "To Project Cage ID",
+      "fromStockId": "From Stock ID",
+      "toStockId": "To Stock ID",
+      "fromAverageGram": "From Average Gram",
+      "toAverageGram": "To Average Gram",
       "measuredCount": "Measured Count",
       "measuredAverageGram": "Measured Average Gram",
       "measuredBiomassGram": "Measured Biomass Gram",
@@ -4496,6 +4519,8 @@
         "noSourceBatch": "No active batch found in selected cage.",
         "targetBatch": "Target Batch",
         "fishCount": "Count",
+        "newAverageGram": "Increment Gram",
+        "gramInfo": "Current gram: {{oldGram}} | Increment: {{increase}} | New total: {{newGram}}",
         "description": "Description",
         "save": "Save"
       },
@@ -4516,6 +4541,7 @@
         "mortalitySaved": "Mortality record created",
         "weatherSaved": "Weather saved",
         "netOperationSaved": "Net operation saved",
+        "invalidNewAverageGram": "Increment gram must be greater than 0.",
         "saveFailed": "Save failed"
       }
     },
@@ -4550,6 +4576,11 @@
       "weather": "Weather",
       "netOps": "Net ops",
       "transfers": "Transfers",
+      "shipments": "Shipments",
+      "shipmentQty": "Shipment Qty",
+      "feedStocks": "Feed Stocks",
+      "stockCountShort": "{{count}} stocks",
+      "feedingDetails": "Feeding Details",
       "weighings": "Weighings",
       "stockConverts": "Stock converts",
       "noOperationDetail": "No detail found for this day.",
@@ -4564,7 +4595,21 @@
       "assignedDate": "Assigned Date",
       "releasedDate": "Released Date",
       "status": "Status",
-      "inactive": "Inactive"
+      "inactive": "Inactive",
+      "currentSnapshotTitle": "Main Summary (Current Snapshot)",
+      "snapshotDate": "Snapshot date",
+      "liveRate": "Survival Rate",
+      "aliveFishNow": "Alive Fish Now",
+      "cagesFedToday": "Active Cages Fed Today",
+      "readGuideTitle": "How To Read This Report?",
+      "readGuideDescription": "Cards show project totals, expandable rows show cage-level daily movements.",
+      "readGuideCurrentFish": "Current Fish: live fish after mortality and shipments are deducted from initial stock.",
+      "readGuideShipment": "Shipment Qty: left is fish count, right is biomass in grams.",
+      "readGuideDelta": "Delta columns show net daily change (+/-).",
+      "readGuideButtons": "Click Transfer/Shipment/Convert buttons to open line-level details for that day.",
+      "consistencyFormula": "Validation: Initial - Mortality - Shipment = Current",
+      "consistent": "Consistent",
+      "inconsistent": "Inconsistent"
     }
   }
 }

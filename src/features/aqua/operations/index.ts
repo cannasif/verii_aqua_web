@@ -4,7 +4,7 @@ export { GoodsReceiptsPage } from './components/GoodsReceiptsPage';
 export { FeedingsPage } from './components/FeedingsPage';
 export { MortalitiesPage } from './components/MortalitiesPage';
 export { TransfersPage } from './components/TransfersPage';
-export { WeighingsPage } from './components/WeighingsPage';
+export { ShipmentsPage } from './components/ShipmentsPage';
 export { StockConvertsPage } from './components/StockConvertsPage';
 export { DailyWeathersPage } from './components/DailyWeathersPage';
 export { NetOperationsPage } from './components/NetOperationsPage';
@@ -13,7 +13,7 @@ export { GoodsReceiptFishDistributionsPage } from './components/GoodsReceiptFish
 export { FeedingLinesPage } from './components/FeedingLinesPage';
 export { FeedingDistributionsPage } from './components/FeedingDistributionsPage';
 export { TransferLinesPage } from './components/TransferLinesPage';
+export { ShipmentLinesPage } from './components/ShipmentLinesPage';
 export { MortalityLinesPage } from './components/MortalityLinesPage';
-export { WeighingLinesPage } from './components/WeighingLinesPage';
 export { StockConvertLinesPage } from './components/StockConvertLinesPage';
 export { NetOperationLinesPage } from './components/NetOperationLinesPage';

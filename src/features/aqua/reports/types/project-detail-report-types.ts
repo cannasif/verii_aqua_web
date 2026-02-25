@@ -3,6 +3,8 @@ export interface ProjectDto {
   projectCode?: string;
   projectName?: string;
   startDate?: string;
+  endDate?: string | null;
+  status?: number;
 }
 
 export interface ProjectCageDto {
@@ -24,12 +26,17 @@ export interface CageHistoryItem {
 export interface FeedingDto {
   id: number;
   projectId: number;
+  feedingNo?: string;
   feedingDate: string;
+  feedingSlot?: number;
+  note?: string;
+  status?: number;
 }
 
 export interface FeedingLineDto {
   id: number;
   feedingId: number;
+  stockId?: number;
 }
 
 export interface FeedingDistributionDto {
@@ -43,6 +50,7 @@ export interface MortalityDto {
   id: number;
   projectId: number;
   mortalityDate: string;
+  status?: number;
 }
 
 export interface MortalityLineDto {
@@ -97,6 +105,7 @@ export interface NetOperationDto {
   operationTypeName?: string;
   note?: string;
   operationDate: string;
+  status?: number;
 }
 
 export interface NetOperationLineDto {
@@ -113,6 +122,7 @@ export interface TransferDto {
   transferNo?: string;
   note?: string;
   transferDate: string;
+  status?: number;
 }
 
 export interface TransferLineDto {
@@ -131,6 +141,7 @@ export interface WeighingDto {
   weighingNo?: string;
   note?: string;
   weighingDate: string;
+  status?: number;
 }
 
 export interface WeighingLineDto {
@@ -148,6 +159,7 @@ export interface StockConvertDto {
   convertNo?: string;
   note?: string;
   convertDate: string;
+  status?: number;
 }
 
 export interface StockConvertLineDto {
@@ -157,12 +169,40 @@ export interface StockConvertLineDto {
   toProjectCageId: number;
   fishCount?: number;
   averageGram?: number;
+  newAverageGram?: number;
+  biomassGram?: number;
+}
+
+export interface ShipmentDto {
+  id: number;
+  projectId: number;
+  shipmentNo?: string;
+  targetWarehouse?: string;
+  note?: string;
+  shipmentDate: string;
+  status?: number;
+}
+
+export interface ShipmentLineDto {
+  id: number;
+  shipmentId: number;
+  fishBatchId?: number;
+  fromProjectCageId: number;
+  fishCount?: number;
+  averageGram?: number;
   biomassGram?: number;
 }
 
 export interface BatchMovementDto {
   id: number;
   projectCageId?: number;
+  fromProjectCageId?: number;
+  toProjectCageId?: number;
+  fromStockId?: number;
+  toStockId?: number;
+  fromAverageGram?: number;
+  toAverageGram?: number;
+  referenceId?: number;
   movementDate: string;
   movementType: number;
   signedCount: number;
@@ -172,6 +212,8 @@ export interface BatchMovementDto {
 export interface CageDailyRow {
   date: string;
   feedGram: number;
+  feedStockCount: number;
+  feedDetails: string[];
   deadCount: number;
   countDelta: number;
   biomassDelta: number;
@@ -184,6 +226,10 @@ export interface CageDailyRow {
   weighingDetails: string[];
   stockConvertCount: number;
   stockConvertDetails: string[];
+  shipmentCount: number;
+  shipmentDetails: string[];
+  shipmentFishCount: number;
+  shipmentBiomassGram: number;
   fed: boolean;
 }
 
