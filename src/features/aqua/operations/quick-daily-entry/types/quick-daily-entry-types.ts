@@ -168,5 +168,6 @@ export interface CreateStockConvertLinePayload {
   toProjectCageId: number;
   fishCount: number;
   averageGram: number;
+  newAverageGram: number;
   biomassGram: number;
 }

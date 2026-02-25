@@ -425,6 +425,14 @@ export function QuickDailyEntryPage(): ReactElement {
         note: data.description,
       });
       const averageGram = sourceBatch.averageGram > 0 ? sourceBatch.averageGram : 0;
+      const newAverageGram = Number(data.newAverageGram);
+      if (newAverageGram <= 0) {
+        throw new Error(
+          t('aqua.quickDailyEntry.toast.invalidNewAverageGram', {
+            defaultValue: 'Yeni ortalama gram 0’dan büyük olmalı.',
+          })
+        );
+      }
       const biomassGram = data.fishCount * averageGram;
       await createStockConvertLine.mutateAsync({
         stockConvertId: stockConvert.id,
@@ -434,6 +442,7 @@ export function QuickDailyEntryPage(): ReactElement {
         toProjectCageId: projectCageId,
         fishCount: data.fishCount,
         averageGram,
+        newAverageGram,
         biomassGram,
       });
       toast.success(t('aqua.quickDailyEntry.toast.stockChangeSaved', { defaultValue: 'Stok değişimi kaydedildi.' }));

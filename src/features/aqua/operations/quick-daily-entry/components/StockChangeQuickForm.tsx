@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Combobox } from '@/components/ui/combobox';
+import { calculateIncrementedAverageGram } from '@/features/aqua/shared/batch-math';
 import {
   stockChangeQuickFormSchema,
   type StockChangeQuickFormSchema,
@@ -41,11 +42,11 @@ export function StockChangeQuickForm({
   const { t } = useTranslation('common');
   const form = useForm<StockChangeQuickFormSchema>({
     resolver: zodResolver(stockChangeQuickFormSchema) as Resolver<StockChangeQuickFormSchema>,
-    defaultValues: { toFishBatchId: 0, fishCount: 0, description: '' },
+    defaultValues: { toFishBatchId: 0, fishCount: 0, newAverageGram: 0, description: '' },
   });
 
   useEffect(() => {
-    form.reset({ toFishBatchId: 0, fishCount: 0, description: '' });
+    form.reset({ toFishBatchId: 0, fishCount: 0, newAverageGram: 0, description: '' });
   }, [projectId, projectCageId]);
 
   const targetBatches = useMemo(
@@ -57,10 +58,11 @@ export function StockChangeQuickForm({
     () => targetBatches.map((b) => ({ value: String(b.id), label: `Batch #${b.id}` })),
     [targetBatches]
   );
+  const newAverageGramValue = Number(form.watch('newAverageGram') || 0);
 
   const handleSubmit: SubmitHandler<StockChangeQuickFormSchema> = async (data) => {
     await onSubmit(data);
-    form.reset({ toFishBatchId: 0, fishCount: 0, description: '' });
+    form.reset({ toFishBatchId: 0, fishCount: 0, newAverageGram: 0, description: '' });
   };
 
   const disabled = projectId == null || projectCageId == null || sourceBatch == null;
@@ -119,6 +121,29 @@ export function StockChangeQuickForm({
                   <FormControl>
                     <Input type="number" min={1} step={1} {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="newAverageGram"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t('aqua.quickDailyEntry.stockChange.newAverageGram', { defaultValue: 'Eklenecek Gram' })}
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" min={0.001} step={0.001} {...field} />
+                  </FormControl>
+                  <p className="text-xs text-muted-foreground">
+                    {t('aqua.quickDailyEntry.stockChange.gramInfo', {
+                      defaultValue: 'Mevcut gram: {{oldGram}} | Eklenecek: {{increase}} | Yeni toplam: {{newGram}}',
+                      oldGram: sourceBatch?.averageGram ?? 0,
+                      increase: newAverageGramValue,
+                      newGram: calculateIncrementedAverageGram(sourceBatch?.averageGram ?? 0, newAverageGramValue),
+                    })}
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}

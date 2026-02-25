@@ -32,6 +32,7 @@ export const transferQuickFormSchema = z.object({
 export const stockChangeQuickFormSchema = z.object({
   toFishBatchId: z.coerce.number().int().positive('common.required'),
   fishCount: z.coerce.number().int().positive('common.required'),
+  newAverageGram: z.coerce.number().positive('common.required'),
   description: z.string().optional(),
 });
 
