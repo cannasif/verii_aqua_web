@@ -46,17 +46,66 @@ const DOC_STATUS_OPTIONS = [
 ];
 const LOOKUP_PAGE_SIZE = 500;
 
+function pad2(value: number): string {
+  return String(value).padStart(2, '0');
+}
+
+function getTodayDateValue(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = pad2(now.getMonth() + 1);
+  const day = pad2(now.getDate());
+  return `${year}-${month}-${day}`;
+}
+
+function getNowDateTimeLocalValue(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = pad2(now.getMonth() + 1);
+  const day = pad2(now.getDate());
+  const hour = pad2(now.getHours());
+  const minute = pad2(now.getMinutes());
+  return `${year}-${month}-${day}T${hour}:${minute}`;
+}
+
+function resolveStatusFallbackValue(config: AquaCrudConfig): unknown {
+  const statusField = config.fields.find((field) => field.key.toLowerCase() === 'status');
+  if (!statusField) return null;
+
+  const configuredStatus = config.defaultValues?.status;
+  if (configuredStatus != null && configuredStatus !== '') {
+    return configuredStatus;
+  }
+
+  const options = statusField.options ?? DOC_STATUS_OPTIONS;
+  if (options.length > 0) {
+    return options[0]?.value ?? 0;
+  }
+
+  return 0;
+}
+
 function getInitialValues(config: AquaCrudConfig): Record<string, unknown> {
   const base: Record<string, unknown> = {};
   for (const field of config.fields) {
-    if (field.type === 'number') {
+    if (field.type === 'date') {
+      base[field.key] = getTodayDateValue();
+    } else if (field.type === 'datetime') {
+      base[field.key] = getNowDateTimeLocalValue();
+    } else if (field.type === 'number') {
       base[field.key] = '';
     } else {
       base[field.key] = '';
     }
   }
 
-  return { ...base, ...(config.defaultValues ?? {}) };
+  const merged = { ...base, ...(config.defaultValues ?? {}) };
+  const statusFallback = resolveStatusFallbackValue(config);
+  if (statusFallback != null && (merged.status == null || merged.status === '')) {
+    merged.status = statusFallback;
+  }
+
+  return merged;
 }
 
 function normalizeFieldValue(field: AquaFieldConfig, rawValue: unknown): unknown {
@@ -103,6 +152,12 @@ function formatCellValue(value: unknown, t: (key: string) => string): string {
   if (typeof value === 'boolean') return value ? t('common.yes') : t('common.no');
   if (typeof value === 'string' || typeof value === 'number') return String(value);
   return JSON.stringify(value);
+}
+
+function extractRecordId(record: Record<string, unknown> | null | undefined): number | null {
+  if (!record) return null;
+  const id = Number(record.id ?? record.Id);
+  return Number.isFinite(id) && id > 0 ? id : null;
 }
 
 function normalizeInputValue(field: AquaFieldConfig, value: unknown): string {
@@ -231,8 +286,23 @@ export function AquaCrudPage({
 
   const createMutation = useMutation({
     mutationFn: (payload: Record<string, unknown>) => aquaCrudApi.create(config.endpoint, payload),
-    onSuccess: () => {
-      toast.success(t('aqua.toast.created'));
+    onSuccess: async (createdRecord) => {
+      if (config.autoPostOnSave && config.postingSlug) {
+        const createdId = extractRecordId(createdRecord);
+        if (!createdId) {
+          toast.error(t('aqua.toast.postFailed'));
+        } else {
+          try {
+            await aquaCrudApi.postDocument(config.postingSlug, createdId);
+            toast.success(t('aqua.toast.posted'));
+          } catch (error) {
+            toast.error(error instanceof Error ? error.message : t('aqua.toast.postFailed'));
+          }
+        }
+      } else {
+        toast.success(t('aqua.toast.created'));
+      }
+
       setFormOpen(false);
       setEditingRow(null);
       setFormValues(getInitialValues(config));
@@ -246,8 +316,18 @@ export function AquaCrudPage({
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: number; payload: Record<string, unknown> }) =>
       aquaCrudApi.update(config.endpoint, id, payload),
-    onSuccess: () => {
-      toast.success(t('aqua.toast.updated'));
+    onSuccess: async (_, variables) => {
+      if (config.autoPostOnSave && config.postingSlug) {
+        try {
+          await aquaCrudApi.postDocument(config.postingSlug, variables.id);
+          toast.success(t('aqua.toast.posted'));
+        } catch (error) {
+          toast.error(error instanceof Error ? error.message : t('aqua.toast.postFailed'));
+        }
+      } else {
+        toast.success(t('aqua.toast.updated'));
+      }
+
       setFormOpen(false);
       setEditingRow(null);
       setFormValues(getInitialValues(config));
@@ -346,8 +426,18 @@ export function AquaCrudPage({
   }, [config.fields, t]);
 
   const visibleFields = useMemo(() => {
-    return config.fields.filter((field) => !(contextFilter?.hideFieldInForm && contextFilter.fieldKey === field.key));
-  }, [config.fields, contextFilter]);
+    return config.fields.filter((field) => {
+      if (contextFilter?.hideFieldInForm && contextFilter.fieldKey === field.key) {
+        return false;
+      }
+
+      if (config.postingSlug && field.key.toLowerCase() === 'status') {
+        return false;
+      }
+
+      return true;
+    });
+  }, [config.fields, contextFilter, config.postingSlug]);
 
   const handleCreate = (): void => {
     if (contextFilter?.lockValue && contextFilter.value == null) {
@@ -385,6 +475,11 @@ export function AquaCrudPage({
     const payload: Record<string, unknown> = {};
     for (const field of config.fields) {
       payload[field.key] = normalizeFieldValue(field, formValues[field.key]);
+    }
+
+    const statusFallback = resolveStatusFallbackValue(config);
+    if (statusFallback != null && (payload.status == null || payload.status === '')) {
+      payload.status = statusFallback;
     }
 
     if (contextFilter?.lockValue) {
@@ -536,7 +631,7 @@ export function AquaCrudPage({
                             </Button>
                           </>
                         )}
-                        {config.postingSlug && status === 0 && (
+                        {config.postingSlug && !config.autoPostOnSave && status === 0 && (
                           <Button
                             size="sm"
                             onClick={() => postMutation.mutate({ slug: config.postingSlug!, id })}
