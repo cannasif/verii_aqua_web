@@ -11,6 +11,12 @@ export const batchMovementsConfig: AquaCrudConfig = {
   columns: [
     { key: 'fishBatchId', label: 'aqua.fields.fishBatchId' },
     { key: 'projectCageId', label: 'aqua.fields.projectCageId' },
+    { key: 'fromProjectCageId', label: 'aqua.fields.fromProjectCageId' },
+    { key: 'toProjectCageId', label: 'aqua.fields.toProjectCageId' },
+    { key: 'fromStockId', label: 'aqua.fields.fromStockId' },
+    { key: 'toStockId', label: 'aqua.fields.toStockId' },
+    { key: 'fromAverageGram', label: 'aqua.fields.fromAverageGram' },
+    { key: 'toAverageGram', label: 'aqua.fields.toAverageGram' },
     { key: 'movementType', label: 'aqua.fields.movementType' },
     { key: 'signedCount', label: 'aqua.fields.signedCount' },
     { key: 'signedBiomassGram', label: 'aqua.fields.signedBiomassGram' },
