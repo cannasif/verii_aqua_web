@@ -65,7 +65,7 @@ export function Combobox({
             className
           )}
         >
-          <span className="truncate">
+          <span className="truncate min-w-0 flex-1 text-left">
             {selectedOption ? selectedOption.label : placeholder}
           </span>
           <ChevronDown className={cn("ml-2 h-4 w-4 shrink-0 opacity-50 transition-transform", open && "rotate-180")} />
