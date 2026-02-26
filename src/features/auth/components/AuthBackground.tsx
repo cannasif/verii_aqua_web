@@ -1,5 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 
+const TARGET_FPS = 30;
+const FRAME_INTERVAL_MS = 1000 / TARGET_FPS;
+const PARTICLE_COUNT = 100;
+const MAX_LINE_SEGMENTS = 800;
+const CONNECTION_DISTANCE = 8;
+
 interface AuthBackgroundProps {
   isActive: boolean;
 }
@@ -32,17 +38,17 @@ export const AuthBackground: React.FC<AuthBackgroundProps> = ({ isActive }) => {
       );
       camera.position.z = 40;
 
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      const pixelRatio = Math.min(window.devicePixelRatio, 2);
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'low-power' });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setPixelRatio(pixelRatio);
       mountRef.current.appendChild(renderer.domElement);
 
-      const particleCount = 200;
       const particlesGeometry = new THREE.BufferGeometry();
-      const particlesPositions = new Float32Array(particleCount * 3);
+      const particlesPositions = new Float32Array(PARTICLE_COUNT * 3);
       const particlesVelocities: { x: number; y: number; z: number }[] = [];
 
-      for (let i = 0; i < particleCount; i++) {
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
         particlesPositions[i * 3] = (Math.random() - 0.5) * 60;
         particlesPositions[i * 3 + 1] = (Math.random() - 0.5) * 60;
         particlesPositions[i * 3 + 2] = (Math.random() - 0.5) * 30;
@@ -73,18 +79,16 @@ export const AuthBackground: React.FC<AuthBackgroundProps> = ({ isActive }) => {
         transparent: true,
         opacity: 0.12,
       });
-      const maxLines = particleCount * particleCount;
-      const linePositions = new Float32Array(maxLines * 3);
+      const linePositions = new Float32Array(MAX_LINE_SEGMENTS * 6);
       const lineGeometry = new THREE.BufferGeometry();
       lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
       const linesMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
       scene.add(linesMesh);
 
-      const pulsesCount = 15;
+      const pulsesCount = 10;
       const pulsesGeo = new THREE.BufferGeometry();
       const pulsesPos = new Float32Array(pulsesCount * 3);
-      const pulsesGeoAttr = new THREE.BufferAttribute(pulsesPos, 3);
-      pulsesGeo.setAttribute('position', pulsesGeoAttr);
+      pulsesGeo.setAttribute('position', new THREE.BufferAttribute(pulsesPos, 3));
       const pulsesMat = new THREE.PointsMaterial({
         color: 0xfbbf24,
         size: 0.9,
@@ -108,12 +112,16 @@ export const AuthBackground: React.FC<AuthBackgroundProps> = ({ isActive }) => {
       let animationFrameId: number;
       let mouseX = 0;
       let mouseY = 0;
+      let lastFrameTime = 0;
 
-      const animate = () => {
+      const animate = (now: number) => {
         animationFrameId = requestAnimationFrame(animate);
+        const elapsed = now - lastFrameTime;
+        if (elapsed < FRAME_INTERVAL_MS) return;
+        lastFrameTime = now - (elapsed % FRAME_INTERVAL_MS);
 
         const pos = particlesMesh.geometry.attributes.position.array as Float32Array;
-        for (let i = 0; i < particleCount; i++) {
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
           pos[i * 3] += particlesVelocities[i].x;
           pos[i * 3 + 1] += particlesVelocities[i].y;
           pos[i * 3 + 2] += particlesVelocities[i].z;
@@ -125,29 +133,28 @@ export const AuthBackground: React.FC<AuthBackgroundProps> = ({ isActive }) => {
         particlesMesh.geometry.attributes.position.needsUpdate = true;
 
         let lineIdx = 0;
-        const connectionDistance = 8;
         const connections: [number, number][] = [];
 
-        for (let i = 0; i < particleCount; i++) {
-          for (let j = i + 1; j < particleCount; j++) {
+        for (let i = 0; i < PARTICLE_COUNT && lineIdx < MAX_LINE_SEGMENTS; i++) {
+          for (let j = i + 1; j < PARTICLE_COUNT && lineIdx < MAX_LINE_SEGMENTS; j++) {
             const dx = pos[i * 3] - pos[j * 3];
             const dy = pos[i * 3 + 1] - pos[j * 3 + 1];
             const dz = pos[i * 3 + 2] - pos[j * 3 + 2];
-            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-            if (dist < connectionDistance) {
-              linePositions[lineIdx++] = pos[i * 3];
-              linePositions[lineIdx++] = pos[i * 3 + 1];
-              linePositions[lineIdx++] = pos[i * 3 + 2];
-              linePositions[lineIdx++] = pos[j * 3];
-              linePositions[lineIdx++] = pos[j * 3 + 1];
-              linePositions[lineIdx++] = pos[j * 3 + 2];
+            const distSq = dx * dx + dy * dy + dz * dz;
+            if (distSq < CONNECTION_DISTANCE * CONNECTION_DISTANCE) {
               connections.push([i, j]);
+              linePositions[lineIdx * 6] = pos[i * 3];
+              linePositions[lineIdx * 6 + 1] = pos[i * 3 + 1];
+              linePositions[lineIdx * 6 + 2] = pos[i * 3 + 2];
+              linePositions[lineIdx * 6 + 3] = pos[j * 3];
+              linePositions[lineIdx * 6 + 4] = pos[j * 3 + 1];
+              linePositions[lineIdx * 6 + 5] = pos[j * 3 + 2];
+              lineIdx++;
             }
           }
         }
 
-        linesMesh.geometry.setDrawRange(0, lineIdx / 3);
+        linesMesh.geometry.setDrawRange(0, lineIdx * 2);
         linesMesh.geometry.attributes.position.needsUpdate = true;
 
         const pPos = pulsesMesh.geometry.attributes.position.array as Float32Array;
@@ -197,7 +204,7 @@ export const AuthBackground: React.FC<AuthBackgroundProps> = ({ isActive }) => {
         mouseX = e.clientX / window.innerWidth - 0.5;
         mouseY = e.clientY / window.innerHeight - 0.5;
       };
-      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
       const handleResize = () => {
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -206,16 +213,14 @@ export const AuthBackground: React.FC<AuthBackgroundProps> = ({ isActive }) => {
       };
       window.addEventListener('resize', handleResize);
 
-      animate();
+      animationFrameId = requestAnimationFrame(animate);
 
       cleanup = () => {
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('resize', handleResize);
         cancelAnimationFrame(animationFrameId);
-        if (mountRef.current && renderer.domElement) {
-          if (mountRef.current.contains(renderer.domElement)) {
-            mountRef.current.removeChild(renderer.domElement);
-          }
+        if (mountRef.current && renderer.domElement?.parentNode === mountRef.current) {
+          mountRef.current.removeChild(renderer.domElement);
         }
         renderer.dispose();
         particlesGeometry.dispose();
