@@ -140,7 +140,7 @@ export function LoginPage(): React.JSX.Element {
               <img
                 src={loginImage}
                 alt="V3RII"
-                className="mx-auto h-10 w-auto object-contain"
+                className="mx-auto h-20 w-auto object-contain"
               />
               <h1 className="mt-2 text-xs font-medium uppercase tracking-widest text-slate-400">
                 {t('auth.login.title')}
