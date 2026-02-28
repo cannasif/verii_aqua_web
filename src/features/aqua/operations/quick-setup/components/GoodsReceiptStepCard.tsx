@@ -142,82 +142,78 @@ export function GoodsReceiptStepCard({
     existingReceipt.fishCount > 0;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t('aqua.quickSetup.step2Title')}</CardTitle>
+    <Card className="bg-[#1a1025]/60 backdrop-blur-xl border border-white/5 shadow-sm rounded-2xl overflow-hidden transition-all duration-300">
+      <CardHeader className="border-b border-white/5 px-6 py-5 bg-transparent">
+        <CardTitle className="text-xl font-bold tracking-tight text-white">{t('aqua.quickSetup.step2Title')}</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="p-6 space-y-6">
         {projectId == null ? (
-          <p className="text-muted-foreground text-sm">{t('aqua.quickSetup.selectProjectFirst')}</p>
+          <p className="text-slate-500 text-sm">{t('aqua.quickSetup.selectProjectFirst')}</p>
         ) : isCheckingExistingReceipt ? (
-          <p className="text-muted-foreground text-sm">{t('common.loading')}</p>
+          <div className="flex items-center gap-3">
+             <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-pink-500" />
+             <p className="text-slate-400 text-sm">{t('common.loading')}</p>
+          </div>
         ) : existingReceipt?.status === 1 ? (
-          <div className="rounded border border-emerald-200 bg-emerald-50 p-3 text-sm space-y-1">
-            <p className="font-medium text-emerald-800">{t('aqua.quickSetup.existingGoodsReceiptFound')}</p>
-            <p className="text-emerald-700">
-              {t('aqua.quickSetup.receiptNo')}: {existingReceipt.receiptNo}
-            </p>
-            <p className="text-emerald-700">
-              {t('aqua.quickSetup.date')}: {existingReceipt.receiptDate}
-            </p>
-            <p className="text-emerald-700">
-              {t('aqua.quickSetup.stock')}: {fishStockLabel}
-            </p>
-            <p className="text-emerald-700">
-              {t('aqua.quickSetup.count')}: {existingReceipt.fishCount}
-            </p>
-            <p className="text-emerald-700">
-              {t('aqua.quickSetup.currentAverageGram')}: {existingReceipt.fishAverageGram ?? 0}
-            </p>
-            {existingReceipt.status === 1 && (
-              <p className="text-amber-700">{t('aqua.quickSetup.existingGoodsReceiptPostedInfo')}</p>
-            )}
-            <p className="text-amber-700">{t('aqua.quickSetup.existingGoodsReceiptPostedInfo')}</p>
+          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-5 text-sm space-y-2 backdrop-blur-md">
+            <p className="font-semibold text-emerald-400 mb-3">{t('aqua.quickSetup.existingGoodsReceiptFound')}</p>
+            <div className="grid grid-cols-2 gap-4">
+                <p className="text-emerald-500/80"><span className="text-emerald-500/50">{t('aqua.quickSetup.receiptNo')}:</span> {existingReceipt.receiptNo}</p>
+                <p className="text-emerald-500/80"><span className="text-emerald-500/50">{t('aqua.quickSetup.date')}:</span> {existingReceipt.receiptDate}</p>
+                <p className="text-emerald-500/80"><span className="text-emerald-500/50">{t('aqua.quickSetup.stock')}:</span> {fishStockLabel}</p>
+                <p className="text-emerald-500/80"><span className="text-emerald-500/50">{t('aqua.quickSetup.count')}:</span> {existingReceipt.fishCount}</p>
+                <p className="text-emerald-500/80"><span className="text-emerald-500/50">{t('aqua.quickSetup.currentAverageGram')}:</span> {existingReceipt.fishAverageGram ?? 0}</p>
+            </div>
+            <p className="text-amber-500/90 mt-4 pt-4 border-t border-emerald-500/10">{t('aqua.quickSetup.existingGoodsReceiptPostedInfo')}</p>
           </div>
         ) : (
           <Form {...receiptForm}>
-            <form onSubmit={receiptForm.handleSubmit(handleSubmit)} className="space-y-4">
+            <form onSubmit={receiptForm.handleSubmit(handleSubmit)} className="space-y-6">
               {existingReceipt && (
-                <div className="rounded border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm text-emerald-400 backdrop-blur-md">
                   {t('aqua.quickSetup.existingGoodsReceiptFound')}
                 </div>
               )}
-              <FormField
-                control={receiptForm.control}
-                name="receiptNo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('aqua.quickSetup.receiptNo')}</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={receiptForm.control}
-                name="receiptDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('aqua.quickSetup.date')}</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="rounded border p-3 space-y-3">
-                <span className="text-sm font-medium">{t('aqua.quickSetup.fishLine')}</span>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <FormField
+                    control={receiptForm.control}
+                    name="receiptNo"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-slate-400">{t('aqua.quickSetup.receiptNo')}</FormLabel>
+                        <FormControl>
+                          <Input className="bg-[#0b0713] border-white/10 text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={receiptForm.control}
+                    name="receiptDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-slate-400">{t('aqua.quickSetup.date')}</FormLabel>
+                        <FormControl>
+                          <Input type="date" className="bg-[#0b0713] border-white/10 text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+              </div>
+
+              <div className="rounded-xl border border-white/5 bg-white/2 p-5 space-y-5">
+                <h3 className="text-sm font-semibold text-white">{t('aqua.quickSetup.fishLine')}</h3>
                 <Form {...fishForm}>
-                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <FormField
                       control={fishForm.control}
                       name="stockId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('aqua.quickSetup.stock')}</FormLabel>
+                          <FormLabel className="text-slate-400">{t('aqua.quickSetup.stock')}</FormLabel>
                           <FormControl>
                             <Combobox
                               options={fishStockOptions}
@@ -238,9 +234,9 @@ export function GoodsReceiptStepCard({
                       name="fishCount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('aqua.quickSetup.count')}</FormLabel>
+                          <FormLabel className="text-slate-400">{t('aqua.quickSetup.count')}</FormLabel>
                           <FormControl>
-                            <Input type="number" min={1} {...field} />
+                            <Input type="number" min={1} className="bg-[#0b0713] border-white/10 text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -251,9 +247,9 @@ export function GoodsReceiptStepCard({
                       name="batchCode"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('aqua.quickSetup.batchCode')}</FormLabel>
+                          <FormLabel className="text-slate-400">{t('aqua.quickSetup.batchCode')}</FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input className="bg-[#0b0713] border-white/10 text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -264,9 +260,9 @@ export function GoodsReceiptStepCard({
                       name="currentAverageGram"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('aqua.quickSetup.currentAverageGram')}</FormLabel>
+                          <FormLabel className="text-slate-400">{t('aqua.quickSetup.currentAverageGram')}</FormLabel>
                           <FormControl>
-                            <Input type="number" min={0} step="0.01" {...field} />
+                            <Input type="number" min={0} step="0.01" className="bg-[#0b0713] border-white/10 text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -275,16 +271,17 @@ export function GoodsReceiptStepCard({
                   </div>
                 </Form>
               </div>
-              <div className="rounded border p-3 space-y-3">
-                <span className="text-sm font-medium">{t('aqua.quickSetup.feedLineOptional')}</span>
+
+              <div className="rounded-xl border border-white/5 bg-white/2 p-5 space-y-5">
+                <h3 className="text-sm font-semibold text-white">{t('aqua.quickSetup.feedLineOptional')}</h3>
                 <Form {...feedForm}>
-                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <FormField
                       control={feedForm.control}
                       name="stockId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('aqua.quickSetup.stock')}</FormLabel>
+                          <FormLabel className="text-slate-400">{t('aqua.quickSetup.stock')}</FormLabel>
                           <FormControl>
                             <Combobox
                               options={feedStockOptions}
@@ -305,9 +302,9 @@ export function GoodsReceiptStepCard({
                       name="qtyUnit"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('aqua.quickSetup.qty')}</FormLabel>
+                          <FormLabel className="text-slate-400">{t('aqua.quickSetup.qty')}</FormLabel>
                           <FormControl>
-                            <Input type="number" min={0} {...field} />
+                            <Input type="number" min={0} className="bg-[#0b0713] border-white/10 text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -316,12 +313,15 @@ export function GoodsReceiptStepCard({
                   </div>
                 </Form>
               </div>
-              <Button type="submit" disabled={isSubmitting}>
-                {existingReceipt ? t('common.save') : t('aqua.quickSetup.createGoodsReceipt')}
-              </Button>
-              {existingReceipt && canContinueDistribution && (
-                <p className="text-sm text-emerald-700">{t('aqua.quickSetup.readyForDistribution')}</p>
-              )}
+
+              <div className="pt-2 flex items-center justify-between">
+                  <Button type="submit" disabled={isSubmitting} className="bg-linear-to-r from-pink-600 to-orange-600 text-white hover:opacity-90 border-0 h-11 px-8 rounded-xl shadow-lg shadow-pink-500/20">
+                    {existingReceipt ? t('common.save') : t('aqua.quickSetup.createGoodsReceipt')}
+                  </Button>
+                  {existingReceipt && canContinueDistribution && (
+                    <p className="text-sm font-medium text-emerald-400 bg-emerald-500/10 px-4 py-2 rounded-lg border border-emerald-500/20">{t('aqua.quickSetup.readyForDistribution')}</p>
+                  )}
+              </div>
             </form>
           </Form>
         )}

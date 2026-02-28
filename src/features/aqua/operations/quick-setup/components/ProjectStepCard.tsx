@@ -58,21 +58,21 @@ export function ProjectStepCard({
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t('aqua.quickSetup.step1Title')}</CardTitle>
+    <Card className="bg-[#1a1025]/60 backdrop-blur-xl border border-white/5 shadow-sm rounded-2xl overflow-hidden transition-all duration-300">
+      <CardHeader className="border-b border-white/5 px-6 py-5 bg-transparent">
+        <CardTitle className="text-xl font-bold tracking-tight text-white">{t('aqua.quickSetup.step1Title')}</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="p-6 space-y-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5">
             <FormField
               control={form.control}
               name="projectCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('aqua.quickSetup.code')}</FormLabel>
+                  <FormLabel className="text-slate-400">{t('aqua.quickSetup.code')}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input className="bg-[#0b0713] border-white/10 text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -83,9 +83,9 @@ export function ProjectStepCard({
               name="projectName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('aqua.quickSetup.name')}</FormLabel>
+                  <FormLabel className="text-slate-400">{t('aqua.quickSetup.name')}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input className="bg-[#0b0713] border-white/10 text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -96,20 +96,26 @@ export function ProjectStepCard({
               name="startDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('aqua.quickSetup.startDate')}</FormLabel>
+                  <FormLabel className="text-slate-400">{t('aqua.quickSetup.startDate')}</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <Input type="date" className="bg-[#0b0713] border-white/10 text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isCreating}>
+            <Button type="submit" disabled={isCreating} className="w-full bg-linear-to-r from-pink-600 to-orange-600 text-white hover:opacity-90 border-0 h-11 rounded-xl shadow-lg shadow-pink-500/20">
               {t('aqua.quickSetup.createProject')}
             </Button>
           </form>
         </Form>
-        <div className="text-sm text-muted-foreground">{t('aqua.quickSetup.orSelectExisting')}</div>
+        
+        <div className="relative flex items-center py-2">
+           <div className="grow border-t border-white/10"></div>
+           <span className="shrink-0 mx-4 text-sm text-slate-500">{t('aqua.quickSetup.orSelectExisting')}</span>
+           <div className="grow border-t border-white/10"></div>
+        </div>
+
         <Combobox
           options={projectOptions}
           value=""
@@ -118,7 +124,7 @@ export function ProjectStepCard({
           searchPlaceholder={t('common.search')}
           emptyText={t('common.noResults')}
           disabled={isLoadingProjects}
-          className="w-full"
+          className="w-full bg-[#0b0713] border-white/10 text-white"
         />
       </CardContent>
     </Card>

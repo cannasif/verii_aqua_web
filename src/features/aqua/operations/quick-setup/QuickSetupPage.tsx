@@ -293,7 +293,6 @@ export function QuickSetupPage(): ReactElement {
             return;
           }
         } catch {
-          // fallback to generic error toast below
         }
       }
       toast.error(e instanceof Error ? e.message : t('aqua.quickSetup.toast.goodsReceiptCreateFailed'));
@@ -343,13 +342,24 @@ export function QuickSetupPage(): ReactElement {
   };
 
   return (
-    <div className="space-y-6 w-full max-w-5xl">
-      <h1 className="text-2xl font-semibold">{t('aqua.quickSetup.pageTitle')}</h1>
+    <div className="w-full space-y-6 relative">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-2">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white transition-colors">
+            {t('aqua.quickSetup.pageTitle')}
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm font-medium transition-colors mt-1">
+            Hızlı kurulum adımlarını tamamlayın.
+          </p>
+        </div>
+      </div>
+
       {projectId != null && projectCageError instanceof Error && (
-        <div className="rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-500 backdrop-blur-md">
           {projectCageError.message}
         </div>
       )}
+
       <ProjectStepCard
         projects={projects}
         isLoadingProjects={isLoadingProjects}
