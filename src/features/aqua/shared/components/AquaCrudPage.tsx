@@ -38,8 +38,6 @@ import {
 } from 'lucide-react';
 import type { AquaCrudConfig, AquaCrudContextFilter, AquaFieldConfig } from '../types/aqua-crud';
 import { aquaCrudApi } from '../api/aqua-crud-api';
-
-// Yeni Shared UI Bileşenleri
 import { PageToolbar, ColumnPreferencesPopover } from '@/components/shared';
 import { loadColumnPreferences } from '@/lib/column-preferences';
 
@@ -60,20 +58,16 @@ const DOC_STATUS_OPTIONS = [
 ];
 const LOOKUP_PAGE_SIZE = 500;
 
-// --- CRM Modal Stilleri ---
 const INPUT_STYLE = `
   h-11 rounded-xl w-full
-  bg-slate-50 dark:bg-[#0f0a18] 
-  border border-slate-200 dark:border-white/10 
+  bg-transparent
+  border border-slate-200 dark:border-white/5 
   text-slate-900 dark:text-white text-sm
   placeholder:text-slate-400 dark:placeholder:text-slate-600 
-  
-  focus-visible:bg-white dark:focus-visible:bg-[#1a1025]
+  focus-visible:bg-transparent dark:focus-visible:bg-white/5
   focus-visible:border-pink-500 dark:focus-visible:border-pink-500/70
   focus-visible:ring-2 focus-visible:ring-pink-500/10 focus-visible:ring-offset-0
-  
   focus:ring-2 focus:ring-pink-500/10 focus:ring-offset-0 focus:border-pink-500
-  
   transition-all duration-200
   read-only:opacity-100 read-only:cursor-default
 `;
@@ -190,7 +184,6 @@ export function AquaCrudPage({
   const localizedTitle = t(config.title);
   const localizedDescription = t(config.description);
 
-  // --- State'ler ---
   const [searchTerm, setSearchTerm] = useState('');
   const [pageSize, setPageSize] = useState<number>(20);
   const [pageNumber, setPageNumber] = useState(1);
@@ -199,11 +192,8 @@ export function AquaCrudPage({
   const [formOpen, setFormOpen] = useState(false);
   const [editingRow, setEditingRow] = useState<Record<string, unknown> | null>(null);
   const [formValues, setFormValues] = useState<Record<string, unknown>>(() => getInitialValues(config));
-  
-  // Silme işlemi için State
   const [rowToDelete, setRowToDelete] = useState<Record<string, unknown> | null>(null);
 
-  // Sütun Konfigürasyonları
   const baseColumns = useMemo(() => {
     if (config.columns && config.columns.length > 0) return config.columns;
     return config.fields.slice(0, 5).map((field) => ({ key: field.key, label: field.label }));
@@ -428,12 +418,10 @@ export function AquaCrudPage({
     for (const field of config.fields) {
       payload[field.key] = normalizeFieldValue(field, formValues[field.key]);
     }
-
     const statusFallback = resolveStatusFallbackValue(config);
     if (statusFallback != null && (payload.status == null || payload.status === '')) {
       payload.status = statusFallback;
     }
-
     if (contextFilter?.lockValue) {
       if (contextFilter.value == null) {
         toast.error(t('aqua.common.requiredField'));
@@ -441,21 +429,17 @@ export function AquaCrudPage({
       }
       payload[contextFilter.fieldKey] = contextFilter.value;
     }
-
     const firstMissingRequiredField = visibleFields.find((field) => isRequiredFieldMissing(field, payload[field.key]));
-
     if (firstMissingRequiredField) {
       toast.error(`${t(firstMissingRequiredField.label)} * - ${t('aqua.common.requiredField')}`);
       return;
     }
-
     if (editingRow) {
       const id = Number(editingRow.id ?? editingRow.Id);
       if (!id) return;
       updateMutation.mutate({ id, payload });
       return;
     }
-
     createMutation.mutate(payload);
   };
 
@@ -468,7 +452,6 @@ export function AquaCrudPage({
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
   const isDeleting = deleteMutation.isPending;
   
-  // Frontend Arama İşlemi
   let rows = canQueryList ? listQuery.data?.data ?? [] : [];
   if (searchTerm && rows.length > 0) {
     const lowerSearch = searchTerm.toLowerCase();
@@ -480,82 +463,82 @@ export function AquaCrudPage({
   const rangeStart = totalCount === 0 ? 0 : (pageNumber - 1) * pageSize + 1;
   const rangeEnd = totalCount === 0 ? 0 : Math.min(pageNumber * pageSize, totalCount);
 
-  // CRM Tablo Stilleri
-  const headStyle = `text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider py-2 px-4 hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer select-none border-r border-slate-200 dark:border-white/[0.03] last:border-r-0 whitespace-nowrap bg-slate-50/90 dark:bg-[#130822]/90 text-left`;
-  const cellStyle = `text-slate-600 dark:text-slate-400 px-4 py-2 border-r border-slate-100 dark:border-white/[0.03] last:border-r-0 text-sm align-middle whitespace-nowrap`;
+  const headStyle = `text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider py-2 px-4 hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer select-none border-r border-slate-200 dark:border-white/[0.05] last:border-r-0 whitespace-nowrap bg-transparent text-left`;
+  const cellStyle = `text-slate-600 dark:text-slate-400 px-4 py-2 border-r border-slate-100 dark:border-white/[0.05] last:border-r-0 text-sm align-middle whitespace-nowrap`;
+
+  const tableContainerClass = hidePageHeader
+    ? "w-full flex flex-col bg-transparent"
+    : "bg-white/70 dark:bg-[#1a1025]/60 backdrop-blur-xl border border-white/60 dark:border-white/5 shadow-sm rounded-2xl p-0 sm:p-1 transition-all duration-300 overflow-hidden";
 
   return (
-    <div className="space-y-4">
-      {/* 1. Header (Başlık ve Araç Çubuğu) */}
-      <div className="flex flex-col gap-4 bg-white/70 dark:bg-[#1a1025]/60 backdrop-blur-xl border border-white/60 dark:border-white/5 shadow-sm rounded-2xl p-4 transition-all duration-300">
-        {!hidePageHeader && (
-          <div className="flex flex-col gap-1">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white transition-colors">{localizedTitle}</h1>
-            <p className="text-sm text-muted-foreground">{localizedDescription}</p>
+    <div className={hidePageHeader ? "w-full" : "w-full space-y-6 relative"}>
+      {!hidePageHeader && (
+        <>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-2">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white transition-colors">{localizedTitle}</h1>
+              <p className="text-slate-500 dark:text-slate-400 text-sm font-medium transition-colors mt-1">{localizedDescription}</p>
+            </div>
+
+            {!config.readOnly && (
+              <Button onClick={handleCreate} disabled={!canQueryList} className="px-6 py-2 bg-linear-to-r from-pink-600 to-orange-600 rounded-xl text-white text-sm font-bold shadow-lg shadow-pink-500/20 hover:scale-105 transition-transform border-0 hover:text-white h-11">
+                <Plus size={18} className="mr-2" />
+                {t('aqua.common.new')}
+              </Button>
+            )}
           </div>
-        )}
 
-        <div className={`flex flex-col lg:flex-row items-center justify-between gap-3 ${!hidePageHeader ? 'border-t border-white/5 pt-4' : ''}`}>
-          <PageToolbar
-            searchPlaceholder={t('aqua.common.quickSearch', 'Hızlı Ara...')}
-            searchValue={searchTerm}
-            onSearchChange={setSearchTerm}
-            onRefresh={handleRefresh}
-            rightSlot={
-              <div className="flex flex-wrap items-center gap-2">
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-300 bg-transparent text-gray-400 border-white/10 hover:bg-white/5 hover:text-white">
-                      <span className="font-medium text-sm">{pageSize}</span>
-                      <ChevronDown size={16} />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-20 bg-[#151025] border border-white/10 shadow-2xl rounded-xl overflow-hidden p-1">
-                      {[10, 20, 50, 100].map((size) => (
-                          <DropdownMenuItem key={size} onClick={() => setPageSize(size)} className={`flex items-center justify-center text-xs font-medium px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${pageSize === size ? 'bg-pink-500/10 text-pink-500' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
-                              {size}
-                          </DropdownMenuItem>
-                      ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+          <div className="bg-white/70 dark:bg-[#1a1025]/60 backdrop-blur-xl border border-white/60 dark:border-white/5 shadow-sm rounded-2xl p-5 flex flex-col gap-5 transition-all duration-300">
+            <PageToolbar
+              searchPlaceholder={t('aqua.common.quickSearch', 'Hızlı Ara...')}
+              searchValue={searchTerm}
+              onSearchChange={setSearchTerm}
+              onRefresh={handleRefresh}
+              rightSlot={
+                <div className="flex flex-wrap items-center gap-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 bg-transparent text-gray-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white">
+                        <span className="font-medium text-sm">{pageSize}</span>
+                        <ChevronDown size={16} />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-20 bg-white dark:bg-[#0b0713] border border-slate-200 dark:border-white/10 shadow-2xl rounded-xl overflow-hidden p-1">
+                        {[10, 20, 50, 100].map((size) => (
+                            <DropdownMenuItem key={size} onClick={() => setPageSize(size)} className={`flex items-center justify-center text-xs font-medium px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${pageSize === size ? 'bg-pink-50 dark:bg-pink-500/10 text-pink-600 dark:text-pink-500' : 'text-slate-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'}`}>
+                                {size}
+                            </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
 
-                <ColumnPreferencesPopover
-                  pageKey={`aqua-${config.key}`}
-                  userId={user?.id}
-                  columns={baseColumns.map((col) => ({ key: col.key, label: t(col.label) }))}
-                  visibleColumns={visibleColumns}
-                  columnOrder={columnOrder}
-                  onVisibleColumnsChange={setVisibleColumns}
-                  onColumnOrderChange={setColumnOrder}
-                />
+                  <ColumnPreferencesPopover
+                    pageKey={`aqua-${config.key}`}
+                    userId={user?.id}
+                    columns={baseColumns.map((col) => ({ key: col.key, label: t(col.label) }))}
+                    visibleColumns={visibleColumns}
+                    columnOrder={columnOrder}
+                    onVisibleColumnsChange={setVisibleColumns}
+                    onColumnOrderChange={setColumnOrder}
+                  />
+                </div>
+              }
+            />
+          </div>
+        </>
+      )}
 
-                {/* Yeni Kayıt Ekle Butonu - SADECE ANA TABLODA (hidePageHeader false ise) GÖSTERİLİR */}
-                {!config.readOnly && !hidePageHeader && (
-                  <Button onClick={handleCreate} disabled={!canQueryList} className="ml-2 bg-linear-to-r from-pink-500 to-orange-500 text-white shadow-lg shadow-pink-500/25 border-0 hover:opacity-95">
-                    <Plus size={16} className="mr-2" />
-                    {t('aqua.common.new')}
-                  </Button>
-                )}
-              </div>
-            }
-          />
-        </div>
-      </div>
-
-      {/* 2. Tablo Gövdesi */}
-      <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0b0713] flex flex-col overflow-hidden shadow-sm">
+      <div className={tableContainerClass}>
         <div className="overflow-x-auto w-full">
           <table className="w-full min-w-[680px] sm:min-w-[820px] caption-bottom text-sm relative">
-            <thead className="bg-[#151025] sticky top-0 z-10 shadow-sm">
-              <tr className="h-10 hover:bg-transparent border-b border-slate-200 dark:border-white/10">
+            <thead className="bg-transparent sticky top-0 z-10 border-b border-slate-200 dark:border-white/5">
+              <tr className="h-10 hover:bg-transparent">
                 <th className={headStyle} onClick={() => handleSort('Id')}>
                   <div className="flex items-center gap-2">
                     {t('aqua.common.id')}
                     {sortConfig?.key === 'Id' ? (sortConfig.direction === 'asc' ? <ArrowUp size={14} className="text-pink-500" /> : <ArrowDown size={14} className="text-pink-500" />) : (<ArrowUpDown size={14} className="opacity-30 group-hover:opacity-100" />)}
                   </div>
                 </th>
-                
                 {displayedColumns.map((column) => (
                   <th key={column.key} className={headStyle} onClick={() => handleSort(column.key)}>
                     <div className="flex items-center gap-2">
@@ -569,7 +552,7 @@ export function AquaCrudPage({
             </thead>
             <tbody>
               {!canQueryList ? (
-                <tr><td colSpan={displayedColumns.length + 2} className="text-center py-20 text-muted-foreground bg-slate-50 dark:bg-white/5 font-medium">{t('aqua.common.noData')}</td></tr>
+                <tr><td colSpan={displayedColumns.length + 2} className="text-center py-20 text-muted-foreground font-medium">{t('aqua.common.noData')}</td></tr>
               ) : listQuery.isLoading ? (
                 <tr>
                   <td colSpan={displayedColumns.length + 2} className="text-center py-20">
@@ -580,15 +563,14 @@ export function AquaCrudPage({
                   </td>
                 </tr>
               ) : rows.length === 0 ? (
-                <tr><td colSpan={displayedColumns.length + 2} className="text-center py-20 text-muted-foreground bg-slate-50 dark:bg-white/5 font-medium">{t('aqua.common.noData')}</td></tr>
+                <tr><td colSpan={displayedColumns.length + 2} className="text-center py-20 text-muted-foreground font-medium">{t('aqua.common.noData')}</td></tr>
               ) : (
                 rows.map((row) => {
                   const id = Number(row.id ?? row.Id);
                   const status = Number(row.status ?? row.Status);
                   const isSelected = rowSelectionEnabled && selectedRowId === id;
-
                   return (
-                    <tr key={id} className={`h-10 border-b border-slate-100 dark:border-white/5 transition-colors duration-200 hover:bg-pink-50/40 dark:hover:bg-pink-500/5 group last:border-0 ${rowSelectionEnabled ? 'cursor-pointer' : ''} ${isSelected ? 'bg-pink-50/60 dark:bg-pink-500/10' : ''}`} onClick={() => { if (rowSelectionEnabled) onRowSelect?.(row); }}>
+                    <tr key={id} className={`h-10 border-b border-slate-200 dark:border-white/5 transition-colors duration-200 hover:bg-pink-50/40 dark:hover:bg-pink-500/5 group last:border-0 bg-transparent ${rowSelectionEnabled ? 'cursor-pointer' : ''} ${isSelected ? 'bg-pink-50/60 dark:bg-pink-500/10' : ''}`} onClick={() => { if (rowSelectionEnabled) onRowSelect?.(row); }}>
                       <td className={`${cellStyle} font-mono text-xs`}>{id}</td>
                       {displayedColumns.map((column) => (
                         <td key={column.key} className={cellStyle}>
@@ -604,10 +586,10 @@ export function AquaCrudPage({
                         <div className="flex items-center justify-end gap-1">
                           {!config.readOnly && (
                             <>
-                              <Button variant="ghost" size="icon" title={t('aqua.common.edit', 'Düzenle')} onClick={(e) => { e.stopPropagation(); handleEdit(row); }} className="h-8 w-8 text-slate-400 hover:text-pink-500 hover:bg-pink-500/10 transition-colors">
+                              <Button variant="ghost" size="icon" title={t('aqua.common.edit', 'Düzenle')} onClick={(e) => { e.stopPropagation(); handleEdit(row); }} className="h-8 w-8 rounded-lg text-slate-400 hover:text-pink-500 hover:bg-pink-500/10 transition-colors">
                                 <Edit size={16} />
                               </Button>
-                              <Button variant="ghost" size="icon" title={t('aqua.common.delete', 'Sil')} onClick={(e) => { e.stopPropagation(); handleDeleteClick(row); }} className="h-8 w-8 text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-colors">
+                              <Button variant="ghost" size="icon" title={t('aqua.common.delete', 'Sil')} onClick={(e) => { e.stopPropagation(); handleDeleteClick(row); }} className="h-8 w-8 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-colors">
                                 <Trash2 size={16} />
                               </Button>
                             </>
@@ -625,25 +607,22 @@ export function AquaCrudPage({
           </table>
         </div>
 
-        {/* 3. Sayfalama (Pagination) */}
-        <div className="flex flex-col gap-2 border-t border-slate-200 dark:border-white/10 px-4 py-3 sm:flex-row sm:items-center sm:justify-between w-full shrink-0">
+        <div className="flex flex-col gap-2 border-t border-slate-200 dark:border-white/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between w-full shrink-0 bg-transparent">
           <span className="text-sm text-slate-500">{rangeStart}-{rangeEnd} / {totalCount}</span>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => setPageNumber((prev) => Math.max(1, prev - 1))} disabled={pageNumber <= 1}>{t('aqua.common.previous')}</Button>
-            <Button variant="outline" size="sm" onClick={() => setPageNumber((prev) => Math.min(totalPages, prev + 1))} disabled={pageNumber >= totalPages}>{t('aqua.common.next')}</Button>
+            <Button variant="outline" size="sm" onClick={() => setPageNumber((prev) => Math.max(1, prev - 1))} disabled={pageNumber <= 1} className="rounded-lg dark:border-white/10 bg-transparent">{t('aqua.common.previous')}</Button>
+            <Button variant="outline" size="sm" onClick={() => setPageNumber((prev) => Math.min(totalPages, prev + 1))} disabled={pageNumber >= totalPages} className="rounded-lg dark:border-white/10 bg-transparent">{t('aqua.common.next')}</Button>
           </div>
         </div>
       </div>
 
-      {/* 4. CRM Uyumlu Şık Ekle/Düzenle Form Dialog */}
       {!config.readOnly && (
         <Dialog open={formOpen} onOpenChange={setFormOpen}>
-          <DialogContent className="[&>button]:hidden bg-white dark:bg-[#130822] border border-slate-100 dark:border-white/10 text-slate-900 dark:text-white max-w-3xl w-[95%] sm:w-full shadow-2xl sm:rounded-2xl p-0 overflow-hidden flex flex-col max-h-[90vh]">
-            
-            <DialogHeader className="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-[#1a1025]/50 flex flex-row items-center justify-between sticky top-0 z-10 backdrop-blur-sm">
+          <DialogContent className="[&>button]:hidden bg-white dark:bg-[#0b0713] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white max-w-3xl w-[95%] sm:w-full shadow-2xl sm:rounded-2xl p-0 overflow-hidden flex flex-col max-h-[90vh]">
+            <DialogHeader className="px-6 py-5 border-b border-slate-200 dark:border-white/5 bg-transparent flex flex-row items-center justify-between sticky top-0 z-10 backdrop-blur-sm">
               <div className="flex items-center gap-4">
                  <div className="h-12 w-12 rounded-2xl bg-linear-to-br from-pink-500 to-orange-500 p-0.5 shadow-lg shadow-pink-500/20">
-                   <div className="h-full w-full bg-white dark:bg-[#130822] rounded-[14px] flex items-center justify-center">
+                   <div className="h-full w-full bg-white dark:bg-[#0b0713] rounded-[14px] flex items-center justify-center">
                      <FileText size={24} className="text-pink-600 dark:text-pink-500" />
                    </div>
                  </div>
@@ -651,16 +630,11 @@ export function AquaCrudPage({
                     <DialogTitle className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                       {editingRow ? t('aqua.common.editRecord', 'Kaydı Düzenle') : t('aqua.common.createRecord', 'Yeni Kayıt')}
                     </DialogTitle>
-                    <DialogDescription className="text-slate-500 dark:text-slate-400 text-sm">
-                      {localizedTitle} modülü için bilgileri doldurun.
-                    </DialogDescription>
+                    <DialogDescription className="text-slate-500 dark:text-slate-400 text-sm">{localizedTitle} modülü için bilgileri doldurun.</DialogDescription>
                  </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setFormOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white rounded-full">
-                <X size={20} />
-              </Button>
+              <Button variant="ghost" size="icon" onClick={() => setFormOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white rounded-full"><X size={20} /></Button>
             </DialogHeader>
-
             <div className="flex-1 overflow-y-auto p-6 sm:p-8 custom-scrollbar">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
                 {visibleFields.map((field) => (
@@ -669,87 +643,42 @@ export function AquaCrudPage({
                       <ChevronRight size={14} className="text-pink-500" />
                       {t(field.label)} {field.required && <span className="text-red-500 ml-1">*</span>}
                     </Label>
-                    
                     {field.type === 'textarea' && (
-                      <Textarea
-                        id={field.key}
-                        placeholder={field.placeholder}
-                        value={String(formValues[field.key] ?? '')}
-                        onChange={(e) => setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))}
-                        className={`${INPUT_STYLE} min-h-[100px] py-3 resize-none`}
-                      />
+                      <Textarea id={field.key} placeholder={field.placeholder} value={String(formValues[field.key] ?? '')} onChange={(e) => setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))} className={`${INPUT_STYLE} min-h-[100px] py-3 resize-none`} />
                     )}
-
                     {field.type === 'select' && (
-                      <Combobox
-                        options={field.lookup ? (lookupOptionsByField[field.key] ?? []).map((o) => ({ value: String(o.value), label: o.label })) : (field.options ?? (field.key.toLowerCase() === 'status' ? DOC_STATUS_OPTIONS : [])).map((o) => ({ value: String(o.value), label: t(o.label) }))}
-                        value={String(formValues[field.key] ?? '')}
-                        onValueChange={(value) => setFormValues((prev) => ({ ...prev, [field.key]: value }))}
-                        placeholder={t('aqua.common.select')}
-                        searchPlaceholder={t('common.search')}
-                        emptyText={t('common.noResults')}
-                      />
+                      <Combobox options={field.lookup ? (lookupOptionsByField[field.key] ?? []).map((o) => ({ value: String(o.value), label: o.label })) : (field.options ?? (field.key.toLowerCase() === 'status' ? DOC_STATUS_OPTIONS : [])).map((o) => ({ value: String(o.value), label: t(o.label) }))} value={String(formValues[field.key] ?? '')} onValueChange={(value) => setFormValues((prev) => ({ ...prev, [field.key]: value }))} placeholder={t('aqua.common.select')} searchPlaceholder={t('common.search')} emptyText={t('common.noResults')} />
                     )}
-
                     {(field.type === 'text' || field.type === 'number' || field.type === 'date' || field.type === 'datetime') && (
-                      <Input
-                        id={field.key}
-                        type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : field.type === 'datetime' ? 'datetime-local' : 'text'}
-                        required={field.required}
-                        step={field.type === 'number' ? resolveNumberInputStep(field) : undefined}
-                        min={field.type === 'number' ? field.numberMin : undefined}
-                        max={field.type === 'number' ? field.numberMax : undefined}
-                        inputMode={field.type === 'number' ? 'decimal' : undefined}
-                        placeholder={field.placeholder}
-                        value={normalizeInputValue(field, formValues[field.key])}
-                        onChange={(e) => setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))}
-                        className={INPUT_STYLE}
-                      />
+                      <Input id={field.key} type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : field.type === 'datetime' ? 'datetime-local' : 'text'} required={field.required} step={field.type === 'number' ? resolveNumberInputStep(field) : undefined} min={field.type === 'number' ? field.numberMin : undefined} max={field.type === 'number' ? field.numberMax : undefined} inputMode={field.type === 'number' ? 'decimal' : undefined} placeholder={field.placeholder} value={normalizeInputValue(field, formValues[field.key])} onChange={(e) => setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))} className={INPUT_STYLE} />
                     )}
                   </div>
                 ))}
               </div>
             </div>
-
-            <DialogFooter className="px-6 py-5 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-[#1a1025]/50 flex-col sm:flex-row gap-3 sticky bottom-0 z-10 backdrop-blur-sm">
-              <Button type="button" variant="outline" onClick={() => setFormOpen(false)} className="w-full sm:w-auto h-11 rounded-xl border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5">
-                {t('aqua.common.cancel')}
-              </Button>
-              <Button onClick={handleSubmit} disabled={isSubmitting} className="w-full sm:w-auto h-11 rounded-xl bg-linear-to-r from-pink-500 to-orange-500 text-white shadow-lg shadow-pink-500/25 hover:opacity-95 border-0">
-                {isSubmitting ? t('aqua.common.saving') : t('aqua.common.save')}
-              </Button>
+            <DialogFooter className="px-6 py-5 border-t border-slate-200 dark:border-white/5 bg-transparent flex-col sm:flex-row gap-3 sticky bottom-0 z-10 backdrop-blur-sm">
+              <Button type="button" variant="outline" onClick={() => setFormOpen(false)} className="w-full sm:w-auto h-11 rounded-xl border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5">{t('aqua.common.cancel')}</Button>
+              <Button onClick={handleSubmit} disabled={isSubmitting} className="w-full sm:w-auto h-11 rounded-xl bg-linear-to-r from-pink-500 to-orange-500 text-white shadow-lg shadow-pink-500/25 hover:opacity-95 border-0">{isSubmitting ? t('aqua.common.saving') : t('aqua.common.save')}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       )}
 
-      {/* 5. Şık Silme Onay Dialog'u (Geliştirilmiş Tipografi) */}
       <Dialog open={!!rowToDelete} onOpenChange={(open) => !open && setRowToDelete(null)}>
-        <DialogContent className="[&>button]:hidden bg-white dark:bg-[#130822] border border-slate-100 dark:border-white/10 text-slate-900 dark:text-white max-w-sm w-[95%] shadow-2xl sm:rounded-2xl p-0 overflow-hidden">
+        <DialogContent className="[&>button]:hidden bg-white dark:bg-[#0b0713] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white max-w-sm w-[95%] shadow-2xl sm:rounded-2xl p-0 overflow-hidden">
             <div className="p-8 flex flex-col items-center justify-center text-center space-y-5">
-               <div className="h-16 w-16 rounded-full bg-red-500/10 flex items-center justify-center">
-                 <AlertTriangle size={32} className="text-red-500" />
-               </div>
+               <div className="h-16 w-16 rounded-full bg-red-500/10 flex items-center justify-center"><AlertTriangle size={32} className="text-red-500" /></div>
                <div className="space-y-3">
-                 <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                    {t('aqua.common.confirmDelete', 'Emin misiniz?')}
-                 </h2>
-                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-[280px] mx-auto">
-                    Bu kaydı kalıcı olarak silmek üzeresiniz. Bu işlem geri alınamaz. Devam etmek istiyor musunuz?
-                 </p>
+                 <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">{t('aqua.common.confirmDelete', 'Emin misiniz?')}</h2>
+                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-[280px] mx-auto">Bu kaydı kalıcı olarak silmek üzeresiniz. Bu işlem geri alınamaz. Devam etmek istiyor musunuz?</p>
                </div>
             </div>
-            <DialogFooter className="px-6 py-4 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-[#1a1025]/50 flex-col sm:flex-row gap-3">
-              <Button variant="outline" onClick={() => setRowToDelete(null)} className="w-full sm:w-auto h-11 rounded-xl border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5">
-                {t('aqua.common.cancel', 'İptal')}
-              </Button>
-              <Button onClick={confirmDelete} disabled={isDeleting} className="w-full sm:w-auto h-11 rounded-xl bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/25 border-0">
-                {isDeleting ? t('aqua.common.deleting', 'Siliniyor...') : t('aqua.common.delete', 'Sil')}
-              </Button>
+            <DialogFooter className="px-6 py-4 border-t border-slate-200 dark:border-white/5 bg-transparent flex-col sm:flex-row gap-3">
+              <Button variant="outline" onClick={() => setRowToDelete(null)} className="w-full sm:w-auto h-11 rounded-xl border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5">{t('aqua.common.cancel', 'İptal')}</Button>
+              <Button onClick={confirmDelete} disabled={isDeleting} className="w-full sm:w-auto h-11 rounded-xl bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/25 border-0">{isDeleting ? t('aqua.common.deleting', 'Siliniyor...') : t('aqua.common.delete', 'Sil')}</Button>
             </DialogFooter>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }

@@ -37,16 +37,18 @@ export function AquaHeaderLineCrudPage({
         onRowSelect={setSelectedHeaderRow}
       />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>{t(lineSectionTitle)}</CardTitle>
-          <CardDescription>
+      <Card className="border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0f0a18]/60 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden flex flex-col">
+        <CardHeader className="border-b border-slate-200 dark:border-white/10 px-5 py-4 bg-transparent shrink-0">
+          <CardTitle className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+            {t(lineSectionTitle)}
+          </CardTitle>
+          <CardDescription className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             {selectedHeaderId == null
               ? t('aqua.common.noData')
               : t(lineSectionDescription, { id: selectedHeaderId })}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0 flex-1">
           <AquaCrudPage
             config={lineConfig}
             hidePageHeader
