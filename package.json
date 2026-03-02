@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "audit:responsive:aqua": "python3 scripts/aqua-responsive-audit.py",
     "test:batch": "node --test tests/batch-math.test.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
