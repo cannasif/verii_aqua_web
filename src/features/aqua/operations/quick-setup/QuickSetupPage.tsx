@@ -363,6 +363,7 @@ export function QuickSetupPage(): ReactElement {
       <ProjectStepCard
         projects={projects}
         isLoadingProjects={isLoadingProjects}
+        selectedProjectId={projectId}
         onCreateProject={handleCreateProject}
         onSelectProject={setProjectId}
         isCreating={mutations.createProject.isPending}

@@ -21,6 +21,7 @@ import type { ProjectDto } from '../types/quick-setup-types';
 interface ProjectStepCardProps {
   projects: ProjectDto[] | undefined;
   isLoadingProjects: boolean;
+  selectedProjectId: number | null;
   onCreateProject: (data: ProjectFormSchema) => Promise<void>;
   onSelectProject: (projectId: number) => void;
   isCreating: boolean;
@@ -29,6 +30,7 @@ interface ProjectStepCardProps {
 export function ProjectStepCard({
   projects,
   isLoadingProjects,
+  selectedProjectId,
   onCreateProject,
   onSelectProject,
   isCreating,
@@ -118,7 +120,7 @@ export function ProjectStepCard({
 
         <Combobox
           options={projectOptions}
-          value=""
+          value={selectedProjectId != null ? String(selectedProjectId) : ''}
           onValueChange={(v) => { if (v) onSelectProject(Number(v)); }}
           placeholder={t('aqua.quickSetup.selectProject')}
           searchPlaceholder={t('common.search')}
