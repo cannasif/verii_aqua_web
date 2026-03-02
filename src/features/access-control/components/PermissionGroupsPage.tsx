@@ -90,26 +90,29 @@ export function PermissionGroupsPage(): ReactElement {
   };
 
   const handleEditClick = (item: PermissionGroupDto): void => {
+    if (item.isSystemAdmin) return;
     setEditingItem(item);
     setFormOpen(true);
   };
 
   const handlePermissionsClick = (item: PermissionGroupDto): void => {
+    if (item.isSystemAdmin) return;
     setPermissionsPanelGroupId(item.id);
     setPermissionsPanelOpen(true);
   };
 
   const handleFormSubmit = async (formData: CreatePermissionGroupSchema): Promise<void> => {
+    if (editingItem?.isSystemAdmin) return;
     if (editingItem) {
       const updateDto = {
         name: formData.name,
         description: formData.description ?? undefined,
-        isSystemAdmin: formData.isSystemAdmin,
+        isSystemAdmin: editingItem.isSystemAdmin,
         isActive: formData.isActive,
       };
       await updateMutation.mutateAsync({ id: editingItem.id, dto: updateDto });
     } else {
-      const createDto = { ...formData, description: formData.description ?? undefined };
+      const createDto = { ...formData, isSystemAdmin: false, description: formData.description ?? undefined };
       await createMutation.mutateAsync(createDto);
     }
     setFormOpen(false);
@@ -117,6 +120,7 @@ export function PermissionGroupsPage(): ReactElement {
   };
 
   const handleDeleteClick = (item: PermissionGroupDto): void => {
+    if (item.isSystemAdmin) return;
     setItemToDelete(item);
     setDeleteDialogOpen(true);
   };
@@ -221,13 +225,34 @@ export function PermissionGroupsPage(): ReactElement {
                     </TableCell>
                     <TableCell className="text-right px-6">
                       <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" onClick={() => handlePermissionsClick(item)} className="size-9 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handlePermissionsClick(item)}
+                          className="size-9 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
+                          disabled={item.isSystemAdmin}
+                          title={item.isSystemAdmin ? t('permissionGroups.systemAdminLocked', 'System Admin grubu değiştirilemez') : t('permissionGroups.managePermissions')}
+                        >
                           <Settings size={18} />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => handleEditClick(item)} className="size-9 text-slate-400 hover:text-pink-400 hover:bg-pink-500/10 rounded-lg transition-colors">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEditClick(item)}
+                          className="size-9 text-slate-400 hover:text-pink-400 hover:bg-pink-500/10 rounded-lg transition-colors"
+                          disabled={item.isSystemAdmin}
+                          title={item.isSystemAdmin ? t('permissionGroups.systemAdminLocked', 'System Admin grubu değiştirilemez') : undefined}
+                        >
                           <Edit2 size={18} />
                         </Button>
-                        <Button variant="ghost" size="icon" className="size-9 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors" onClick={() => handleDeleteClick(item)}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-9 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors"
+                          onClick={() => handleDeleteClick(item)}
+                          disabled={item.isSystemAdmin}
+                          title={item.isSystemAdmin ? t('permissionGroups.systemAdminLocked', 'System Admin grubu değiştirilemez') : undefined}
+                        >
                           <Trash2 size={18} />
                         </Button>
                       </div>

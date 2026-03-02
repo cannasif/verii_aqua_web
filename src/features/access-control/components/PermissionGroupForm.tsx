@@ -27,7 +27,7 @@ import { FieldHelpTooltip } from './FieldHelpTooltip';
 import { createPermissionGroupSchema, type CreatePermissionGroupSchema } from '../schemas/permission-group-schema';
 import type { PermissionGroupDto } from '../types/access-control.types';
 import { isZodFieldRequired } from '@/lib/zod-required';
-import { Shield, Settings2, Power, Save, Loader2 } from 'lucide-react';
+import { Shield, Power, Save, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PermissionGroupFormProps {
@@ -143,24 +143,7 @@ export function PermissionGroupForm({
                 )}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="isSystemAdmin"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-xl border border-white/5 p-4 bg-white/2 hover:bg-white/4 transition-colors">
-                      <FormLabel className="inline-flex items-center text-xs font-bold text-slate-300 cursor-pointer">
-                        <Settings2 className="w-4 h-4 mr-2 text-orange-500" />
-                        {t('permissionGroups.form.isSystemAdmin')}
-                        <FieldHelpTooltip text={t('help.permissionGroup.isSystemAdmin')} />
-                      </FormLabel>
-                      <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} className="data-[state=checked]:bg-pink-600 scale-90" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
+              <div className="grid grid-cols-1 gap-4">
                 <FormField
                   control={form.control}
                   name="isActive"

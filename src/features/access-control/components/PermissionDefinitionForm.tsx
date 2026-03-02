@@ -21,7 +21,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Switch } from '@/components/ui/switch';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import {
   createPermissionDefinitionSchema,
@@ -32,7 +31,7 @@ import { FieldHelpTooltip } from './FieldHelpTooltip';
 import { PERMISSION_CODE_CATALOG, getRoutesForPermissionCode, getPermissionDisplayMeta } from '../utils/permission-config';
 import { Badge } from '@/components/ui/badge';
 import { isZodFieldRequired } from '@/lib/zod-required';
-import { ShieldAlert, Code, FileText, Power, Save, X, Loader2, Link2 } from 'lucide-react';
+import { ShieldAlert, Code, FileText, Save, X, Loader2, Link2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PermissionDefinitionFormProps {
@@ -41,6 +40,7 @@ interface PermissionDefinitionFormProps {
   onSubmit: (data: CreatePermissionDefinitionSchema) => void | Promise<void>;
   item?: PermissionDefinitionDto | null;
   isLoading?: boolean;
+  usedCodes?: string[];
 }
 
 export function PermissionDefinitionForm({
@@ -49,6 +49,7 @@ export function PermissionDefinitionForm({
   onSubmit,
   item,
   isLoading = false,
+  usedCodes = [],
 }: PermissionDefinitionFormProps): ReactElement {
   const { t } = useTranslation(['access-control', 'common']);
 
@@ -87,12 +88,19 @@ export function PermissionDefinitionForm({
   }, [item, form, open]);
 
   const permissionCodeOptions: ComboboxOption[] = useMemo(() => {
-    return PERMISSION_CODE_CATALOG.map((code) => {
+    const usedSet = new Set(usedCodes.map((code) => code.toLowerCase()));
+    const currentCode = item?.code?.toLowerCase();
+
+    return PERMISSION_CODE_CATALOG.filter((code) => {
+      const lowerCode = code.toLowerCase();
+      if (currentCode && lowerCode === currentCode) return true;
+      return !usedSet.has(lowerCode);
+    }).map((code) => {
       const meta = getPermissionDisplayMeta(code);
       const title = meta ? t(meta.key, meta.fallback) : code;
       return { value: code, label: `${title} (${code})` };
     });
-  }, [t]);
+  }, [t, usedCodes, item?.code]);
 
   const handleSubmit = async (data: CreatePermissionDefinitionSchema): Promise<void> => {
     await onSubmit(data);
@@ -107,7 +115,7 @@ export function PermissionDefinitionForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#0b0713] border-white/10 text-white max-w-2xl w-[95%] sm:w-full shadow-2xl sm:rounded-2xl p-0 overflow-hidden flex flex-col max-h-[90vh]">
+      <DialogContent className="bg-[#0b0713] border-white/10 text-white max-w-2xl w-[95%] sm:w-full shadow-2xl sm:rounded-2xl p-0 overflow-visible flex flex-col max-h-[90vh]">
         <DialogHeader className="px-8 py-6 border-b border-white/5 bg-white/2">
           <DialogTitle className="text-2xl font-bold flex items-center gap-3">
             <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
@@ -134,26 +142,23 @@ export function PermissionDefinitionForm({
                       <FieldHelpTooltip text={t('help.permissionDefinition.code')} />
                     </FormLabel>
                     <FormControl>
-                      {item ? (
-                        <Input {...field} className={cn(inputStyle, "opacity-70 font-mono text-sm")} maxLength={120} disabled />
-                      ) : (
-                        <Combobox
-                          options={permissionCodeOptions}
-                          value={field.value}
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                            const meta = getPermissionDisplayMeta(value);
-                            const title = meta ? t(meta.key, meta.fallback) : '';
-                            if (!form.getValues('name') && title) {
-                              form.setValue('name', title, { shouldDirty: true });
-                            }
-                          }}
-                          placeholder={t('permissionDefinitions.form.codePlaceholder')}
-                          searchPlaceholder={t('permissionDefinitions.form.codeSearchPlaceholder')}
-                          emptyText={t('permissionDefinitions.form.codeEmpty')}
-                          className={inputStyle}
-                        />
-                      )}
+                      <Combobox
+                        options={permissionCodeOptions}
+                        value={field.value}
+                        modal
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          const meta = getPermissionDisplayMeta(value);
+                          const title = meta ? t(meta.key, meta.fallback) : '';
+                          if (!form.getValues('name') && title) {
+                            form.setValue('name', title, { shouldDirty: true });
+                          }
+                        }}
+                        placeholder={t('permissionDefinitions.form.codePlaceholder')}
+                        searchPlaceholder={t('permissionDefinitions.form.codeSearchPlaceholder')}
+                        emptyText={t('permissionDefinitions.form.codeEmpty')}
+                        className={inputStyle}
+                      />
                     </FormControl>
                     <FormMessage className="text-[10px] text-rose-500" />
                     
@@ -213,23 +218,6 @@ export function PermissionDefinitionForm({
                       <Textarea {...field} value={field.value ?? ''} className={cn(inputStyle, "min-h-[100px] resize-none py-3")} placeholder={t('permissionDefinitions.form.descriptionPlaceholder')} maxLength={500} />
                     </FormControl>
                     <FormMessage className="text-[10px] text-rose-500" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="isActive"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-xl border border-white/5 p-4 bg-white/2 hover:bg-white/4 transition-colors">
-                    <FormLabel className="inline-flex items-center text-xs font-bold text-slate-300 cursor-pointer">
-                      <Power className="w-4 h-4 mr-2 text-emerald-500" />
-                      {t('permissionDefinitions.form.isActive')}
-                      <FieldHelpTooltip text={t('help.permissionDefinition.isActive')} />
-                    </FormLabel>
-                    <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} className="data-[state=checked]:bg-amber-500" />
-                    </FormControl>
                   </FormItem>
                 )}
               />
