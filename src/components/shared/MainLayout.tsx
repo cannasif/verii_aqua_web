@@ -54,6 +54,7 @@ export function MainLayout({ navItems }: MainLayoutProps): ReactElement {
         title: t('sidebar.aquaReports', { defaultValue: 'Aqua Raporları' }),
         icon: <BarChart3 size={iconSize} className="text-indigo-500" />,
         children: [
+          { title: t('sidebar.aquaDashboard', { defaultValue: 'Dashboard' }), href: '/aqua/dashboard' },
           { title: t('sidebar.aquaProjectDetailReport', { defaultValue: 'Proje Detay Raporu' }), href: '/aqua/reports/project-detail' },
           { title: t('sidebar.aquaBatchMovements', { defaultValue: 'Batch Movement' }), href: '/aqua/reports/batch-movements' },
           { title: t('sidebar.aquaCageBalances', { defaultValue: 'Kafes Balance' }), href: '/aqua/reports/cage-balances' },

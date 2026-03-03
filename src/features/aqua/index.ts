@@ -26,3 +26,4 @@ export { NetOperationLinesPage } from './operations/components/NetOperationLines
 export { BatchMovementsPage } from './reports/components/BatchMovementsPage';
 export { CageBalancesPage } from './reports/components/CageBalancesPage';
 export { ProjectDetailReportPage } from './reports/components/ProjectDetailReportPage';
+export { AquaDashboardPage } from './reports/components/AquaDashboardPage';

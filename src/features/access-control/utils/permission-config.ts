@@ -45,6 +45,7 @@ export const ROUTE_PERMISSION_MAP: Record<string, string> = {
   '/aqua/reports/project-detail': 'aqua.reports.project-detail.view',
   '/aqua/reports/batch-movements': 'aqua.reports.batch-movements.view',
   '/aqua/reports/cage-balances': 'aqua.reports.cage-balances.view',
+  '/aqua/dashboard': 'aqua.reports.project-detail.view',
 };
 
 export const PATH_TO_PERMISSION_PATTERNS: Array<{ pattern: RegExp; permission: string }> = [
@@ -113,6 +114,10 @@ export const PATH_TO_PERMISSION_PATTERNS: Array<{ pattern: RegExp; permission: s
 
   {
     pattern: /^\/aqua\/reports\/project-detail(\/|$)/,
+    permission: 'aqua.reports.project-detail.view',
+  },
+  {
+    pattern: /^\/aqua\/dashboard(\/|$)/,
     permission: 'aqua.reports.project-detail.view',
   },
   {

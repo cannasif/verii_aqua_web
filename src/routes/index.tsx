@@ -53,6 +53,7 @@ const NetOperationLinesPage = lazyImport(() => import('@/features/aqua'), 'NetOp
 const BatchMovementsPage = lazyImport(() => import('@/features/aqua'), 'BatchMovementsPage');
 const CageBalancesPage = lazyImport(() => import('@/features/aqua'), 'CageBalancesPage');
 const ProjectDetailReportPage = lazyImport(() => import('@/features/aqua'), 'ProjectDetailReportPage');
+const AquaDashboardPage = lazyImport(() => import('@/features/aqua'), 'AquaDashboardPage');
 const QuickSetupPage = lazyImport(() => import('@/features/aqua/operations/quick-setup'), 'QuickSetupPage');
 const QuickDailyEntryPage = lazyImport(() => import('@/features/aqua/operations/quick-daily-entry'), 'QuickDailyEntryPage');
 const WelcomePage = lazyImport(() => import('@/features/welcome'), 'WelcomePage');
@@ -111,6 +112,7 @@ export const router = createBrowserRouter([
       { path: 'aqua/reports/batch-movements', element: <BatchMovementsPage /> },
       { path: 'aqua/reports/cage-balances', element: <CageBalancesPage /> },
       { path: 'aqua/reports/project-detail', element: <ProjectDetailReportPage /> },
+      { path: 'aqua/dashboard', element: <AquaDashboardPage /> },
     ],
   },
   {
