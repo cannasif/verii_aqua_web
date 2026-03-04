@@ -21,19 +21,19 @@ import type { ProjectDto } from '../types/quick-setup-types';
 interface ProjectStepCardProps {
   projects: ProjectDto[] | undefined;
   isLoadingProjects: boolean;
-  selectedProjectId: number | null;
   onCreateProject: (data: ProjectFormSchema) => Promise<void>;
   onSelectProject: (projectId: number) => void;
   isCreating: boolean;
+  selectedProjectId: number | null;
 }
 
 export function ProjectStepCard({
   projects,
   isLoadingProjects,
-  selectedProjectId,
   onCreateProject,
   onSelectProject,
   isCreating,
+  selectedProjectId,
 }: ProjectStepCardProps): ReactElement {
   const { t } = useTranslation('common');
   const form = useForm<ProjectFormSchema>({
@@ -120,7 +120,7 @@ export function ProjectStepCard({
 
         <Combobox
           options={projectOptions}
-          value={selectedProjectId != null ? String(selectedProjectId) : ''}
+          value={selectedProjectId?.toString() || ""}
           onValueChange={(v) => { if (v) onSelectProject(Number(v)); }}
           placeholder={t('aqua.quickSetup.selectProject')}
           searchPlaceholder={t('common.search')}
