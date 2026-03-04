@@ -43,13 +43,34 @@ import {
   Menu,
   FileSpreadsheet,
   Presentation,
-  Filter
+  Filter,
+  GripVertical
 } from 'lucide-react';
 import type { AquaCrudConfig, AquaCrudContextFilter, AquaFieldConfig } from '../types/aqua-crud';
 import { aquaCrudApi } from '../api/aqua-crud-api';
 import { PageToolbar, ColumnPreferencesPopover, AdvancedFilter } from '@/components/shared';
-import { loadColumnPreferences } from '@/lib/column-preferences';
+// DİKKAT: saveColumnPreferences eklendi (sürükle bırak sonrası hemen kaydetmek için)
+import { loadColumnPreferences, saveColumnPreferences } from '@/lib/column-preferences';
 import type { FilterRow, FilterColumnConfig } from '@/lib/advanced-filter-types';
+
+// DND-KIT Sürükle Bırak Paketleri
+import {
+  DndContext, 
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  horizontalListSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface AquaCrudPageProps {
   config: AquaCrudConfig;
@@ -178,6 +199,58 @@ function resolveLookupLabel(item: Record<string, unknown>, field: AquaFieldConfi
   return parts.join(field.lookup.labelSeparator ?? ' - ');
 }
 
+// YENİ: Sürükle Bırak (Draggable) Kolon Başlığı Bileşeni
+interface DraggableThProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
+  id: string;
+}
+
+const DraggableTh = ({ id, children, className, onClick, ...props }: DraggableThProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    opacity: isDragging ? 0.9 : 1,
+    zIndex: isDragging ? 50 : 'auto',
+    position: isDragging ? 'relative' : 'static',
+    // Sürüklenirken karanlık cam efekti veriyoruz
+    backgroundColor: isDragging ? 'rgba(21, 16, 37, 0.95)' : undefined, 
+  };
+
+  return (
+    <th
+      ref={setNodeRef}
+      style={style}
+      className={`${className} ${isDragging ? 'shadow-2xl ring-1 ring-white/10 backdrop-blur-xl' : ''}`}
+      {...props}
+    >
+      <div className="flex items-center gap-1.5">
+        {/* Sürükleme İkonu (Grip) */}
+        <button
+          type="button"
+          {...attributes}
+          {...listeners}
+          className="cursor-grab active:cursor-grabbing hover:bg-white/10 p-1 rounded-md transition-colors touch-none text-slate-500 hover:text-slate-300 dark:text-slate-500 dark:hover:text-slate-300"
+          title="Sürükle bırak ile sıralamayı değiştir"
+        >
+          <GripVertical size={14} />
+        </button>
+        {/* Yazı ve Sıralama (Sort) Tıklama Alanı */}
+        <div className="flex-1 flex items-center gap-2 cursor-pointer hover:text-pink-500 transition-colors select-none" onClick={onClick}>
+          {children}
+        </div>
+      </div>
+    </th>
+  );
+};
+
 export function AquaCrudPage({
   config,
   contextFilter,
@@ -199,7 +272,6 @@ export function AquaCrudPage({
   const [pageNumber, setPageNumber] = useState(1);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>({ key: 'Id', direction: 'desc' });
 
-  // Filter States
   const [showFilters, setShowFilters] = useState(false);
   const [draftFilterRows, setDraftFilterRows] = useState<FilterRow[]>([]);
   const [appliedFilterRows, setAppliedFilterRows] = useState<FilterRow[]>([]);
@@ -209,7 +281,6 @@ export function AquaCrudPage({
   const [formValues, setFormValues] = useState<Record<string, unknown>>(() => getInitialValues(config));
   const [rowToDelete, setRowToDelete] = useState<Record<string, unknown> | null>(null);
 
-  // Dinamik Filtre Kolonları (Hack: translatedLabel ile yolluyoruz)
   const filterColumns = useMemo<FilterColumnConfig[]>(() => {
     return config.fields.map(field => {
       let type: 'string' | 'number' | 'date' | 'boolean' = 'string';
@@ -249,6 +320,39 @@ export function AquaCrudPage({
     const orderMap = new Map(columnOrder.map((k, i) => [k, i]));
     return [...visible].sort((a, b) => (orderMap.get(a.key) ?? 999) - (orderMap.get(b.key) ?? 999));
   }, [baseColumns, visibleColumns, columnOrder]);
+
+  // YENİ: DND Sensörleri (Tıklama ile sürüklemeyi ayırmak için Constraint eklendi)
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5, // Fare 5 piksel hareket edene kadar tıklama sayar, sort bozulmaz
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // YENİ: Sürükleme Bittiğinde Çalışacak Fonksiyon
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setColumnOrder((items) => {
+        const oldIndex = items.indexOf(active.id as string);
+        const newIndex = items.indexOf(over.id as string);
+        const newOrder = arrayMove(items, oldIndex, newIndex);
+        
+        // Değişikliği anında local storage'a kaydet
+        saveColumnPreferences(`aqua-${config.key}`, user?.id, {
+          order: newOrder,
+          visibleKeys: visibleColumns,
+        });
+
+        return newOrder;
+      });
+    }
+  };
 
   useEffect(() => {
     if (disablePageTitleSync) return;
@@ -595,7 +699,7 @@ export function AquaCrudPage({
     }
   };
 
-  const headStyle = `text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider py-2 px-4 hover:text-pink-600 dark:hover:text-pink-400 transition-colors cursor-pointer select-none border-r border-slate-200 dark:border-white/[0.05] last:border-r-0 whitespace-nowrap bg-transparent text-left`;
+  const headStyle = `text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider py-2 px-4 border-r border-slate-200 dark:border-white/[0.05] last:border-r-0 whitespace-nowrap bg-transparent text-left`;
   const cellStyle = `text-slate-600 dark:text-slate-400 px-4 py-2 border-r border-slate-100 dark:border-white/[0.05] last:border-r-0 text-sm align-middle whitespace-nowrap`;
 
   const tableContainerClass = hidePageHeader
@@ -644,7 +748,6 @@ export function AquaCrudPage({
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  {/* FİLTRE BUTONU VE POPOVER */}
                   <Popover open={showFilters} onOpenChange={setShowFilters}>
                     <PopoverTrigger asChild>
                       <Button
@@ -722,79 +825,92 @@ export function AquaCrudPage({
         </>
       )}
 
+      {/* YENİ: Sürükle Bırak Bağlamı (DndContext) Tabloyu Sarıyor */}
       <div className={tableContainerClass}>
-        <div className="overflow-x-auto w-full">
-          <table className="w-full min-w-[560px] sm:min-w-[700px] lg:min-w-[820px] caption-bottom text-sm relative">
-            <thead className="bg-[#0b0713] sticky top-0 z-10 border-b border-slate-200 dark:border-white/5">
-              <tr className="h-10 hover:bg-transparent">
-                <th className={headStyle} onClick={() => handleSort('Id')}>
-                  <div className="flex items-center gap-2">
-                    {t('aqua.common.id', 'ID')}
-                    {sortConfig?.key === 'Id' ? (sortConfig.direction === 'asc' ? <ArrowUp size={14} className="text-pink-500" /> : <ArrowDown size={14} className="text-pink-500" />) : (<ArrowUpDown size={14} className="opacity-30 group-hover:opacity-100" />)}
-                  </div>
-                </th>
-                {displayedColumns.map((column) => (
-                  <th key={column.key} className={headStyle} onClick={() => handleSort(column.key)}>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <div className="overflow-x-auto w-full">
+            <table className="w-full min-w-[560px] sm:min-w-[700px] lg:min-w-[820px] caption-bottom text-sm relative">
+              <thead className="bg-[#0b0713] sticky top-0 z-10 border-b border-slate-200 dark:border-white/5">
+                <tr className="h-10 hover:bg-transparent">
+                  {/* ID Kolonu Sabit Bırakıldı */}
+                  <th className={`${headStyle} cursor-pointer hover:text-pink-500`} onClick={() => handleSort('Id')}>
                     <div className="flex items-center gap-2">
-                      {t(column.label)}
-                      {sortConfig?.key === column.key ? (sortConfig.direction === 'asc' ? <ArrowUp size={14} className="text-pink-500" /> : <ArrowDown size={14} className="text-pink-500" />) : (<ArrowUpDown size={14} className="opacity-30 group-hover:opacity-100" />)}
+                      {t('aqua.common.id', 'ID')}
+                      {sortConfig?.key === 'Id' ? (sortConfig.direction === 'asc' ? <ArrowUp size={14} className="text-pink-500" /> : <ArrowDown size={14} className="text-pink-500" />) : (<ArrowUpDown size={14} className="opacity-30 group-hover:opacity-100" />)}
                     </div>
                   </th>
-                ))}
-                <th className={`${headStyle} text-right cursor-default hover:text-slate-500 dark:hover:text-slate-400`}>{t('aqua.common.actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!canQueryList ? (
-                <tr><td colSpan={displayedColumns.length + 2} className="text-center py-20 text-muted-foreground font-medium">{t('aqua.common.noData')}</td></tr>
-              ) : listQuery.isLoading ? (
-                <tr>
-                  <td colSpan={displayedColumns.length + 2} className="text-center py-20">
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-current text-pink-500" />
-                      <span className="text-sm font-medium text-muted-foreground animate-pulse">{t('aqua.common.loading')}</span>
-                    </div>
-                  </td>
+
+                  {/* Sürükle Bırak (Sortable) Bağlamı ve Kolonları */}
+                  <SortableContext items={displayedColumns.map(c => c.key)} strategy={horizontalListSortingStrategy}>
+                    {displayedColumns.map((column) => (
+                      <DraggableTh 
+                        key={column.key} 
+                        id={column.key} 
+                        className={headStyle} 
+                        onClick={() => handleSort(column.key)}
+                      >
+                        {t(column.label)}
+                        {sortConfig?.key === column.key ? (sortConfig.direction === 'asc' ? <ArrowUp size={14} className="text-pink-500" /> : <ArrowDown size={14} className="text-pink-500" />) : (<ArrowUpDown size={14} className="opacity-30 group-hover:opacity-100" />)}
+                      </DraggableTh>
+                    ))}
+                  </SortableContext>
+
+                  {/* Aksiyonlar Kolonu Sabit Bırakıldı */}
+                  <th className={`${headStyle} text-right cursor-default hover:text-slate-500 dark:hover:text-slate-400`}>{t('aqua.common.actions')}</th>
                 </tr>
-              ) : rows.length === 0 ? (
-                <tr><td colSpan={displayedColumns.length + 2} className="text-center py-20 text-muted-foreground font-medium">{t('aqua.common.noData')}</td></tr>
-              ) : (
-                rows.map((row) => {
-                  const id = Number(row.id ?? row.Id);
-                  const status = Number(row.status ?? row.Status);
-                  const isSelected = rowSelectionEnabled && selectedRowId === id;
-                  return (
-                    <tr key={id} className={`h-10 border-b border-slate-200 dark:border-white/5 transition-colors duration-200 hover:bg-pink-50/40 dark:hover:bg-pink-500/5 group last:border-0 bg-transparent ${rowSelectionEnabled ? 'cursor-pointer' : ''} ${isSelected ? 'bg-pink-50/60 dark:bg-pink-500/10' : ''}`} onClick={() => { if (rowSelectionEnabled) onRowSelect?.(row); }}>
-                      <td className={`${cellStyle} font-mono text-xs`}>{id}</td>
-                      {displayedColumns.map((column) => (
-                        <td key={column.key} className={cellStyle}>
-                          {getFormattedCellValue(row, column.key)}
+              </thead>
+              <tbody>
+                {!canQueryList ? (
+                  <tr><td colSpan={displayedColumns.length + 2} className="text-center py-20 text-muted-foreground font-medium">{t('aqua.common.noData')}</td></tr>
+                ) : listQuery.isLoading ? (
+                  <tr>
+                    <td colSpan={displayedColumns.length + 2} className="text-center py-20">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-current text-pink-500" />
+                        <span className="text-sm font-medium text-muted-foreground animate-pulse">{t('aqua.common.loading')}</span>
+                      </div>
+                    </td>
+                  </tr>
+                ) : rows.length === 0 ? (
+                  <tr><td colSpan={displayedColumns.length + 2} className="text-center py-20 text-muted-foreground font-medium">{t('aqua.common.noData')}</td></tr>
+                ) : (
+                  rows.map((row) => {
+                    const id = Number(row.id ?? row.Id);
+                    const status = Number(row.status ?? row.Status);
+                    const isSelected = rowSelectionEnabled && selectedRowId === id;
+                    return (
+                      <tr key={id} className={`h-10 border-b border-slate-200 dark:border-white/5 transition-colors duration-200 hover:bg-pink-50/40 dark:hover:bg-pink-500/5 group last:border-0 bg-transparent ${rowSelectionEnabled ? 'cursor-pointer' : ''} ${isSelected ? 'bg-pink-50/60 dark:bg-pink-500/10' : ''}`} onClick={() => { if (rowSelectionEnabled) onRowSelect?.(row); }}>
+                        <td className={`${cellStyle} font-mono text-xs`}>{id}</td>
+                        {displayedColumns.map((column) => (
+                          <td key={column.key} className={cellStyle}>
+                            {getFormattedCellValue(row, column.key)}
+                          </td>
+                        ))}
+                        <td className={`${cellStyle} text-right w-[1%] whitespace-nowrap`}>
+                          <div className="flex items-center justify-end gap-1">
+                            {!config.readOnly && (
+                              <>
+                                <Button variant="ghost" size="icon" title={t('aqua.common.edit', 'Düzenle')} onClick={(e) => { e.stopPropagation(); handleEdit(row); }} className="h-8 w-8 rounded-lg text-slate-400 hover:text-pink-500 hover:bg-pink-500/10 transition-colors">
+                                  <Edit size={16} />
+                                </Button>
+                                <Button variant="ghost" size="icon" title={t('aqua.common.delete', 'Sil')} onClick={(e) => { e.stopPropagation(); handleDeleteClick(row); }} className="h-8 w-8 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-colors">
+                                  <Trash2 size={16} />
+                                </Button>
+                              </>
+                            )}
+                            {config.postingSlug && !config.autoPostOnSave && status === 0 && (
+                              <Button size="sm" onClick={(e) => { e.stopPropagation(); postMutation.mutate({ slug: config.postingSlug!, id }); }} disabled={postMutation.isPending}>{t('aqua.common.post')}</Button>
+                            )}
+                          </div>
                         </td>
-                      ))}
-                      <td className={`${cellStyle} text-right w-[1%] whitespace-nowrap`}>
-                        <div className="flex items-center justify-end gap-1">
-                          {!config.readOnly && (
-                            <>
-                              <Button variant="ghost" size="icon" title={t('aqua.common.edit', 'Düzenle')} onClick={(e) => { e.stopPropagation(); handleEdit(row); }} className="h-8 w-8 rounded-lg text-slate-400 hover:text-pink-500 hover:bg-pink-500/10 transition-colors">
-                                <Edit size={16} />
-                              </Button>
-                              <Button variant="ghost" size="icon" title={t('aqua.common.delete', 'Sil')} onClick={(e) => { e.stopPropagation(); handleDeleteClick(row); }} className="h-8 w-8 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-colors">
-                                <Trash2 size={16} />
-                              </Button>
-                            </>
-                          )}
-                          {config.postingSlug && !config.autoPostOnSave && status === 0 && (
-                            <Button size="sm" onClick={(e) => { e.stopPropagation(); postMutation.mutate({ slug: config.postingSlug!, id }); }} disabled={postMutation.isPending}>{t('aqua.common.post')}</Button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </DndContext>
 
         <div className="flex flex-col gap-2 border-t border-slate-200 dark:border-white/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between w-full shrink-0 bg-[#0b0713]">
           <span className="text-sm text-slate-500">{rangeStart}-{rangeEnd} / {totalCount}</span>
