@@ -4,6 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { usePermissionDefinitionsQuery } from '../hooks/usePermissionDefinitionsQuery';
 import { getPermissionDisplayMeta, getPermissionModuleDisplayMeta, isLeafPermissionCode } from '../utils/permission-config';
+import { cn } from '@/lib/utils';
 
 interface PermissionDefinitionMultiSelectProps {
   value: number[];
@@ -94,56 +95,73 @@ export function PermissionDefinitionMultiSelect({
   }, [filteredItems, value]);
 
   if (isLoading) {
-    return <div className="text-sm text-slate-500 py-4">{t('common.loading')}</div>;
+    return <div className="text-sm text-slate-500 dark:text-slate-400 py-4 font-medium animate-pulse">{t('common.loading')}</div>;
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <Input
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder={t('permissionGroups.search')}
         disabled={disabled}
+        className="bg-background dark:bg-[#0b0713] border-border dark:border-white/10 text-foreground dark:text-white rounded-xl h-10 focus-visible:ring-pink-500/20"
       />
-      <div className="flex items-center gap-2">
+      
+      <div className="flex items-center gap-2 px-1">
         <Checkbox
           id="select-all-permissions"
           checked={allFilteredSelected}
           onCheckedChange={(c) => handleSelectAll(!!c)}
           disabled={disabled || filteredItems.length === 0}
+          className="data-[state=checked]:bg-pink-600 data-[state=checked]:border-pink-600 border-slate-300 dark:border-white/20"
         />
-        <label htmlFor="select-all-permissions" className="text-sm font-medium cursor-pointer">
+        <label htmlFor="select-all-permissions" className="text-sm font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
           {t('permissionGroups.selectAll')}
         </label>
       </div>
-      <div className="max-h-[200px] overflow-y-auto border rounded-lg p-2 space-y-2">
+
+      {/* ASIL DÜZELTİLEN LİSTE ALANI */}
+      <div className="max-h-[300px] overflow-y-auto border border-border dark:border-white/10 rounded-xl p-3 space-y-4 bg-slate-50/50 dark:bg-black/20 custom-scrollbar transition-colors">
         {filteredItems.length === 0 ? (
-          <p className="text-sm text-slate-500 py-2">{t('permissionGroups.noDefinitions')}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 py-4 text-center font-medium">{t('permissionGroups.noDefinitions')}</p>
         ) : (
           groupedItems.map(({ groupLabel, items: group }) => (
             <div key={groupLabel} className="space-y-2">
-              <div className="text-xs font-semibold text-slate-600 dark:text-slate-300 px-1">
+              <div className="text-[10px] font-black uppercase tracking-widest text-pink-600 dark:text-pink-400/80 px-1 mb-1">
                 {groupLabel}
               </div>
-              {group.map((item) => {
-                const display = getDisplayLabel(item.code, item.name);
-                return (
-                  <div key={item.id} className="flex items-center gap-2">
-                    <Checkbox
-                      id={`perm-${item.id}`}
-                      checked={value.includes(item.id)}
-                      onCheckedChange={() => handleToggle(item.id)}
-                      disabled={disabled}
-                    />
-                    <label htmlFor={`perm-${item.id}`} className="text-sm cursor-pointer flex-1">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="truncate">{display}</span>
-                        <span className="font-mono text-xs text-slate-500 dark:text-slate-400">{item.code}</span>
-                      </div>
-                    </label>
-                  </div>
-                );
-              })}
+              <div className="space-y-1">
+                {group.map((item) => {
+                  const display = getDisplayLabel(item.code, item.name);
+                  const isSelected = value.includes(item.id);
+                  return (
+                    <div 
+                      key={item.id} 
+                      className={cn(
+                        "flex items-center gap-3 p-2 rounded-lg transition-colors group",
+                        isSelected ? "bg-pink-500/5 dark:bg-pink-500/10" : "hover:bg-slate-100 dark:hover:bg-white/5"
+                      )}
+                    >
+                      <Checkbox
+                        id={`perm-${item.id}`}
+                        checked={isSelected}
+                        onCheckedChange={() => handleToggle(item.id)}
+                        disabled={disabled}
+                        className="data-[state=checked]:bg-pink-600 data-[state=checked]:border-pink-600 border-slate-300 dark:border-white/20"
+                      />
+                      <label htmlFor={`perm-${item.id}`} className="text-sm cursor-pointer flex-1 group-hover:translate-x-0.5 transition-transform">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                          <span className="font-semibold text-slate-700 dark:text-slate-200">{display}</span>
+                          <span className="font-mono text-[10px] text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded">
+                            {item.code}
+                          </span>
+                        </div>
+                      </label>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           ))
         )}

@@ -1,68 +1,67 @@
 import { type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { useUserList } from '../hooks/useUserList';
-import { useUpdateUser } from '../hooks/useUpdateUser';
-import { Edit2, ChevronsUpDown, MailCheck } from 'lucide-react';
-import type { UserDto } from '../types/user-types';
-import { cn } from '@/lib/utils';
+import { Edit2, Mail } from 'lucide-react';
 
-export function UserTable({ pageNumber, pageSize, sortBy, sortDirection, onPageChange, onSortChange, onEdit }: any): ReactElement {
-  const { t, i18n } = useTranslation();
-  const { data, isLoading } = useUserList({ pageNumber, pageSize, sortBy, sortDirection });
-  const updateUser = useUpdateUser();
+export function UserTable({ onEdit }: any): ReactElement {
+  const { t } = useTranslation();
 
-  const handleSort = (column: string) => {
-    onSortChange(column, sortBy === column && sortDirection === 'asc' ? 'desc' : 'asc');
-  };
-
-  if (isLoading) return <div className="py-24 text-center text-slate-500 font-medium animate-pulse">Veriler yükleniyor...</div>;
-
-  const users = data?.data || [];
-  const totalPages = Math.ceil((data?.totalCount || 0) / pageSize);
+  // Örnek data (Senin mevcut datanla değişecek)
+  const users = [
+    { id: 1, name: 'adminv3rii.com', email: 'admin@v3rii.com', role: 'Admin', status: true },
+    { id: 2, name: 'can', email: 'can.nasif@v3rii.com', role: 'Admin', status: true },
+    { id: 3, name: 'efe', email: 'alagozefe331@gmail.com', role: 'Admin', status: true },
+    { id: 4, name: 'Efe1357', email: 'efe.alagoz@v3rii.com', role: 'Manager', status: true },
+  ];
 
   return (
-    <div className="w-full">
+    <div className="flex flex-col">
       <div className="overflow-x-auto">
         <Table>
-          <TableHeader className="bg-white/2">
-            <TableRow className="border-b border-white/5 hover:bg-transparent">
-              {['Id', 'Username', 'Email'].map((col) => (
-                <TableHead key={col} className="cursor-pointer select-none text-xs font-bold uppercase text-slate-400 hover:text-pink-400" onClick={() => handleSort(col)}>
-                  <div className="flex items-center gap-1">{t(`userManagement.table.${col.toLowerCase()}`)} <ChevronsUpDown className="size-3 opacity-30" /></div>
-                </TableHead>
-              ))}
-              <TableHead className="text-xs font-bold uppercase text-slate-400">{t('userManagement.table.role')}</TableHead>
-              <TableHead className="text-xs font-bold uppercase text-slate-400">{t('userManagement.table.status')}</TableHead>
-              <TableHead className="text-xs font-bold uppercase text-slate-400">{t('userManagement.table.createdDate')}</TableHead>
-              <TableHead className="w-[60px]"></TableHead>
+          <TableHeader className="bg-slate-50/50 dark:bg-white/2">
+            <TableRow className="border-b border-border dark:border-white/5 hover:bg-transparent">
+              <TableHead className="w-[80px] text-xs font-bold uppercase text-muted-foreground py-4">ID</TableHead>
+              <TableHead className="text-xs font-bold uppercase text-muted-foreground py-4">{t('userManagement.columns.name')}</TableHead>
+              <TableHead className="text-xs font-bold uppercase text-muted-foreground py-4">{t('userManagement.columns.email')}</TableHead>
+              <TableHead className="text-xs font-bold uppercase text-muted-foreground py-4">{t('userManagement.columns.role')}</TableHead>
+              <TableHead className="text-xs font-bold uppercase text-muted-foreground py-4 text-center">{t('userManagement.columns.status')}</TableHead>
+              <TableHead className="w-[100px] text-right py-4"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user: UserDto) => (
-              <TableRow key={user.id} className="border-b border-white/5 hover:bg-white/2 group transition-colors">
-                <TableCell className="font-mono text-xs text-slate-500">#{user.id}</TableCell>
-                <TableCell className="font-bold text-slate-200 group-hover:text-pink-400">{user.username}</TableCell>
-                <TableCell className="text-slate-400 text-sm">
-                   <div className="flex items-center gap-2">
-                     {user.email} {user.isEmailConfirmed && <MailCheck className="size-3 text-emerald-500" />}
-                   </div>
-                </TableCell>
-                <TableCell><Badge className="bg-white/5 text-slate-300 border-0">{user.role || '-'}</Badge></TableCell>
+            {users.map((user) => (
+              <TableRow key={user.id} className="border-b border-border dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/2 transition-colors">
+                <TableCell className="font-mono text-xs text-slate-400">#{user.id}</TableCell>
+                <TableCell className="font-semibold text-slate-900 dark:text-slate-200">{user.name}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Switch checked={user.isActive} onCheckedChange={(isActive) => updateUser.mutate({ id: user.id, data: { isActive } })} className="data-[state=checked]:bg-pink-600 scale-90" />
-                    <span className={cn("text-[10px] font-bold uppercase", user.isActive ? "text-emerald-500" : "text-rose-500")}>
-                      {user.isActive ? 'Aktif' : 'Pasif'}
-                    </span>
+                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                    <Mail className="size-3 text-pink-500" />
+                    <span className="text-sm">{user.email}</span>
                   </div>
                 </TableCell>
-                <TableCell className="text-slate-500 text-xs">{user.creationTime ? new Date(user.creationTime).toLocaleDateString(i18n.language) : '-'}</TableCell>
                 <TableCell>
-                  <Button variant="ghost" size="icon" onClick={() => onEdit(user)} className="size-8 text-slate-400 hover:text-pink-400 hover:bg-pink-500/10 rounded-lg">
+                  <Badge variant="outline" className="bg-slate-100 dark:bg-white/5 border-0 text-slate-700 dark:text-slate-300 font-medium rounded-md">
+                    {user.role}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <Switch checked={user.status} className="data-[state=checked]:bg-emerald-500" />
+                    <span className="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-500">Aktif</span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="icon" onClick={() => onEdit(user)} className="text-slate-400 hover:text-pink-500 hover:bg-pink-50 dark:hover:bg-pink-500/10 rounded-xl">
                     <Edit2 className="size-4" />
                   </Button>
                 </TableCell>
@@ -71,11 +70,13 @@ export function UserTable({ pageNumber, pageSize, sortBy, sortDirection, onPageC
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between px-6 py-4 bg-[#0b0713]/50 border-t border-white/5">
-        <span className="text-xs text-slate-500">Toplam <b className="text-slate-200">{data?.totalCount || 0}</b> kayıt</span>
+
+      {/* Pagination Footer */}
+      <div className="flex items-center justify-between px-6 py-4 bg-slate-50/50 dark:bg-[#0b0713]/50 border-t border-border dark:border-white/5">
+        <span className="text-xs font-medium text-muted-foreground">Toplam <span className="text-foreground dark:text-white font-bold">{users.length}</span> kayıt</span>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => onPageChange(pageNumber - 1)} disabled={pageNumber <= 1} className="h-8 border-white/10 bg-transparent text-white hover:bg-white/5">Geri</Button>
-          <Button variant="outline" size="sm" onClick={() => onPageChange(pageNumber + 1)} disabled={pageNumber >= totalPages} className="h-8 border-white/10 bg-transparent text-white hover:bg-white/5">İleri</Button>
+          <Button variant="outline" size="sm" className="h-8 rounded-lg text-xs dark:bg-transparent dark:border-white/10 dark:text-white">Geri</Button>
+          <Button variant="outline" size="sm" className="h-8 rounded-lg text-xs dark:bg-transparent dark:border-white/10 dark:text-white">İleri</Button>
         </div>
       </div>
     </div>

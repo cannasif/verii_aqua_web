@@ -31,12 +31,18 @@ export function UserManagementPage(): ReactElement {
     <div className="space-y-8 pb-10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-500 border border-pink-500/20 shadow-lg shadow-pink-500/5">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-600 dark:text-pink-500 border border-pink-200 dark:border-pink-500/20 shadow-lg shadow-pink-500/5 transition-colors">
             <Users className="size-6" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white">{t('userManagement.menu')}</h1>
-            <p className="text-slate-400 mt-1 text-sm font-medium">{t('userManagement.description')}</p>
+            {/* FIX: text-white -> text-slate-900 dark:text-white */}
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white transition-colors">
+              {t('userManagement.menu')}
+            </h1>
+            {/* FIX: text-slate-400 font-medium */}
+            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm font-medium transition-colors">
+              {t('userManagement.description')}
+            </p>
           </div>
         </div>
         <Button 
@@ -50,7 +56,8 @@ export function UserManagementPage(): ReactElement {
 
       <UserStats />
 
-      <div className="bg-[#1a1025]/60 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+      {/* FIX: Tablo dış çerçevesi akıllı temaya çekildi */}
+      <div className="bg-card dark:bg-[#1a1025]/60 backdrop-blur-xl border border-slate-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm dark:shadow-2xl transition-all duration-300">
         <UserTable
           pageNumber={pageNumber}
           pageSize={20}

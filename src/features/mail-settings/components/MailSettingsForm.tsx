@@ -52,7 +52,6 @@ export function MailSettingsForm({
   const testMailMutation = useSendTestMailMutation();
 
   const form = useForm<SmtpSettingsFormSchema>({
-    // TypeScript Hata Düzeltmesi: as unknown as Resolver zorlaması yapıldı
     resolver: zodResolver(smtpSettingsFormSchema) as unknown as Resolver<SmtpSettingsFormSchema>,
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -89,18 +88,19 @@ export function MailSettingsForm({
     onSubmit(values);
   };
 
-  const labelStyle = "text-xs font-bold text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2";
-  const inputStyle = "bg-[#0b0713]/50 border-white/5 text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl transition-all duration-300";
+  // AKILLI STİLLER: Temaya göre dinamik geçiş
+  const labelStyle = "text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2";
+  const inputStyle = "bg-background dark:bg-[#0b0713]/50 border-border dark:border-white/5 text-foreground dark:text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl transition-all duration-300";
 
   if (isLoading) {
     return (
-      <div className="bg-[#1a1025]/60 backdrop-blur-xl border border-white/5 rounded-2xl p-6 md:p-8 space-y-6">
-        <Skeleton className="h-10 w-full bg-white/5 rounded-xl" />
+      <div className="bg-card dark:bg-[#1a1025]/60 backdrop-blur-xl border border-border dark:border-white/5 rounded-2xl p-6 md:p-8 space-y-6 transition-all duration-300">
+        <Skeleton className="h-10 w-full bg-slate-100 dark:bg-white/5 rounded-xl" />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          <Skeleton className="h-10 w-full bg-white/5 rounded-xl" />
-          <Skeleton className="h-10 w-full bg-white/5 rounded-xl" />
+          <Skeleton className="h-10 w-full bg-slate-100 dark:bg-white/5 rounded-xl" />
+          <Skeleton className="h-10 w-full bg-slate-100 dark:bg-white/5 rounded-xl" />
         </div>
-        <Skeleton className="h-32 w-full bg-white/5 rounded-xl" />
+        <Skeleton className="h-32 w-full bg-slate-100 dark:bg-white/5 rounded-xl" />
       </div>
     );
   }
@@ -108,7 +108,7 @@ export function MailSettingsForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8 animate-in fade-in duration-500">
-        <div className="bg-[#1a1025]/60 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl p-6 md:p-8">
+        <div className="bg-card dark:bg-[#1a1025]/60 backdrop-blur-xl border border-border dark:border-white/5 rounded-2xl shadow-sm dark:shadow-2xl p-6 md:p-8 transition-all duration-300">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             
             {/* SMTP Host */}
@@ -118,12 +118,12 @@ export function MailSettingsForm({
               render={({ field }) => (
                 <FormItem className="md:col-span-8">
                   <FormLabel className={labelStyle} required={isZodFieldRequired(smtpSettingsFormSchema, 'host')}>
-                    <Server className="w-3.5 h-3.5 text-pink-500" /> {t('mailSettings.Fields.Host')}
+                    <Server className="w-3.5 h-3.5 text-pink-600 dark:text-pink-500" /> {t('mailSettings.Fields.Host')}
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="smtp.gmail.com" className={inputStyle} {...field} />
                   </FormControl>
-                  <FormMessage className="text-[10px]" />
+                  <FormMessage className="text-[10px] text-rose-500" />
                 </FormItem>
               )}
             />
@@ -135,12 +135,12 @@ export function MailSettingsForm({
               render={({ field }) => (
                 <FormItem className="md:col-span-4">
                   <FormLabel className={labelStyle} required={isZodFieldRequired(smtpSettingsFormSchema, 'port')}>
-                    <Hash className="w-3.5 h-3.5 text-orange-500" /> {t('mailSettings.Fields.Port')}
+                    <Hash className="w-3.5 h-3.5 text-orange-600 dark:text-orange-500" /> {t('mailSettings.Fields.Port')}
                   </FormLabel>
                   <FormControl>
                     <Input type="number" className={inputStyle} {...field} onChange={(e) => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                   </FormControl>
-                  <FormMessage className="text-[10px]" />
+                  <FormMessage className="text-[10px] text-rose-500" />
                 </FormItem>
               )}
             />
@@ -150,10 +150,10 @@ export function MailSettingsForm({
               control={form.control}
               name="enableSsl"
               render={({ field }) => (
-                <FormItem className="md:col-span-12 flex flex-row items-center justify-between rounded-xl border border-white/5 p-4 bg-white/2">
+                <FormItem className="md:col-span-12 flex flex-row items-center justify-between rounded-xl border border-border dark:border-white/5 p-4 bg-muted/20 dark:bg-white/2 transition-colors">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-sm font-bold text-white flex items-center gap-2 cursor-pointer">
-                      <ShieldCheck className={cn("w-4 h-4 transition-colors", field.value ? "text-emerald-500" : "text-slate-500")} />
+                    <FormLabel className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2 cursor-pointer">
+                      <ShieldCheck className={cn("w-4 h-4 transition-colors", field.value ? "text-emerald-600 dark:text-emerald-500" : "text-slate-500")} />
                       {t('mailSettings.Fields.EnableSsl')}
                     </FormLabel>
                   </div>
@@ -171,12 +171,12 @@ export function MailSettingsForm({
               render={({ field }) => (
                 <FormItem className="md:col-span-6">
                   <FormLabel className={labelStyle} required={isZodFieldRequired(smtpSettingsFormSchema, 'username')}>
-                    <User className="w-3.5 h-3.5 text-blue-500" /> {t('mailSettings.Fields.Username')}
+                    <User className="w-3.5 h-3.5 text-blue-600 dark:text-blue-500" /> {t('mailSettings.Fields.Username')}
                   </FormLabel>
                   <FormControl>
                     <Input className={inputStyle} {...field} />
                   </FormControl>
-                  <FormMessage className="text-[10px]" />
+                  <FormMessage className="text-[10px] text-rose-500" />
                 </FormItem>
               )}
             />
@@ -188,12 +188,12 @@ export function MailSettingsForm({
               render={({ field }) => (
                 <FormItem className="md:col-span-6">
                   <FormLabel className={labelStyle}>
-                    <Lock className="w-3.5 h-3.5 text-rose-500" /> {t('mailSettings.Fields.Password')}
+                    <Lock className="w-3.5 h-3.5 text-rose-600 dark:text-rose-500" /> {t('mailSettings.Fields.Password')}
                   </FormLabel>
                   <FormControl>
                     <Input type="password" placeholder={t('mailSettings.Fields.PasswordPlaceholder')} className={inputStyle} {...field} />
                   </FormControl>
-                  <FormMessage className="text-[10px]" />
+                  <FormMessage className="text-[10px] text-rose-500" />
                 </FormItem>
               )}
             />
@@ -205,12 +205,12 @@ export function MailSettingsForm({
               render={({ field }) => (
                 <FormItem className="md:col-span-6">
                   <FormLabel className={labelStyle} required={isZodFieldRequired(smtpSettingsFormSchema, 'fromEmail')}>
-                    <AtSign className="w-3.5 h-3.5 text-emerald-500" /> {t('mailSettings.Fields.FromEmail')}
+                    <AtSign className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-500" /> {t('mailSettings.Fields.FromEmail')}
                   </FormLabel>
                   <FormControl>
                     <Input type="email" className={inputStyle} {...field} />
                   </FormControl>
-                  <FormMessage className="text-[10px]" />
+                  <FormMessage className="text-[10px] text-rose-500" />
                 </FormItem>
               )}
             />
@@ -222,12 +222,12 @@ export function MailSettingsForm({
               render={({ field }) => (
                 <FormItem className="md:col-span-6">
                   <FormLabel className={labelStyle} required={isZodFieldRequired(smtpSettingsFormSchema, 'timeout')}>
-                    <Clock className="w-3.5 h-3.5 text-amber-500" /> {t('mailSettings.Fields.Timeout')}
+                    <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500" /> {t('mailSettings.Fields.Timeout')}
                   </FormLabel>
                   <FormControl>
                     <Input type="number" className={inputStyle} {...field} onChange={(e) => field.onChange(e.target.value === '' ? 0 : Number(e.target.value))} />
                   </FormControl>
-                  <FormMessage className="text-[10px]" />
+                  <FormMessage className="text-[10px] text-rose-500" />
                 </FormItem>
               )}
             />
@@ -238,7 +238,7 @@ export function MailSettingsForm({
           <Button
             type="button"
             variant="ghost"
-            className="h-11 px-6 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all"
+            className="h-11 px-6 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all font-bold"
             onClick={() => testMailMutation.mutate({})}
             disabled={isSubmitting || testMailMutation.isPending}
           >
@@ -255,7 +255,7 @@ export function MailSettingsForm({
           <Button 
             type="submit" 
             disabled={isSubmitting || !isFormValid}
-            className="h-11 px-10 bg-linear-to-r from-pink-600 to-orange-600 text-white font-bold rounded-xl shadow-lg shadow-pink-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all border-0"
+            className="h-11 px-10 bg-linear-to-r from-pink-600 to-orange-600 text-white font-extrabold rounded-xl shadow-lg shadow-pink-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all border-0"
           >
             {isSubmitting ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -48,30 +48,30 @@ export function GroupPermissionsPanel({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-white dark:bg-[#130822] border border-slate-100 dark:border-white/10 text-slate-900 dark:text-white max-w-2xl w-[95%] sm:w-full shadow-2xl sm:rounded-2xl p-0 overflow-hidden flex flex-col max-h-[90vh]">
-        <DialogHeader className="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-[#1a1025]/50">
-          <DialogTitle>
+      <DialogContent className="bg-card dark:bg-[#130822] border-border dark:border-white/10 text-foreground dark:text-white max-w-2xl w-[95%] sm:w-full shadow-2xl sm:rounded-2xl p-0 overflow-hidden flex flex-col max-h-[90vh] transition-colors duration-300">
+        <DialogHeader className="px-6 py-5 border-b border-border dark:border-white/5 bg-muted/20 dark:bg-[#1a1025]/50">
+          <DialogTitle className="text-slate-900 dark:text-white font-bold">
             {t('permissionGroups.permissionsPanel.title')}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-slate-500 dark:text-slate-400 font-medium">
             {group?.name} - {t('permissionGroups.permissionsPanel.description')}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto p-6 sm:p-8">
+        <div className="flex-1 overflow-y-auto p-6 sm:p-8 custom-scrollbar">
           {isSystemAdminGroup && (
-            <div className="mb-4 rounded-lg border border-amber-300/50 bg-amber-50 px-3 py-2 text-xs text-amber-700 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300">
+            <div className="mb-4 rounded-lg border border-amber-200 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-300 font-medium">
               {t('permissionGroups.systemAdminLocked', 'System Admin grubu değiştirilemez')}
             </div>
           )}
           {group?.permissionCodes && group.permissionCodes.length > 0 && (
-            <div className="mb-4">
-              <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">
+            <div className="mb-6 p-4 bg-muted/10 dark:bg-white/2 rounded-xl border border-border dark:border-white/5">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
                 {t('permissionGroups.permissionsPanel.currentCodes')}
               </p>
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-1.5">
                 {group.permissionCodes.map((code) => (
-                  <Badge key={code} variant="secondary" className="font-mono text-xs">
+                  <Badge key={code} variant="secondary" className="bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 border-0 font-mono text-[10px] px-2 py-0.5">
                     {code}
                   </Badge>
                 ))}
@@ -79,21 +79,27 @@ export function GroupPermissionsPanel({
             </div>
           )}
           <div>
-            <p className="text-sm font-medium mb-2 inline-flex items-center">
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 inline-flex items-center gap-2">
               {t('permissionGroups.form.permissions')}
               <FieldHelpTooltip text={t('help.permissionGroup.permissions')} />
             </p>
-            <PermissionDefinitionMultiSelect value={selectedIds} onChange={setSelectedIds} disabled={setPermissions.isPending || isSystemAdminGroup} />
+            <div className="rounded-xl border border-border dark:border-white/5 overflow-hidden bg-background/50 dark:bg-transparent">
+              <PermissionDefinitionMultiSelect value={selectedIds} onChange={setSelectedIds} disabled={setPermissions.isPending || isSystemAdminGroup} />
+            </div>
           </div>
         </div>
 
-        <DialogFooter className="px-6 py-5 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-[#1a1025]/50">
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={setPermissions.isPending}>
+        <DialogFooter className="px-6 py-5 border-t border-border dark:border-white/5 bg-muted/20 dark:bg-[#1a1025]/50">
+          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={setPermissions.isPending} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-bold">
             {t('common.cancel')}
           </Button>
-          <span className="inline-flex items-center gap-1">
+          <span className="inline-flex items-center gap-2 ml-2">
             <FieldHelpTooltip text={t('help.permissionGroup.save')} side="top" />
-            <Button onClick={handleSave} disabled={setPermissions.isPending || isSystemAdminGroup}>
+            <Button 
+              onClick={handleSave} 
+              disabled={setPermissions.isPending || isSystemAdminGroup}
+              className="bg-linear-to-r from-pink-600 to-orange-600 text-white font-extrabold h-10 px-8 rounded-xl border-0 shadow-lg shadow-pink-500/20 hover:opacity-90 transition-all"
+            >
               {setPermissions.isPending ? t('common.saving') : t('common.save')}
             </Button>
           </span>
