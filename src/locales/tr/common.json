@@ -1,6 +1,14 @@
 {
+  
+  "Error.User.InvalidCredentials": "E-posta veya şifre yanlış. Lütfen tekrar deneyin.",
+  "Error": {
+    "User": {
+      "InvalidCredentials": "E-posta veya şifre yanlış. Lütfen tekrar deneyin."
+    }
+  },
   "common": {
     "loading": "Yükleniyor...",
+    "comingSoon": "Çok Yakında",
     "loadingDescription": "Veriler yükleniyor, lütfen bekleyin",
     "save": "Kaydet",
     "saving": "Kaydediliyor...",
@@ -154,6 +162,7 @@
     "uploadFromFile": "Dosyadan yükle",
     "imageUrlPlaceholder": "https://... veya /logo.png"
   },
+
   "auth": {
     "login": {
       "title": "Sistem Girişi",
@@ -176,7 +185,7 @@
       "loginError": "Giriş yapılırken bir hata oluştu",
       "sessionExpired": "Oturum süreniz doldu. Lütfen tekrar giriş yapın.",
       "copyright": "© 2025 VERII. Tüm hakları saklıdır.",
-      "slogan": "İşinizi tahminlerle değil, <1>VERII AQUA</1> ile yönetin.",
+      "slogan": "<1>V3RII</1> ile Bilgi, <2>AQUA</2> ile Yönetim;<br/>Su Ürünlerinde Dijital Deneyim.",
       "capsLockOn": "Büyük harf kilidi açık",
       "animationOff": "Animasyonu Kapat",
       "animationOn": "Animasyonu Aç"
@@ -191,6 +200,7 @@
       "failed": "Şifre sıfırlama işlemi başarısız oldu",
       "error": "Şifre sıfırlama işlemi sırasında bir hata oluştu"
     }
+    
   },
   "navbar": {
     "VERII WMS": "VERII WMS",

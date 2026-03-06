@@ -1,249 +1,127 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const TARGET_FPS = 30;
-const FRAME_INTERVAL_MS = 1000 / TARGET_FPS;
-const PARTICLE_COUNT = 100;
-const MAX_LINE_SEGMENTS = 800;
-const CONNECTION_DISTANCE = 8;
+interface Bubble {
+  id: number;
+  left: number;
+  size: number;
+  duration: number;
+  delay: number;
+  animationType: number; 
+}
 
 interface AuthBackgroundProps {
   isActive: boolean;
 }
 
 export const AuthBackground: React.FC<AuthBackgroundProps> = ({ isActive }) => {
-  const mountRef = useRef<HTMLDivElement>(null);
+  const [bubbles, setBubbles] = useState<Bubble[]>([]);
 
   useEffect(() => {
-    if (!isActive || !mountRef.current) return;
+    if (!isActive) return;
 
-    let cancelled = false;
-    let cleanup: (() => void) | null = null;
-
-    void (async () => {
-      const THREE = await import('three');
-      if (cancelled || !mountRef.current) return;
-
-      while (mountRef.current.firstChild) {
-        mountRef.current.removeChild(mountRef.current.firstChild);
-      }
-
-      const scene = new THREE.Scene();
-      scene.fog = new THREE.Fog(0x1a0b2e, 20, 100);
-
-      const camera = new THREE.PerspectiveCamera(
-        60,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-      );
-      camera.position.z = 40;
-
-      const pixelRatio = Math.min(window.devicePixelRatio, 2);
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'low-power' });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(pixelRatio);
-      mountRef.current.appendChild(renderer.domElement);
-
-      const particlesGeometry = new THREE.BufferGeometry();
-      const particlesPositions = new Float32Array(PARTICLE_COUNT * 3);
-      const particlesVelocities: { x: number; y: number; z: number }[] = [];
-
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particlesPositions[i * 3] = (Math.random() - 0.5) * 60;
-        particlesPositions[i * 3 + 1] = (Math.random() - 0.5) * 60;
-        particlesPositions[i * 3 + 2] = (Math.random() - 0.5) * 30;
-
-        particlesVelocities.push({
-          x: (Math.random() - 0.5) * 0.04,
-          y: (Math.random() - 0.5) * 0.04,
-          z: (Math.random() - 0.5) * 0.02,
+    const interval = setInterval(() => {
+      const count = Math.random() > 0.7 ? 2 : 1; 
+      const newBubbles: Bubble[] = [];
+      
+      for (let i = 0; i < count; i++) {
+        newBubbles.push({
+          id: Date.now() + i,
+          left: 10 + Math.random() * 80,
+          size: 10 + Math.random() * 25,
+          duration: 15 + Math.random() * 15,
+          delay: Math.random() * 2,
+          animationType: Math.random() > 0.5 ? 1 : 2, 
         });
       }
 
-      particlesGeometry.setAttribute(
-        'position',
-        new THREE.BufferAttribute(particlesPositions, 3)
-      );
-      const particlesMaterial = new THREE.PointsMaterial({
-        color: 0xffedd5,
-        size: 0.4,
-        transparent: true,
-        opacity: 0.8,
-        blending: THREE.AdditiveBlending,
+      setBubbles(prev => {
+        return [...prev, ...newBubbles].slice(-15);
       });
-      const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-      scene.add(particlesMesh);
 
-      const lineMaterial = new THREE.LineBasicMaterial({
-        color: 0xec4899,
-        transparent: true,
-        opacity: 0.12,
-      });
-      const linePositions = new Float32Array(MAX_LINE_SEGMENTS * 6);
-      const lineGeometry = new THREE.BufferGeometry();
-      lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
-      const linesMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
-      scene.add(linesMesh);
+    }, 6000); 
 
-      const pulsesCount = 10;
-      const pulsesGeo = new THREE.BufferGeometry();
-      const pulsesPos = new Float32Array(pulsesCount * 3);
-      pulsesGeo.setAttribute('position', new THREE.BufferAttribute(pulsesPos, 3));
-      const pulsesMat = new THREE.PointsMaterial({
-        color: 0xfbbf24,
-        size: 0.9,
-        transparent: true,
-        opacity: 1,
-        blending: THREE.AdditiveBlending,
-      });
-      const pulsesMesh = new THREE.Points(pulsesGeo, pulsesMat);
-      scene.add(pulsesMesh);
-
-      const activePulses = Array(pulsesCount)
-        .fill(null)
-        .map(() => ({
-          active: false,
-          startIdx: 0,
-          endIdx: 0,
-          progress: 0,
-          speed: 0,
-        }));
-
-      let animationFrameId: number;
-      let mouseX = 0;
-      let mouseY = 0;
-      let lastFrameTime = 0;
-
-      const animate = (now: number) => {
-        animationFrameId = requestAnimationFrame(animate);
-        const elapsed = now - lastFrameTime;
-        if (elapsed < FRAME_INTERVAL_MS) return;
-        lastFrameTime = now - (elapsed % FRAME_INTERVAL_MS);
-
-        const pos = particlesMesh.geometry.attributes.position.array as Float32Array;
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-          pos[i * 3] += particlesVelocities[i].x;
-          pos[i * 3 + 1] += particlesVelocities[i].y;
-          pos[i * 3 + 2] += particlesVelocities[i].z;
-
-          if (pos[i * 3] > 40 || pos[i * 3] < -40) particlesVelocities[i].x *= -1;
-          if (pos[i * 3 + 1] > 30 || pos[i * 3 + 1] < -30) particlesVelocities[i].y *= -1;
-          if (pos[i * 3 + 2] > 15 || pos[i * 3 + 2] < -15) particlesVelocities[i].z *= -1;
-        }
-        particlesMesh.geometry.attributes.position.needsUpdate = true;
-
-        let lineIdx = 0;
-        const connections: [number, number][] = [];
-
-        for (let i = 0; i < PARTICLE_COUNT && lineIdx < MAX_LINE_SEGMENTS; i++) {
-          for (let j = i + 1; j < PARTICLE_COUNT && lineIdx < MAX_LINE_SEGMENTS; j++) {
-            const dx = pos[i * 3] - pos[j * 3];
-            const dy = pos[i * 3 + 1] - pos[j * 3 + 1];
-            const dz = pos[i * 3 + 2] - pos[j * 3 + 2];
-            const distSq = dx * dx + dy * dy + dz * dz;
-            if (distSq < CONNECTION_DISTANCE * CONNECTION_DISTANCE) {
-              connections.push([i, j]);
-              linePositions[lineIdx * 6] = pos[i * 3];
-              linePositions[lineIdx * 6 + 1] = pos[i * 3 + 1];
-              linePositions[lineIdx * 6 + 2] = pos[i * 3 + 2];
-              linePositions[lineIdx * 6 + 3] = pos[j * 3];
-              linePositions[lineIdx * 6 + 4] = pos[j * 3 + 1];
-              linePositions[lineIdx * 6 + 5] = pos[j * 3 + 2];
-              lineIdx++;
-            }
-          }
-        }
-
-        linesMesh.geometry.setDrawRange(0, lineIdx * 2);
-        linesMesh.geometry.attributes.position.needsUpdate = true;
-
-        const pPos = pulsesMesh.geometry.attributes.position.array as Float32Array;
-        activePulses.forEach((pulse, idx) => {
-          if (!pulse.active) {
-            if (Math.random() > 0.95 && connections.length > 0) {
-              const conn = connections[Math.floor(Math.random() * connections.length)];
-              pulse.active = true;
-              pulse.startIdx = conn[0];
-              pulse.endIdx = conn[1];
-              pulse.progress = 0;
-              pulse.speed = 0.02 + Math.random() * 0.03;
-            } else {
-              pPos[idx * 3] = 9999;
-            }
-            return;
-          }
-
-          pulse.progress += pulse.speed;
-          if (pulse.progress >= 1) {
-            pulse.active = false;
-            return;
-          }
-
-          const x1 = pos[pulse.startIdx * 3];
-          const y1 = pos[pulse.startIdx * 3 + 1];
-          const z1 = pos[pulse.startIdx * 3 + 2];
-          const x2 = pos[pulse.endIdx * 3];
-          const y2 = pos[pulse.endIdx * 3 + 1];
-          const z2 = pos[pulse.endIdx * 3 + 2];
-
-          pPos[idx * 3] = x1 + (x2 - x1) * pulse.progress;
-          pPos[idx * 3 + 1] = y1 + (y2 - y1) * pulse.progress;
-          pPos[idx * 3 + 2] = z1 + (z2 - z1) * pulse.progress;
-        });
-        pulsesMesh.geometry.attributes.position.needsUpdate = true;
-
-        scene.rotation.y += 0.0008;
-        camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
-        camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.05;
-        camera.lookAt(0, 0, 0);
-
-        renderer.render(scene, camera);
-      };
-
-      const handleMouseMove = (e: MouseEvent) => {
-        mouseX = e.clientX / window.innerWidth - 0.5;
-        mouseY = e.clientY / window.innerHeight - 0.5;
-      };
-      window.addEventListener('mousemove', handleMouseMove, { passive: true });
-
-      const handleResize = () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      };
-      window.addEventListener('resize', handleResize);
-
-      animationFrameId = requestAnimationFrame(animate);
-
-      cleanup = () => {
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('resize', handleResize);
-        cancelAnimationFrame(animationFrameId);
-        if (mountRef.current && renderer.domElement?.parentNode === mountRef.current) {
-          mountRef.current.removeChild(renderer.domElement);
-        }
-        renderer.dispose();
-        particlesGeometry.dispose();
-        particlesMaterial.dispose();
-        lineGeometry.dispose();
-        lineMaterial.dispose();
-        pulsesGeo.dispose();
-        pulsesMat.dispose();
-      };
-    })();
-
-    return () => {
-      cancelled = true;
-      cleanup?.();
-    };
+    return () => clearInterval(interval);
   }, [isActive]);
 
   return (
-    <div
-      ref={mountRef}
-      className={`fixed inset-0 z-0 transition-opacity duration-1000 ${
-        isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      }`}
-    />
+    <div className={`fixed inset-0 z-0 transition-opacity duration-1000 overflow-hidden bg-[#010814] ${isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+      
+      <style>{`
+        @keyframes godray1 {
+          0%, 100% { transform: rotate(-12deg) translateX(-5%) scaleX(1); opacity: 0.6; }
+          50% { transform: rotate(-8deg) translateX(5%) scaleX(1.2); opacity: 0.8; }
+        }
+        @keyframes godray2 {
+          0%, 100% { transform: rotate(15deg) translateX(10%) scaleX(1.1); opacity: 0.5; }
+          50% { transform: rotate(10deg) translateX(-10%) scaleX(0.9); opacity: 0.7; }
+        }
+        @keyframes godray3 {
+          0%, 100% { transform: rotate(-5deg) translateX(0%) scaleX(0.9); opacity: 0.7; }
+          50% { transform: rotate(5deg) translateX(15%) scaleX(1.3); opacity: 0.5; }
+        }
+
+        @keyframes waterPulse {
+          0%, 100% { transform: scale(1); opacity: 0.9; }
+          50% { transform: scale(1.03); opacity: 1; }
+        }
+
+        @keyframes floatBubble1 {
+          0%   { transform: translate(0, 5vh) scale(1); opacity: 0; }
+          10%  { opacity: 0.25; } 
+          25%  { transform: translate(30px, -20vh) scale(1.05); }
+          50%  { transform: translate(-25px, -50vh) scale(1.1); opacity: 0.35; } 
+          75%  { transform: translate(45px, -80vh) scale(1.15); }
+          90%  { opacity: 0.2; }
+          100% { transform: translate(-30px, -120vh) scale(1.2); opacity: 0; }
+        }
+
+        @keyframes floatBubble2 {
+          0%   { transform: translate(0, 5vh) scale(1); opacity: 0; }
+          10%  { opacity: 0.25; }
+          25%  { transform: translate(-40px, -25vh) scale(1.05); }
+          50%  { transform: translate(35px, -55vh) scale(1.1); opacity: 0.35; }
+          75%  { transform: translate(-45px, -85vh) scale(1.15); }
+          90%  { opacity: 0.2; }
+          100% { transform: translate(25px, -120vh) scale(1.2); opacity: 0; }
+        }
+        .animate-godray-1 { animation: godray1 8s infinite ease-in-out; }
+        .animate-godray-2 { animation: godray2 11s infinite ease-in-out; }
+        .animate-godray-3 { animation: godray3 9s infinite ease-in-out; }
+        
+        .animate-water-pulse { animation: waterPulse 10s infinite ease-in-out; }
+        .animate-bubble-1 { animation: floatBubble1 linear forwards; }
+        .animate-bubble-2 { animation: floatBubble2 linear forwards; }
+      `}</style>
+
+
+      <div className="absolute inset-0 bg-gradient-to-b from-[#021631] via-[#010a17] to-[#000000] animate-water-pulse origin-center" />
+
+
+      <div className="absolute top-[-20%] left-[-10%] w-[120%] h-[140%] mix-blend-screen pointer-events-none blur-[60px] flex justify-center gap-10 overflow-hidden">
+        <div className="w-[25%] h-full bg-gradient-to-b from-[#ffedb3]/40 via-[#00f7ff]/10 to-transparent origin-top animate-godray-1" />
+        <div className="w-[35%] h-full bg-gradient-to-b from-[#ffedb3]/30 via-[#00f7ff]/15 to-transparent origin-top animate-godray-2" />
+        <div className="w-[15%] h-full bg-gradient-to-b from-[#ffedb3]/50 via-[#00f7ff]/20 to-transparent origin-top animate-godray-3" />
+      </div>
+
+
+      <div className="absolute top-0 left-0 right-0 h-[40vh] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#00f7ff]/20 via-[#00f7ff]/5 to-transparent opacity-60 animate-water-pulse pointer-events-none" />
+
+
+      {bubbles.map(b => (
+        <div
+          key={b.id}
+          className={`absolute bottom-[-50px] rounded-full border border-white/5 shadow-[0_0_5px_rgba(0,247,255,0.1)] bg-gradient-to-tr from-white/5 to-white/10 backdrop-blur-[2px] pointer-events-none animate-bubble-${b.animationType}`}
+          style={{
+            left: `${b.left}%`,
+            width: `${b.size}px`,
+            height: `${b.size}px`,
+            animationDuration: `${b.duration}s`,
+            animationDelay: `${b.delay}s`,
+          }}
+        />
+      ))}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_30%,_#000000_120%)] pointer-events-none opacity-80" />
+      
+    </div>
   );
 };

@@ -21,9 +21,7 @@ import { Combobox } from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import { AuthBackground } from './AuthBackground';
-
-import loginImage from '../../../../public/logo.png';
-
+import loginImage from '../../../../public/v3riiaqua.png';
 import { 
   Location01Icon, 
   Mail02Icon, 
@@ -86,12 +84,19 @@ export function LoginPage(): React.JSX.Element {
     login({ ...data });
   };
 
-  const inputGroupBase = 'flex items-stretch rounded-lg border border-white/10 bg-white/5 overflow-hidden transition-[border-color,box-shadow] duration-200 focus-within:border-pink-500/60 focus-within:ring-2 focus-within:ring-pink-500/20';
-  const inputGroupInvalid = 'border-red-500/70 focus-within:border-red-500 focus-within:ring-red-500/20';
-  const iconSlotBase = 'flex items-center justify-center w-10 shrink-0 bg-white/5 text-slate-400 transition-colors duration-200 group-focus-within:text-pink-400';
+  const handleSocialClick = (e: React.MouseEvent, label: string) => {
+    if (['Telegram', 'Instagram', 'X'].includes(label)) {
+      e.preventDefault();
+      toast.info(t('common.comingSoon'));
+    }
+  };
+
+  const inputGroupBase = 'flex items-stretch rounded-xl border border-white/5 bg-[#020712]/70 overflow-hidden transition-all duration-300 focus-within:border-[#ff4d79]/40 focus-within:bg-[#020712]/90 focus-within:ring-1 focus-within:ring-[#ff4d79]/20';
+  const inputGroupInvalid = 'border-red-500/50 focus-within:border-red-500 focus-within:ring-red-500/20';
+  const iconSlotBase = 'flex items-center justify-center w-11 shrink-0 bg-transparent text-[#5c7c99] transition-colors duration-300 group-focus-within:text-[#ff4d79]';
 
   return (
-    <div className="relative w-full h-dvh overflow-hidden bg-[#0f0518] text-white font-['Plus_Jakarta_Sans']">
+    <div className="relative w-full min-h-dvh overflow-x-hidden bg-[#020c16] text-[#d0e6ff] font-['Plus_Jakarta_Sans'] flex flex-col">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
         input { color-scheme: dark; }
@@ -99,33 +104,31 @@ export function LoginPage(): React.JSX.Element {
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus,
         input:-webkit-autofill:active {
-          -webkit-box-shadow: 0 0 0 30px #1a1225 inset !important;
-          -webkit-text-fill-color: white !important;
+          -webkit-box-shadow: 0 0 0 30px #020712 inset !important;
+          -webkit-text-fill-color: #ffffff !important;
           transition: background-color 5000s ease-in-out 0s;
-          caret-color: white;
+          caret-color: #ff4d79;
           color-scheme: dark;
         }
       `}</style>
 
-      <div
-        className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${showAnimation ? 'opacity-0' : 'opacity-100'}`}
-      >
-        <div className="absolute top-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-pink-900/15 blur-[120px] rounded-full mix-blend-screen" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-orange-900/10 blur-[120px] rounded-full mix-blend-screen" />
-        <div className="absolute inset-0 bg-linear-to-b from-transparent via-[#0f0518]/60 to-[#0f0518]" />
+      <div className={`fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out ${showAnimation ? 'opacity-0' : 'opacity-100'}`}>
+        <div className="absolute top-[-30%] left-[30%] w-[80vw] h-[150vh] bg-gradient-to-b from-[#ffedb3]/15 via-[#70d6ff]/5 to-transparent blur-[120px] -rotate-12 mix-blend-screen pointer-events-none" />
+        <div className="absolute top-[-20%] right-[-10%] w-[60vw] h-[120vh] bg-gradient-to-b from-[#00cec9]/10 via-[#0984e3]/5 to-transparent blur-[100px] rotate-[15deg] mix-blend-screen pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#010408] via-[#020c16]/70 to-transparent pointer-events-none" />
       </div>
 
       <AuthBackground isActive={showAnimation} />
 
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 animate-[fadeIn_1s_ease-out]">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col gap-2 sm:gap-3 animate-[fadeIn_1s_ease-out]">
         <LanguageSwitcher variant="icon" />
         <button
           onClick={() => setShowAnimation(!showAnimation)}
           className={`
             flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-300 backdrop-blur-xl
             ${showAnimation
-              ? 'bg-pink-500/20 border-pink-500/50 text-pink-400 hover:bg-pink-500/30'
-              : 'bg-white/10 border-white/20 text-slate-300 hover:text-pink-400 hover:bg-white/15'}
+              ? 'bg-[#00f7ff]/15 border-[#00f7ff]/40 text-[#00f7ff] hover:bg-[#00f7ff]/25 shadow-[0_0_15px_rgba(247,255,255,0.25)]'
+              : 'bg-[#091b30]/40 border-white/10 text-[#5c7c99] hover:text-[#00f7ff] hover:bg-[#00f7ff]/10'}
           `}
           title={showAnimation ? t('auth.login.animationOff') : t('auth.login.animationOn')}
         >
@@ -133,22 +136,22 @@ export function LoginPage(): React.JSX.Element {
         </button>
       </div>
 
-      <div className="relative z-10 w-full h-full flex flex-col justify-between items-center px-3 py-3 overflow-hidden">
-        <div className="w-full max-w-[380px] flex-1 flex flex-col justify-center min-h-0">
-          <div className="rounded-2xl border border-white/10 bg-[#140a1e]/80 backdrop-blur-xl shadow-xl py-5 px-4 sm:px-5">
-            <div className="text-center mb-4">
+      <div className="relative z-10 w-full min-h-dvh flex flex-col justify-between items-center px-4 sm:px-6 py-8 sm:py-12 pb-24 sm:pb-12">
+        <div className="w-full max-w-[390px] flex-1 flex flex-col justify-center min-h-0">
+          <div className="rounded-[24px] border border-white/5 border-t-white/20 bg-[#091b30]/35 backdrop-blur-[40px] shadow-[0_30px_60px_rgba(0,0,0,0.8)] py-8 px-5 sm:px-8 relative overflow-hidden">
+            <div className="text-center mb-6 relative z-10">
               <img
                 src={loginImage}
-                alt="V3RII"
-                className="mx-auto h-20 w-auto object-contain"
+                alt="V3RII AQUA"
+                className="mx-auto h-24 sm:h-46 w-auto object-contain drop-shadow-[0_0_20px_rgba(255,77,121,0.35)]"
               />
-              <h1 className="mt-2 text-xs font-medium uppercase tracking-widest text-slate-400">
+              <h1 className="mt-3 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.25em] text-[#5c7c99]">
                 {t('auth.login.title')}
               </h1>
             </div>
 
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3" noValidate>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4 relative z-10" noValidate>
                 <FormField
                   control={form.control}
                   name="branchId"
@@ -166,7 +169,7 @@ export function LoginPage(): React.JSX.Element {
                             placeholder={t('auth.login.branchPlaceholder')}
                             searchPlaceholder={t('common.search')}
                             emptyText={t('common.noResults')}
-                            className="flex-1 min-w-0 h-10 rounded-none border-0 bg-transparent py-2 pl-2 pr-2 text-sm text-white placeholder:text-slate-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 justify-between font-normal"
+                            className="flex-1 min-w-0 h-10 sm:h-11 rounded-none border-0 bg-transparent py-2 pl-2 pr-2 text-[12px] sm:text-[13px] text-white placeholder:text-[#5c7c99] focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 justify-between font-normal truncate"
                           />
                         </div>
                       </FormControl>
@@ -189,7 +192,7 @@ export function LoginPage(): React.JSX.Element {
                             {...field}
                             type="email"
                             placeholder={t('auth.login.emailPlaceholder')}
-                            className="flex-1 min-w-0 h-10 rounded-none border-0 bg-transparent py-2 pl-2 pr-3 text-sm text-white placeholder:text-slate-500 focus-visible:ring-0 focus-visible:ring-offset-0"
+                            className="flex-1 min-w-0 h-10 sm:h-11 rounded-none border-0 bg-transparent py-2 pl-2 pr-3 text-[12px] sm:text-[13px] text-white placeholder:text-[#5c7c99] focus-visible:ring-0 focus-visible:ring-offset-0 truncate"
                           />
                         </div>
                       </FormControl>
@@ -212,14 +215,14 @@ export function LoginPage(): React.JSX.Element {
                             {...field}
                             type={isPasswordVisible ? 'text' : 'password'}
                             placeholder={t('auth.login.passwordPlaceholder')}
-                            className="flex-1 min-w-0 h-10 rounded-none border-0 bg-transparent py-2 pl-2 pr-10 text-sm text-white placeholder:text-slate-500 focus-visible:ring-0 focus-visible:ring-offset-0"
+                            className="flex-1 min-w-0 h-10 sm:h-11 rounded-none border-0 bg-transparent py-2 pl-2 pr-10 text-[12px] sm:text-[13px] text-white placeholder:text-[#5c7c99] focus-visible:ring-0 focus-visible:ring-offset-0 truncate"
                             onKeyDown={(e) => setCapsLockActive(e.getModifierState('CapsLock'))}
                             onKeyUp={(e) => setCapsLockActive(e.getModifierState('CapsLock'))}
                           />
                           <button
                             type="button"
                             onClick={() => setIsPasswordVisible((v) => !v)}
-                            className="flex items-center justify-center w-9 shrink-0 text-slate-400 hover:text-white transition-colors"
+                            className="flex items-center justify-center w-10 sm:w-11 shrink-0 text-[#5c7c99] hover:text-[#ff4d79] transition-colors"
                             aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
                           >
                             {isPasswordVisible ? <ViewOffIcon size={18} /> : <ViewIcon size={18} />}
@@ -241,19 +244,19 @@ export function LoginPage(): React.JSX.Element {
                   )}
                 />
 
-                <div className="flex items-center justify-between text-xs text-slate-400 pt-0.5">
+                <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-[#5c7c99] pt-1 pb-1 sm:pb-2">
                   <FormField
                     control={form.control}
                     name="rememberMe"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <label className="flex items-center gap-2 cursor-pointer hover:text-slate-300 transition-colors">
+                          <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
                             <input
                               type="checkbox"
                               checked={field.value}
                               onChange={field.onChange}
-                              className="rounded border-white/20 bg-white/10 accent-pink-500 size-3.5"
+                              className="rounded border-white/10 bg-[#020712] accent-[#ff4d79] size-3.5"
                             />
                             {t('auth.login.rememberMe')}
                           </label>
@@ -261,7 +264,7 @@ export function LoginPage(): React.JSX.Element {
                       </FormItem>
                     )}
                   />
-                  <Link to="/auth/forgot-password" className="hover:text-pink-400 transition-colors">
+                  <Link to="/auth/forgot-password" className="hover:text-white transition-colors">
                     {t('auth.login.forgotPassword')}
                   </Link>
                 </div>
@@ -269,7 +272,7 @@ export function LoginPage(): React.JSX.Element {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full h-10 rounded-xl bg-linear-to-r from-pink-500 to-orange-500 text-white text-sm font-semibold shadow-lg shadow-pink-500/25 transition hover:opacity-95 active:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+                  className="w-full h-11 sm:h-12 rounded-xl bg-gradient-to-r from-[#ff4d79] to-[#ffb703] text-white text-[12px] sm:text-[13px] tracking-widest font-bold shadow-[0_10px_30px_-5px_rgba(255,77,121,0.5)] transition-all hover:opacity-95 hover:shadow-[0_15px_35px_-5px_rgba(255,77,121,0.7)] active:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
                 >
                   {isPending ? t('auth.login.processing') : t('auth.login.submitButton')}
                 </button>
@@ -278,35 +281,40 @@ export function LoginPage(): React.JSX.Element {
           </div>
         </div>
 
-        <footer className="shrink-0 flex flex-col items-center gap-2 py-2">
-          <p className="text-slate-500 text-[11px] uppercase tracking-wider text-center max-w-[260px] leading-tight">
+        <footer className="shrink-0 flex flex-col items-center gap-4 sm:gap-5 mt-6 sm:mt-0 py-4 sm:py-6 z-10 w-full">
+          <p className="text-[#5c7c99] text-[9px] sm:text-[10.5px] uppercase tracking-[0.15em] text-center max-w-[280px] sm:max-w-[360px] leading-relaxed px-2">
             <Trans
               i18nKey="auth.login.slogan"
-              components={{ 1: <span className="text-pink-400 font-semibold" /> }}
+              components={{
+                1: <span className="font-bold bg-gradient-to-r from-[#ff4d79] to-[#ffb703] bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(255,77,121,0.3)]" />,
+                2: <span className="font-bold bg-gradient-to-r from-[#00f7ff] to-[#0088ff] bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(0,247,255,0.4)]" />,
+                br: <br />
+              }}
             />
           </p>
-          <div className="flex items-center justify-center gap-1.5">
-            <a href="tel:+905070123018" className="flex items-center justify-center size-8 rounded-full bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all" aria-label="Telefon">
-              <Call02Icon size={16} />
-            </a>
-            <a href="https://v3rii.com" target="_blank" rel="noreferrer" className="flex items-center justify-center size-8 rounded-full bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all" aria-label="Web">
-              <Globe02Icon size={16} />
-            </a>
-            <a href="mailto:info@v3rii.com" className="flex items-center justify-center size-8 rounded-full bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all" aria-label="E-posta">
-              <Mail02Icon size={16} />
-            </a>
-            <a href="https://wa.me/905070123018" target="_blank" rel="noreferrer" className="flex items-center justify-center size-8 rounded-full bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all" aria-label="WhatsApp">
-              <WhatsappIcon size={16} />
-            </a>
-            <a href="https://t.me/v3rii" target="_blank" rel="noreferrer" className="flex items-center justify-center size-8 rounded-full bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all" aria-label="Telegram">
-              <TelegramIcon size={16} />
-            </a>
-            <a href="https://instagram.com/v3rii" target="_blank" rel="noreferrer" className="flex items-center justify-center size-8 rounded-full bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all" aria-label="Instagram">
-              <InstagramIcon size={16} />
-            </a>
-            <a href="https://x.com/v3rii" target="_blank" rel="noreferrer" className="flex items-center justify-center size-8 rounded-full bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all" aria-label="X">
-              <NewTwitterIcon size={16} />
-            </a>
+
+          <div className="flex items-center justify-center gap-2 sm:gap-4 flex-wrap px-2">
+            {[
+              { icon: <Call02Icon className="size-5 sm:size-[22px]" />, href: "tel:+905070123018", label: "Telefon" },
+              { icon: <Globe02Icon className="size-5 sm:size-[22px]" />, href: "https://v3rii.com", label: "Web" },
+              { icon: <Mail02Icon className="size-5 sm:size-[22px]" />, href: "mailto:info@v3rii.com", label: "E-posta" },
+              { icon: <WhatsappIcon className="size-5 sm:size-[22px]" />, href: "https://wa.me/905070123018", label: "WhatsApp" },
+              { icon: <TelegramIcon className="size-5 sm:size-[22px]" />, href: "https://t.me/v3rii", label: "Telegram" },
+              { icon: <InstagramIcon className="size-5 sm:size-[22px]" />, href: "https://instagram.com/v3rii", label: "Instagram" },
+              { icon: <NewTwitterIcon className="size-5 sm:size-[22px]" />, href: "https://x.com/v3rii", label: "X" }
+            ].map((link, i) => (
+              <a 
+                key={i}
+                href={link.href} 
+                onClick={(e) => handleSocialClick(e, link.label)}
+                target={link.href.startsWith('http') ? "_blank" : "_self"}
+                rel={link.href.startsWith('http') ? "noreferrer" : ""}
+                className="flex items-center justify-center size-10 sm:size-12 rounded-full border border-white/5 bg-[#020712]/50 text-[#5c7c99] backdrop-blur-md transition-all duration-300 hover:text-[#00f7ff] hover:border-[#00f7ff]/40 hover:bg-[#00f7ff]/10 hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(0,247,255,0.25)]" 
+                aria-label={link.label}
+              >
+                {link.icon}
+              </a>
+            ))}
           </div>
         </footer>
       </div>

@@ -72,25 +72,29 @@ export function Combobox({
           <ChevronDown className={cn("ml-2 h-4 w-4 shrink-0 opacity-50 transition-transform", open && "rotate-180")} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-        <Command>
+      <PopoverContent 
+        className="w-[--radix-popover-trigger-width] p-0 border border-white/10 bg-[#020712]/95 backdrop-blur-2xl shadow-[0_15px_40px_rgba(0,0,0,0.8)] rounded-xl overflow-hidden" 
+        align="start"
+      >
+        <Command className="bg-transparent text-white">
           <CommandInput 
             placeholder={searchPlaceholder} 
             value={searchQuery}
             onValueChange={setSearchQuery}
+            className="text-[13px] text-white placeholder:text-[#5c7c99] border-b border-white/5"
           >
              <VoiceSearchButton 
                 onResult={(text) => setSearchQuery(text)} 
-                className="h-7 w-7 mr-1" 
+                className="h-7 w-7 mr-1 text-[#5c7c99] hover:text-[#00f7ff] hover:bg-[#00f7ff]/10 transition-colors" 
              />
           </CommandInput>
           <CommandList
             className={cn(
               DROPDOWN_MAX_VISIBLE_ITEMS_CLASS,
-              "overflow-y-auto p-2 custom-scrollbar space-y-1"
+              "overflow-y-auto p-1.5 custom-scrollbar space-y-0.5"
             )}
           >
-            <CommandEmpty>{emptyText}</CommandEmpty>
+            <CommandEmpty className="py-4 text-center text-[13px] text-[#5c7c99]">{emptyText}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem
@@ -100,10 +104,11 @@ export function Combobox({
                     onValueChange(option.value)
                     setOpen(false)
                   }}
+                  className="flex items-center text-[13px] text-[#d0e6ff] aria-selected:bg-[#00f7ff]/15 aria-selected:text-[#00f7ff] cursor-pointer rounded-lg px-3 py-2 transition-all duration-200"
                 >
                   <Check
                     className={cn(
-                      "mr-2 h-4 w-4",
+                      "mr-2 h-4 w-4 text-[#00f7ff] transition-opacity",
                       value === option.value ? "opacity-100" : "opacity-0"
                     )}
                   />

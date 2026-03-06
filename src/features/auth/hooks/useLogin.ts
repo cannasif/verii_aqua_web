@@ -14,6 +14,15 @@ export const useLogin = (branches?: Branch[]) => {
   const queryClient = useQueryClient();
   const setAuth = useAuthStore((state) => state.setAuth);
 
+  const resolveErrorMessage = (rawMessage?: string) => {
+    if (!rawMessage) return t('auth.login.loginError');
+    if (rawMessage === 'Error.User.InvalidCredentials') {
+      return t('auth.login.wrongPassword');
+    }
+    const translated = t(rawMessage);
+    return translated !== rawMessage ? translated : rawMessage;
+  };
+
   return useMutation({
     mutationFn: (data: LoginRequest) => authApi.login(data),
     onSuccess: async (response, variables) => {
@@ -46,12 +55,12 @@ export const useLogin = (branches?: Branch[]) => {
           toast.error(t('auth.login.loginError'));
         }
       } else {
-        const errorMessage = response.message || response.exceptionMessage || t('auth.login.loginError');
+        const errorMessage = resolveErrorMessage(response.message || response.exceptionMessage);
         toast.error(errorMessage);
       }
     },
     onError: (error: Error) => {
-      const errorMessage = error.message || t('auth.login.loginError');
+      const errorMessage = resolveErrorMessage(error.message);
       toast.error(errorMessage);
     },
   });
