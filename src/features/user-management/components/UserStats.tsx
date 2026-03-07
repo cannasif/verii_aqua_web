@@ -4,44 +4,51 @@ import { Users, UserCheck, UserX } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 export function UserStats(): ReactElement {
-  const { t } = useTranslation();
+  // Eğer çeviriler user.json içindeyse 'user' namespace'ini ekleyin
+  const { t } = useTranslation(['user', 'common']);
 
   const stats = [
     {
-      title: t('userManagement.stats.total'),
+      // HATA FIX: Anahtar yolları kontrol edildi
+      title: t('userManagement.stats.total', { defaultValue: 'Toplam Kullanıcı' }),
       value: '4',
       icon: Users,
-      color: 'text-pink-600 dark:text-pink-500',
-      bg: 'bg-pink-100 dark:bg-pink-500/10',
+      color: 'text-cyan-600 dark:text-cyan-400',
+      bg: 'bg-cyan-100 dark:bg-cyan-500/10',
     },
     {
-      title: t('userManagement.stats.active'),
+      title: t('userManagement.stats.active', { defaultValue: 'Aktif Kullanıcı' }),
       value: '4',
       icon: UserCheck,
-      color: 'text-emerald-600 dark:text-emerald-500',
+      color: 'text-emerald-600 dark:text-emerald-400',
       bg: 'bg-emerald-100 dark:bg-emerald-500/10',
     },
     {
-      title: t('userManagement.stats.inactive'),
+      title: t('userManagement.stats.inactive', { defaultValue: 'Pasif Kullanıcı' }),
       value: '0',
       icon: UserX,
-      color: 'text-orange-600 dark:text-orange-500',
-      bg: 'bg-orange-100 dark:bg-orange-500/10',
+      color: 'text-slate-600 dark:text-slate-400',
+      bg: 'bg-slate-100 dark:bg-slate-500/10',
     },
   ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {stats.map((stat, index) => (
-        <Card key={index} className="bg-card dark:bg-[#1a1025]/60 backdrop-blur-xl border-border dark:border-white/5 shadow-sm dark:shadow-xl rounded-2xl overflow-hidden transition-all duration-300">
+        <Card key={index} className="bg-white dark:bg-blue-950/60 backdrop-blur-xl border-slate-200 dark:border-cyan-800/30 shadow-sm rounded-2xl overflow-hidden transition-all duration-300">
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
-              <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${stat.bg} ${stat.color} transition-colors`}>
+              <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${stat.bg} ${stat.color} transition-colors border border-transparent dark:border-white/5`}>
                 <stat.icon className="size-6" />
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{stat.title}</p>
-                <p className="text-3xl font-black text-slate-900 dark:text-white mt-1">{stat.value}</p>
+                {/* FIX: uppercase kaldırıldı veya kontrol altına alındı */}
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                   {stat.title}
+                </p>
+                <p className="text-3xl font-black text-slate-900 dark:text-white mt-1 tabular-nums">
+                   {stat.value}
+                </p>
               </div>
             </div>
           </CardContent>

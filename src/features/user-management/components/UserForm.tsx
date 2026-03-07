@@ -38,16 +38,14 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
     }
   }, [open, user, permissionGroups.data]);
 
-  // AKILLI STİLLER: Temaya göre değişen renkler
-  const inputStyle = "bg-background dark:bg-[#0b0713] border-border dark:border-white/10 text-foreground dark:text-white focus-visible:ring-pink-500/20 h-11 rounded-xl transition-all";
+  const inputStyle = "bg-slate-50 dark:bg-blue-950/50 border-slate-200 dark:border-cyan-800/30 text-slate-900 dark:text-white focus-visible:ring-cyan-500/20 focus-visible:border-cyan-500 h-11 rounded-xl transition-all duration-200";
   const labelStyle = "text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      {/* FIX: bg-card ve text-foreground eklendi, sabit siyah kaldırıldı */}
-      <DialogContent className="w-[calc(100vw-1rem)] sm:w-[calc(100vw-2rem)] max-w-2xl max-h-[90dvh] bg-card dark:bg-[#0b0713] border-border dark:border-white/10 text-foreground dark:text-white rounded-2xl shadow-2xl p-0 overflow-hidden flex flex-col transition-colors duration-300">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:w-[calc(100vw-2rem)] max-w-2xl max-h-[90dvh] bg-white dark:bg-blue-950 border-slate-200 dark:border-cyan-800/30 text-slate-900 dark:text-white rounded-2xl shadow-2xl p-0 overflow-hidden flex flex-col transition-colors duration-300">
         
-        <DialogHeader className="p-5 sm:p-6 md:p-8 border-b border-border dark:border-white/5 bg-muted/20 dark:bg-white/2 shrink-0">
+        <DialogHeader className="p-5 sm:p-6 md:p-8 border-b border-slate-100 dark:border-cyan-800/30 bg-slate-50/50 dark:bg-blue-900/10 shrink-0">
           <DialogTitle className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
             {isEditMode ? 'Kullanıcıyı Düzenle' : 'Yeni Kullanıcı'}
           </DialogTitle>
@@ -61,16 +59,16 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <FormField name="username" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={labelStyle}><User className="size-3 text-pink-600 dark:text-pink-400" /> Kullanıcı Adı</FormLabel>
+                  <FormLabel className={labelStyle}><User className="size-3 text-cyan-600 dark:text-cyan-400" /> Kullanıcı Adı</FormLabel>
                   <FormControl><Input {...field} className={inputStyle} disabled={isEditMode} /></FormControl>
-                  <FormMessage className="text-[10px] text-rose-500" />
+                  <FormMessage className="text-[10px] text-red-500" />
                 </FormItem>
               )} />
               <FormField name="email" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={labelStyle}><Mail className="size-3 text-pink-600 dark:text-pink-400" /> E-Posta</FormLabel>
+                  <FormLabel className={labelStyle}><Mail className="size-3 text-cyan-600 dark:text-cyan-400" /> E-Posta</FormLabel>
                   <FormControl><Input {...field} type="email" className={inputStyle} /></FormControl>
-                  <FormMessage className="text-[10px] text-rose-500" />
+                  <FormMessage className="text-[10px] text-red-500" />
                 </FormItem>
               )} />
             </div>
@@ -78,9 +76,9 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
             {!isEditMode && (
               <FormField name="password" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={labelStyle}><Lock className="size-3 text-pink-600 dark:text-pink-400" /> Şifre</FormLabel>
+                  <FormLabel className={labelStyle}><Lock className="size-3 text-cyan-600 dark:text-cyan-400" /> Şifre</FormLabel>
                   <FormControl><Input {...field} type="password" className={inputStyle} /></FormControl>
-                  <FormMessage className="text-[10px] text-rose-500" />
+                  <FormMessage className="text-[10px] text-red-500" />
                 </FormItem>
               )} />
             )}
@@ -88,24 +86,24 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <FormField name="roleId" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={labelStyle}><Shield className="size-3 text-pink-600 dark:text-pink-400" /> Rol</FormLabel>
+                  <FormLabel className={labelStyle}><Shield className="size-3 text-cyan-600 dark:text-cyan-400" /> Rol</FormLabel>
                   <Combobox 
                     options={(roleOptionsQuery.data || []).map(o => ({ value: String(o.value), label: o.label }))}
                     value={String(field.value)}
                     onValueChange={(v) => field.onChange(Number(v))}
                     className={inputStyle}
                   />
-                  <FormMessage className="text-[10px] text-rose-500" />
+                  <FormMessage className="text-[10px] text-red-500" />
                 </FormItem>
               )} />
-              <FormItem className="flex flex-row items-center justify-between rounded-xl border border-border dark:border-white/5 p-4 bg-muted/10 dark:bg-white/2 self-end h-11 transition-colors">
-                <FormLabel className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-2">
+              <FormItem className="flex flex-row items-center justify-between rounded-xl border border-slate-200 dark:border-cyan-800/30 p-4 bg-slate-50 dark:bg-blue-900/10 self-end h-11 transition-colors">
+                <FormLabel className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-2 cursor-pointer">
                   <Power className="size-3.5 text-emerald-600 dark:text-emerald-500" /> Aktif mi?
                 </FormLabel>
                 <Switch 
                   checked={form.watch('isActive')} 
                   onCheckedChange={(v) => form.setValue('isActive', v)} 
-                  className="data-[state=checked]:bg-pink-600" 
+                  className="data-[state=checked]:bg-cyan-600" 
                 />
               </FormItem>
             </div>
@@ -113,25 +111,25 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
             <FormField name="permissionGroupIds" render={({ field }) => (
               <FormItem className="space-y-3">
                 <FormLabel className={labelStyle}>Yetki Grupları</FormLabel>
-                <div className="rounded-xl border border-border dark:border-white/5 p-1 bg-muted/5 dark:bg-transparent">
+                <div className="rounded-xl border border-slate-200 dark:border-cyan-800/30 p-1 bg-slate-50 dark:bg-transparent">
                   <UserFormPermissionGroupSelect value={field.value} onChange={field.onChange} />
                 </div>
               </FormItem>
             )} />
 
-            <DialogFooter className="pt-6 border-t border-border dark:border-white/5 sticky bottom-0 bg-card dark:bg-[#0b0713] transition-colors">
+            <DialogFooter className="pt-6 border-t border-slate-100 dark:border-cyan-800/30 sticky bottom-0 bg-white dark:bg-blue-950 transition-colors">
               <Button 
                 type="button" 
                 variant="ghost" 
                 onClick={() => onOpenChange(false)} 
-                className="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 font-bold"
+                className="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 font-bold rounded-xl"
               >
                 İptal
               </Button>
               <Button 
                 type="submit" 
                 disabled={isLoading} 
-                className="bg-linear-to-r from-pink-600 to-orange-600 text-white font-extrabold h-11 px-10 rounded-xl border-0 shadow-lg shadow-pink-500/20 hover:opacity-90 transition-all"
+                className="bg-linear-to-r from-cyan-600 to-blue-600 text-white font-extrabold h-11 px-10 rounded-xl border-0 shadow-lg shadow-cyan-500/25 hover:opacity-95 transition-all active:scale-[0.98]"
               >
                 {isLoading ? <Loader2 className="size-4 animate-spin mr-2" /> : null} Kaydet
               </Button>
