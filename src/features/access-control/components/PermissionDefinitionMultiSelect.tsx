@@ -1,14 +1,16 @@
-import { type ReactElement, useCallback, useMemo, useState } from 'react';
+import { type ReactElement, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge'; // HATA FIX: Badge eklendi
+import { Search, Globe, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { usePermissionDefinitionsQuery } from '../hooks/usePermissionDefinitionsQuery';
-import { getPermissionDisplayMeta, getPermissionModuleDisplayMeta, isLeafPermissionCode } from '../utils/permission-config';
 import { cn } from '@/lib/utils';
+import type { PermissionDefinitionDto } from '../types/access-control.types';
 
 interface PermissionDefinitionMultiSelectProps {
   value: number[];
-  onChange: (ids: number[]) => void;
+  onChange: (value: number[]) => void;
   disabled?: boolean;
 }
 
@@ -18,153 +20,138 @@ export function PermissionDefinitionMultiSelect({
   disabled = false,
 }: PermissionDefinitionMultiSelectProps): ReactElement {
   const { t } = useTranslation(['access-control', 'common']);
-  const { data, isLoading } = usePermissionDefinitionsQuery({
+  
+  // HATA FIX: Hook parametre beklediği için sayfalama değerleri eklendi
+  const { data: permissionsResponse, isLoading } = usePermissionDefinitionsQuery({
     pageNumber: 1,
     pageSize: 1000,
-    sortBy: 'code',
-    sortDirection: 'asc',
+    sortBy: 'Name',
+    sortDirection: 'asc'
   });
 
-  const items = (data?.data ?? []).filter((d) => d.isActive && isLeafPermissionCode(d.code));
-  const [search, setSearch] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const getDisplayLabel = useCallback(
-    (code: string, name: string | null | undefined): string => {
-      const trimmedName = (name ?? '').trim();
-      if (trimmedName) return trimmedName;
-      const meta = getPermissionDisplayMeta(code);
-      if (meta) return t(meta.key, meta.fallback);
-      return code;
-    },
-    [t]
-  );
+  // HATA FIX: permissionsResponse.data üzerinden filtreleme yapıldı ve tip atandı
+  const filteredPermissions = useMemo(() => {
+    const items = permissionsResponse?.data || [];
+    if (!searchTerm.trim()) return items;
+    const lower = searchTerm.toLowerCase();
+    return items.filter(
+      (p: PermissionDefinitionDto) =>
+        p.name.toLowerCase().includes(lower) ||
+        p.code.toLowerCase().includes(lower)
+    );
+  }, [permissionsResponse, searchTerm]);
 
-  const filteredItems = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return items;
-    return items.filter((item) => {
-      const display = getDisplayLabel(item.code, item.name);
-      return (item.code ?? '').toLowerCase().includes(q) || (item.name ?? '').toLowerCase().includes(q) || display.toLowerCase().includes(q);
-    });
-  }, [items, search, getDisplayLabel]);
-
-  const groupedItems = useMemo(() => {
-    const buckets = new Map<string, typeof filteredItems>();
-    for (const item of filteredItems) {
-      const prefix = (item.code ?? '').split('.').filter(Boolean)[0] ?? 'other';
-      const meta = getPermissionModuleDisplayMeta(prefix);
-      const groupLabel = meta ? t(meta.key, meta.fallback) : prefix;
-      const existing = buckets.get(groupLabel);
-      if (existing) {
-        existing.push(item);
-      } else {
-        buckets.set(groupLabel, [item]);
-      }
-    }
-
-    const sorted = Array.from(buckets.entries()).sort((a, b) => a[0].localeCompare(b[0]));
-    return sorted.map(([groupLabel, groupItems]) => ({
-      groupLabel,
-      items: groupItems.sort((a, b) => (a.code ?? '').localeCompare(b.code ?? '')),
-    }));
-  }, [filteredItems, t]);
-
-  const handleToggle = (id: number): void => {
-    if (value.includes(id)) {
-      onChange(value.filter((x) => x !== id));
-    } else {
-      onChange([...value, id]);
-    }
+  const togglePermission = (id: number) => {
+    if (disabled) return;
+    const newValue = value.includes(id)
+      ? value.filter((v) => v !== id)
+      : [...value, id];
+    onChange(newValue);
   };
 
-  const handleSelectAll = (checked: boolean): void => {
-    if (checked) {
-      const ids = new Set<number>(value);
-      for (const item of filteredItems) ids.add(item.id);
-      onChange(Array.from(ids));
+  const toggleAll = () => {
+    if (disabled) return;
+    if (value.length === filteredPermissions.length && filteredPermissions.length > 0) {
+      onChange([]);
     } else {
-      const filteredIds = new Set<number>(filteredItems.map((i) => i.id));
-      onChange(value.filter((id) => !filteredIds.has(id)));
+      onChange(filteredPermissions.map((p: PermissionDefinitionDto) => p.id));
     }
   };
-
-  const allFilteredSelected = useMemo(() => {
-    if (filteredItems.length === 0) return false;
-    const selected = new Set<number>(value);
-    return filteredItems.every((i) => selected.has(i.id));
-  }, [filteredItems, value]);
-
-  if (isLoading) {
-    return <div className="text-sm text-slate-500 dark:text-slate-400 py-4 font-medium animate-pulse">{t('common.loading')}</div>;
-  }
 
   return (
-    <div className="space-y-4">
-      <Input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder={t('permissionGroups.search')}
-        disabled={disabled}
-        className="bg-background dark:bg-[#0b0713] border-border dark:border-white/10 text-foreground dark:text-white rounded-xl h-10 focus-visible:ring-pink-500/20"
-      />
-      
-      <div className="flex items-center gap-2 px-1">
-        <Checkbox
-          id="select-all-permissions"
-          checked={allFilteredSelected}
-          onCheckedChange={(c) => handleSelectAll(!!c)}
-          disabled={disabled || filteredItems.length === 0}
-          className="data-[state=checked]:bg-pink-600 data-[state=checked]:border-pink-600 border-slate-300 dark:border-white/20"
-        />
-        <label htmlFor="select-all-permissions" className="text-sm font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
-          {t('permissionGroups.selectAll')}
-        </label>
+    <div className="flex flex-col h-full min-h-[400px] animate-in fade-in duration-500 bg-white dark:bg-blue-950/20">
+      {/* Arama Alanı - Aqua Tasarım */}
+      <div className="p-4 border-b border-slate-100 dark:border-cyan-800/20 bg-slate-50/50 dark:bg-blue-900/10">
+        <div className="relative group">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-cyan-500 transition-colors" />
+          <Input
+            placeholder={t('common.search')}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 bg-white dark:bg-blue-950 border-slate-200 dark:border-cyan-800/30 rounded-xl h-10 focus-visible:ring-cyan-500/20 transition-all text-slate-900 dark:text-white"
+          />
+        </div>
+        
+        <div className="flex items-center justify-between mt-3 px-1">
+          <label className="flex items-center gap-2 cursor-pointer group">
+            <Checkbox
+              checked={filteredPermissions.length > 0 && value.length === filteredPermissions.length}
+              onCheckedChange={toggleAll}
+              disabled={disabled || filteredPermissions.length === 0}
+              className="border-slate-300 dark:border-cyan-800 data-[state=checked]:bg-cyan-600 data-[state=checked]:border-cyan-600"
+            />
+            <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider group-hover:text-cyan-600 transition-colors">
+              {t('permissionGroups.selectAll', { defaultValue: 'Tümünü Seç' })}
+            </span>
+          </label>
+          <Badge variant="outline" className="text-[10px] font-mono bg-cyan-50 dark:bg-cyan-950/30 text-cyan-700 dark:text-cyan-400 border-cyan-100 dark:border-cyan-800/50 rounded-md">
+            {value.length} / {filteredPermissions.length}
+          </Badge>
+        </div>
       </div>
 
-      {/* ASIL DÜZELTİLEN LİSTE ALANI */}
-      <div className="max-h-[300px] overflow-y-auto border border-border dark:border-white/10 rounded-xl p-3 space-y-4 bg-slate-50/50 dark:bg-black/20 custom-scrollbar transition-colors">
-        {filteredItems.length === 0 ? (
-          <p className="text-sm text-slate-500 dark:text-slate-400 py-4 text-center font-medium">{t('permissionGroups.noDefinitions')}</p>
-        ) : (
-          groupedItems.map(({ groupLabel, items: group }) => (
-            <div key={groupLabel} className="space-y-2">
-              <div className="text-[10px] font-black uppercase tracking-widest text-pink-600 dark:text-pink-400/80 px-1 mb-1">
-                {groupLabel}
-              </div>
-              <div className="space-y-1">
-                {group.map((item) => {
-                  const display = getDisplayLabel(item.code, item.name);
-                  const isSelected = value.includes(item.id);
-                  return (
-                    <div 
-                      key={item.id} 
-                      className={cn(
-                        "flex items-center gap-3 p-2 rounded-lg transition-colors group",
-                        isSelected ? "bg-pink-500/5 dark:bg-pink-500/10" : "hover:bg-slate-100 dark:hover:bg-white/5"
-                      )}
-                    >
-                      <Checkbox
-                        id={`perm-${item.id}`}
-                        checked={isSelected}
-                        onCheckedChange={() => handleToggle(item.id)}
-                        disabled={disabled}
-                        className="data-[state=checked]:bg-pink-600 data-[state=checked]:border-pink-600 border-slate-300 dark:border-white/20"
-                      />
-                      <label htmlFor={`perm-${item.id}`} className="text-sm cursor-pointer flex-1 group-hover:translate-x-0.5 transition-transform">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                          <span className="font-semibold text-slate-700 dark:text-slate-200">{display}</span>
-                          <span className="font-mono text-[10px] text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded">
-                            {item.code}
-                          </span>
-                        </div>
-                      </label>
-                    </div>
-                  );
-                })}
-              </div>
+      {/* Yetki Listesi - HATA FIX: ScrollArea yerine custom-scrollbar kullanıldı */}
+      <div className="flex-1 overflow-y-auto p-4 custom-scrollbar max-h-[500px]">
+        <div className="space-y-2">
+          {isLoading ? (
+            <div className="py-10 text-center text-slate-400 animate-pulse text-sm font-medium">
+              {t('common.loading')}...
             </div>
-          ))
-        )}
+          ) : filteredPermissions.length === 0 ? (
+            <div className="py-10 text-center text-slate-500 dark:text-slate-400 text-sm italic">
+              {t('common.noData')}
+            </div>
+          ) : (
+            <div className="grid gap-2">
+              <p className="text-[10px] font-black text-cyan-600 dark:text-cyan-400 uppercase tracking-widest flex items-center gap-2 mb-1 ml-1">
+                <Globe className="w-3 h-3" /> {t('permissionGroups.moduleTitle', { defaultValue: 'AQUA MODÜLÜ' })}
+              </p>
+              {filteredPermissions.map((permission: PermissionDefinitionDto) => {
+                const isSelected = value.includes(permission.id);
+                return (
+                  <div
+                    key={permission.id}
+                    onClick={() => togglePermission(permission.id)}
+                    className={cn(
+                      "group flex items-center justify-between p-3 rounded-xl border transition-all duration-200 cursor-pointer",
+                      isSelected
+                        ? "bg-cyan-50 dark:bg-cyan-900/20 border-cyan-200 dark:border-cyan-800/50 shadow-sm"
+                        : "bg-white dark:bg-blue-900/10 border-slate-100 dark:border-cyan-800/10 hover:border-cyan-200 dark:hover:border-cyan-800/30"
+                    )}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={cn(
+                        "flex h-5 w-5 items-center justify-center rounded border transition-colors",
+                        isSelected 
+                          ? "bg-cyan-600 border-cyan-600 text-white" 
+                          : "bg-transparent border-slate-300 dark:border-cyan-800 group-hover:border-cyan-500"
+                      )}>
+                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 shadow-sm" />}
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <span className={cn(
+                          "text-sm font-bold truncate transition-colors",
+                          isSelected ? "text-cyan-900 dark:text-white" : "text-slate-700 dark:text-slate-300"
+                        )}>
+                          {permission.name}
+                        </span>
+                        <code className="text-[9px] font-mono text-slate-400 dark:text-slate-500 truncate mt-0.5">
+                          {permission.code}
+                        </code>
+                      </div>
+                    </div>
+                    <ChevronRight className={cn(
+                      "w-4 h-4 transition-all opacity-0 group-hover:opacity-100",
+                      isSelected ? "text-cyan-500 translate-x-1" : "text-slate-300"
+                    )} />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

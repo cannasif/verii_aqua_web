@@ -90,15 +90,15 @@ export function PermissionGroupForm({
   };
 
   const labelStyle = "text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2 transition-colors";
-  const inputStyle = "bg-background dark:bg-[#0b0713] border-border dark:border-white/10 text-foreground dark:text-white focus-visible:ring-pink-500/20 focus-visible:border-pink-500 rounded-xl transition-all duration-300 h-11";
+  const inputStyle = "bg-slate-50 dark:bg-blue-950/50 border-slate-200 dark:border-cyan-800/30 text-slate-900 dark:text-white focus-visible:ring-cyan-500/20 focus-visible:border-cyan-500 rounded-xl transition-all duration-300 h-11";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card dark:bg-[#0b0713] border-border dark:border-white/10 text-foreground dark:text-white max-w-2xl w-[95%] sm:w-full shadow-2xl sm:rounded-2xl p-0 overflow-hidden flex flex-col max-h-[90vh] transition-colors duration-300">
-        <DialogHeader className="px-8 py-6 border-b border-border dark:border-white/5 bg-muted/20 dark:bg-white/2">
+      <DialogContent className="bg-white dark:bg-blue-950 border-slate-200 dark:border-cyan-800/30 text-slate-900 dark:text-white max-w-2xl w-[95%] sm:w-full shadow-2xl sm:rounded-2xl p-0 overflow-hidden flex flex-col max-h-[90vh] transition-colors duration-300">
+        <DialogHeader className="px-8 py-6 border-b border-slate-100 dark:border-cyan-800/20 bg-slate-50/50 dark:bg-blue-900/10">
           <DialogTitle className="text-2xl font-bold flex items-center gap-3 text-slate-900 dark:text-white">
-            <div className="p-2 rounded-lg bg-pink-500/10 border border-pink-200 dark:border-pink-500/20">
-              <Shield className="w-5 h-5 text-pink-600 dark:text-pink-500" />
+            <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 shadow-sm">
+              <Shield className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
             </div>
             {item ? t('permissionGroups.form.editTitle') : t('permissionGroups.form.addTitle')}
           </DialogTitle>
@@ -122,7 +122,7 @@ export function PermissionGroupForm({
                     <FormControl>
                       <Input {...field} className={inputStyle} placeholder={t('permissionGroups.form.namePlaceholder')} maxLength={100} />
                     </FormControl>
-                    <FormMessage className="text-[10px] text-rose-500" />
+                    <FormMessage className="text-[10px] text-red-500" />
                   </FormItem>
                 )}
               />
@@ -138,7 +138,7 @@ export function PermissionGroupForm({
                     <FormControl>
                       <Textarea {...field} value={field.value ?? ''} className={cn(inputStyle, "min-h-[100px] resize-none py-3")} placeholder={t('permissionGroups.form.descriptionPlaceholder')} maxLength={500} />
                     </FormControl>
-                    <FormMessage className="text-[10px] text-rose-500" />
+                    <FormMessage className="text-[10px] text-red-500" />
                   </FormItem>
                 )}
               />
@@ -148,14 +148,14 @@ export function PermissionGroupForm({
                   control={form.control}
                   name="isActive"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-xl border border-border dark:border-white/5 p-4 bg-muted/10 dark:bg-white/2 hover:bg-muted/20 dark:hover:bg-white/4 transition-colors">
+                    <FormItem className="flex flex-row items-center justify-between rounded-2xl border border-slate-100 dark:border-cyan-800/20 p-4 bg-slate-50/50 dark:bg-blue-900/10 hover:bg-slate-100 dark:hover:bg-blue-900/20 transition-colors">
                       <FormLabel className="inline-flex items-center text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
                         <Power className="w-4 h-4 mr-2 text-emerald-600 dark:text-emerald-500" />
                         {t('permissionGroups.form.isActive')}
                         <FieldHelpTooltip text={t('help.permissionGroup.isActive')} />
                       </FormLabel>
                       <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} className="data-[state=checked]:bg-pink-600 scale-90" />
+                        <Switch checked={field.value} onCheckedChange={field.onChange} className="data-[state=checked]:bg-cyan-600 scale-90" />
                       </FormControl>
                     </FormItem>
                   )}
@@ -172,11 +172,11 @@ export function PermissionGroupForm({
                       <FieldHelpTooltip text={t('help.permissionGroup.permissions')} />
                     </FormLabel>
                     <FormControl>
-                      <div className="bg-muted/5 dark:bg-white/1 rounded-xl border border-border dark:border-white/5 overflow-hidden">
+                      <div className="bg-slate-50 dark:bg-blue-950/40 rounded-2xl border border-slate-200 dark:border-cyan-800/30 overflow-hidden shadow-sm">
                         <PermissionDefinitionMultiSelect value={field.value} onChange={field.onChange} disabled={isLoading} />
                       </div>
                     </FormControl>
-                    <FormMessage className="text-[10px] text-rose-500" />
+                    <FormMessage className="text-[10px] text-red-500" />
                   </FormItem>
                 )}
               />
@@ -184,15 +184,15 @@ export function PermissionGroupForm({
           </Form>
         </div>
 
-        <DialogFooter className="px-8 py-6 border-t border-border dark:border-white/5 bg-muted/20 dark:bg-white/2">
-          <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} disabled={isLoading} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 px-6 font-bold transition-colors">
+        <DialogFooter className="px-8 py-6 border-t border-slate-100 dark:border-cyan-800/20 bg-slate-50/50 dark:bg-blue-900/10">
+          <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} disabled={isLoading} className="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 px-6 font-bold transition-colors rounded-xl">
             {t('common.cancel')}
           </Button>
           <Button 
             type="submit" 
             form="permission-group-form" 
             disabled={isLoading || !form.formState.isValid}
-            className="bg-linear-to-r from-pink-600 to-orange-600 text-white font-extrabold h-11 px-10 rounded-xl border-0 shadow-lg shadow-pink-500/20 hover:opacity-90 transition-all"
+            className="bg-linear-to-r from-cyan-600 to-blue-600 text-white font-extrabold h-11 px-10 rounded-xl border-0 shadow-lg shadow-cyan-500/25 hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] transition-all"
           >
             {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             {isLoading ? t('common.saving') : t('common.save')}

@@ -1,7 +1,7 @@
 import { type ReactElement, useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/stores/ui-store';
-import { Plus, Search, RefreshCw, X, Settings, Shield, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Search, RefreshCw, X, Settings, Shield, Edit2, Trash2, ArrowLeft, ArrowRight } from 'lucide-react';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -138,7 +138,8 @@ export function PermissionGroupsPage(): ReactElement {
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-1">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-600 dark:text-pink-500 border border-pink-200 dark:border-pink-500/20 shadow-lg shadow-pink-500/5 transition-colors">
+          {/* Aqua Konsepti: Pembe yerine Cyan vurgulu ikon kutusu */}
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-500/20 shadow-lg shadow-cyan-500/5 transition-colors">
             <Shield className="size-6" />
           </div>
           <div>
@@ -152,21 +153,22 @@ export function PermissionGroupsPage(): ReactElement {
         </div>
         <Button 
           onClick={handleAddClick}
-          className="bg-linear-to-r from-pink-600 to-orange-600 text-white font-bold h-11 px-6 rounded-xl shadow-lg shadow-pink-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all border-0 shrink-0"
+          className="bg-linear-to-r from-cyan-600 to-blue-600 text-white font-bold h-11 px-6 rounded-xl shadow-lg shadow-cyan-500/20 hover:opacity-95 active:scale-[0.98] transition-all border-0 shrink-0"
         >
           <Plus size={18} className="mr-2" />
           {t('permissionGroups.add')}
         </Button>
       </div>
 
-      <div className="bg-card dark:bg-[#1a1025]/60 backdrop-blur-xl border border-slate-200 dark:border-white/5 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm dark:shadow-xl transition-all duration-300">
+      {/* Arama Barı: Aqua stilleri uygulandı */}
+      <div className="bg-white dark:bg-blue-950/60 backdrop-blur-xl border border-slate-200 dark:border-cyan-800/30 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm transition-all duration-300">
         <div className="relative group w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-pink-600 dark:group-focus-within:text-pink-500 transition-colors" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-cyan-600 dark:group-focus-within:text-cyan-400 transition-colors" />
           <Input
             placeholder={t('common.search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 h-11 bg-background dark:bg-[#0b0713] border-slate-200 dark:border-white/5 text-foreground dark:text-white focus-visible:ring-pink-500/20 rounded-xl"
+            className="pl-10 h-11 bg-slate-50 dark:bg-blue-950/40 border-slate-200 dark:border-cyan-800/20 text-slate-900 dark:text-white focus-visible:ring-cyan-500/20 rounded-xl"
           />
           {searchTerm && (
             <button
@@ -177,16 +179,17 @@ export function PermissionGroupsPage(): ReactElement {
             </button>
           )}
         </div>
-        <Button variant="outline" size="icon" onClick={handleRefresh} disabled={isLoading} className="h-11 w-11 border-slate-200 dark:border-white/10 bg-transparent text-slate-600 dark:text-white hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl shrink-0 transition-colors">
+        <Button variant="outline" size="icon" onClick={handleRefresh} disabled={isLoading} className="h-11 w-11 border-slate-200 dark:border-cyan-800/30 bg-transparent text-slate-600 dark:text-white hover:bg-slate-50 dark:hover:bg-blue-900/30 rounded-xl shrink-0 transition-colors">
           <RefreshCw size={18} className={isLoading ? 'animate-spin' : ''} />
         </Button>
       </div>
 
-      <div className="bg-card dark:bg-[#1a1025]/60 backdrop-blur-xl border border-slate-200 dark:border-white/5 rounded-2xl overflow-hidden shadow-sm dark:shadow-2xl transition-all duration-300">
+      {/* Tablo: Aqua Blue-950 cam efekti ve Cyan borderlar */}
+      <div className="bg-white dark:bg-blue-950/60 backdrop-blur-xl border border-slate-200 dark:border-cyan-800/30 rounded-2xl overflow-hidden shadow-sm transition-all duration-300">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="bg-slate-50/50 dark:bg-white/2">
-              <TableRow className="border-b border-slate-200 dark:border-white/5 hover:bg-transparent">
+            <TableHeader className="bg-slate-50 dark:bg-blue-900/40">
+              <TableRow className="border-b border-slate-200 dark:border-cyan-800/30 hover:bg-transparent">
                 <TableHead className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider px-6 py-4">{t('permissionGroups.table.name')}</TableHead>
                 <TableHead className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider py-4">{t('permissionGroups.table.isSystemAdmin')}</TableHead>
                 <TableHead className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider py-4">{t('permissionGroups.table.isActive')}</TableHead>
@@ -205,22 +208,24 @@ export function PermissionGroupsPage(): ReactElement {
                 </TableRow>
               ) : (
                 filteredItems.map((item) => (
-                  <TableRow key={item.id} className="border-b border-slate-100 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/2 group transition-colors">
-                    <TableCell className="font-bold text-slate-900 dark:text-slate-200 group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors px-6 py-4">
+                  <TableRow key={item.id} className="border-b border-slate-100 dark:border-cyan-800/20 hover:bg-slate-50 dark:hover:bg-blue-900/30 group transition-colors">
+                    <TableCell className="font-bold text-slate-900 dark:text-slate-200 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors px-6 py-4">
                       {item.name}
                     </TableCell>
                     <TableCell>
-                      <Badge className={cn("border-0 rounded-md text-[10px] font-bold uppercase tracking-tighter px-2", item.isSystemAdmin ? "bg-pink-100 text-pink-700 dark:bg-pink-500/20 dark:text-pink-500" : "bg-slate-100 text-slate-500 dark:bg-white/5 dark:text-slate-400")}>
+                      <Badge className={cn("border-0 rounded-md text-[10px] font-bold uppercase tracking-tighter px-2", item.isSystemAdmin ? "bg-cyan-100 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-400" : "bg-slate-100 text-slate-500 dark:bg-white/10 dark:text-slate-400")}>
                         {item.isSystemAdmin ? t('common.yes') : t('common.no')}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge className={cn("border-0 rounded-md text-[10px] font-bold uppercase tracking-tighter px-2", item.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-500" : "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-500")}>
+                      <Badge className={cn("border-0 rounded-md text-[10px] font-bold uppercase tracking-tighter px-2", item.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400" : "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400")}>
                         {item.isActive ? t('common.yes') : t('common.no')}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <span className="text-slate-600 dark:text-slate-300 font-mono text-xs">{(item.permissionDefinitionIds?.length ?? item.permissionCodes?.length ?? 0)}</span>
+                      <span className="text-slate-600 dark:text-slate-300 font-mono text-xs bg-slate-100 dark:bg-blue-900/30 px-2 py-0.5 rounded">
+                        {(item.permissionDefinitionIds?.length ?? item.permissionCodes?.length ?? 0)}
+                      </span>
                     </TableCell>
                     <TableCell className="text-right px-6 py-4">
                       <div className="flex justify-end gap-1">
@@ -228,7 +233,7 @@ export function PermissionGroupsPage(): ReactElement {
                           variant="ghost"
                           size="icon"
                           onClick={() => handlePermissionsClick(item)}
-                          className="size-9 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors"
+                          className="size-9 text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-500/10 rounded-lg transition-colors"
                           disabled={item.isSystemAdmin}
                         >
                           <Settings size={18} />
@@ -237,7 +242,7 @@ export function PermissionGroupsPage(): ReactElement {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleEditClick(item)}
-                          className="size-9 text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-500/10 rounded-lg transition-colors"
+                          className="size-9 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors"
                           disabled={item.isSystemAdmin}
                         >
                           <Edit2 size={18} />
@@ -260,8 +265,9 @@ export function PermissionGroupsPage(): ReactElement {
           </Table>
         </div>
         
+        {/* Pagination Footer */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-6 py-4 bg-slate-50/50 dark:bg-[#0b0713]/50 border-t border-slate-200 dark:border-white/5 transition-colors">
+          <div className="flex items-center justify-between px-6 py-4 bg-slate-50 dark:bg-blue-950/50 border-t border-slate-200 dark:border-cyan-800/30 transition-colors">
             <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
               {t('permissionGroups.table.showing', {
                 from: (pageNumber - 1) * pageSize + 1,
@@ -270,11 +276,11 @@ export function PermissionGroupsPage(): ReactElement {
               })}
             </span>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => setPageNumber((p) => Math.max(1, p - 1))} disabled={pageNumber <= 1} className="h-8 px-4 border-slate-200 dark:border-white/10 bg-white dark:bg-transparent text-slate-600 dark:text-white hover:bg-slate-50 dark:hover:bg-white/5 rounded-lg text-xs font-bold transition-colors">
-                {t('common.previous')}
+              <Button variant="outline" size="sm" onClick={() => setPageNumber((p) => Math.max(1, p - 1))} disabled={pageNumber <= 1} className="h-8 px-4 border-slate-200 dark:border-cyan-800/30 bg-white dark:bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-blue-900/30 rounded-lg text-xs font-bold transition-colors">
+                <ArrowLeft size={14} className="mr-1" /> {t('common.previous')}
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setPageNumber((p) => Math.min(totalPages, p + 1))} disabled={pageNumber >= totalPages} className="h-8 px-4 border-slate-200 dark:border-white/10 bg-white dark:bg-transparent text-slate-600 dark:text-white hover:bg-slate-50 dark:hover:bg-white/5 rounded-lg text-xs font-bold transition-colors">
-                {t('common.next')}
+              <Button variant="outline" size="sm" onClick={() => setPageNumber((p) => Math.min(totalPages, p + 1))} disabled={pageNumber >= totalPages} className="h-8 px-4 border-slate-200 dark:border-cyan-800/30 bg-white dark:bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-blue-900/30 rounded-lg text-xs font-bold transition-colors">
+                {t('common.next')} <ArrowRight size={14} className="ml-1" />
               </Button>
             </div>
           </div>
@@ -291,24 +297,27 @@ export function PermissionGroupsPage(): ReactElement {
 
       <GroupPermissionsPanel groupId={permissionsPanelGroupId} open={permissionsPanelOpen} onOpenChange={setPermissionsPanelOpen} />
 
+      {/* Delete Dialog: Aqua Stilleri */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent className="bg-card dark:bg-[#0b0713] border-border dark:border-white/10 text-foreground dark:text-white rounded-2xl shadow-2xl p-5 sm:p-6 md:p-8 w-[calc(100vw-1rem)] sm:w-[calc(100vw-2rem)] max-w-md transition-colors duration-300">
+        <DialogContent className="bg-white dark:bg-blue-950 border-slate-200 dark:border-cyan-800/30 text-slate-900 dark:text-white rounded-2xl shadow-2xl p-5 sm:p-6 md:p-8 w-[calc(100vw-1rem)] sm:w-[calc(100vw-2rem)] max-w-md transition-colors duration-300">
           <DialogHeader className="p-0">
             <DialogTitle className="text-xl font-bold flex items-center gap-3 text-slate-900 dark:text-white">
-              <Trash2 className="size-5 text-rose-600 dark:text-rose-500" />
+              <div className="p-2 bg-rose-50 dark:bg-rose-900/20 rounded-xl">
+                <Trash2 className="size-5 text-rose-600 dark:text-rose-500" />
+              </div>
               {t('permissionGroups.delete.confirmTitle')}
             </DialogTitle>
-            <DialogDescription className="text-slate-500 dark:text-slate-400 mt-2 text-sm font-medium">
+            <DialogDescription className="text-slate-500 dark:text-slate-400 mt-4 text-sm font-medium leading-relaxed">
               {t('permissionGroups.delete.confirmMessage', {
                 name: itemToDelete?.name ?? '',
               })}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="mt-8 gap-3 sm:gap-0">
+          <DialogFooter className="mt-8 gap-3 sm:gap-0 border-t border-slate-100 dark:border-cyan-800/20 pt-6">
             <Button variant="ghost" onClick={() => setDeleteDialogOpen(false)} disabled={deleteMutation.isPending} className="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 font-bold transition-colors">
               {t('common.cancel')}
             </Button>
-            <Button variant="destructive" onClick={handleDeleteConfirm} disabled={deleteMutation.isPending} className="bg-rose-600 hover:bg-rose-500 rounded-xl px-8 font-bold border-0 shadow-lg shadow-rose-500/20 text-white transition-all">
+            <Button variant="destructive" onClick={handleDeleteConfirm} disabled={deleteMutation.isPending} className="bg-rose-600 hover:bg-rose-700 rounded-xl px-8 font-bold border-0 shadow-lg shadow-rose-500/20 text-white transition-all">
               {deleteMutation.isPending ? t('common.processing') : t('common.delete')}
             </Button>
           </DialogFooter>
