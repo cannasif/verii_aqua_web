@@ -102,7 +102,8 @@
     "assignedGroups": "Assigned Permission Groups",
     "noUsers": "No users found",
     "noGroups": "No permission groups available",
-    "selectAll": "Select all"
+    "selectAll": "Select all",
+    "unsavedChanges": "Änderungen wurden nicht gespeichert"
   },
   "common": {
     "cancel": "Stornieren",
@@ -125,5 +126,8 @@
     "permissionDefinitions": "Berechtigungsdefinitionen",
     "permissionGroups": "Berechtigungsgruppen",
     "userGroupAssignments": "Benutzergruppenzuweisungen"
+  },
+  "assignments": {
+    "userListLoadFailed": "Benutzerliste konnte nicht geladen werden"
   }
 }

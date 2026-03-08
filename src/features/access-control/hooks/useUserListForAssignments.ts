@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
+import i18n from '@/lib/i18n';
 import type { ApiResponse, PagedParams, PagedResponse } from '@/types/api';
 
 export interface AssignableUserDto {
@@ -32,7 +33,7 @@ const getUserList = async (params: PagedParams): Promise<PagedResponse<Assignabl
     }
     return pagedData;
   }
-  throw new Error(response.message || 'Kullanıcı listesi yüklenemedi');
+  throw new Error(response.message || i18n.t('assignments.userListLoadFailed', { ns: 'access-control' }));
 };
 
 export const useUserListForAssignments = (params: PagedParams) =>

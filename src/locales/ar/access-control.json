@@ -102,7 +102,8 @@
     "assignedGroups": "Assigned Permission Groups",
     "noUsers": "No users found",
     "noGroups": "No permission groups available",
-    "selectAll": "Select all"
+    "selectAll": "Select all",
+    "unsavedChanges": "لم يتم حفظ التغييرات"
   },
   "common": {
     "cancel": "إلغاء",
@@ -125,5 +126,8 @@
     "permissionDefinitions": "Permission Definitions",
     "permissionGroups": "Permission Groups",
     "userGroupAssignments": "User Group Assignments"
+  },
+  "assignments": {
+    "userListLoadFailed": "تعذر تحميل قائمة المستخدمين"
   }
 }

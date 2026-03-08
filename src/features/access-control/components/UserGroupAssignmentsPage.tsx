@@ -142,7 +142,7 @@ export function UserGroupAssignmentsPage(): ReactElement {
                   {hasChanges && (
                     <div className="flex justify-end items-center gap-3 pt-4 animate-in zoom-in-95 duration-300">
                       <span className="text-[10px] font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-widest italic">
-                        Değişiklikler kaydedilmedi
+                        {t('userGroupAssignments.unsavedChanges')}
                       </span>
                       <div className="flex items-center gap-2">
                         <FieldHelpTooltip text={t('help.userAssignment.save')} side="top" />
@@ -174,7 +174,7 @@ export function UserGroupAssignmentsPage(): ReactElement {
                 {t('userGroupAssignments.selectUserHint')}
               </p>
               <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">
-                Yetki gruplarını yönetmek için listeden bir kullanıcı seçin.
+                {t('help.userAssignment.user')}
               </p>
             </div>
           </div>
