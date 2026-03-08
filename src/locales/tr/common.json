@@ -1,5 +1,4 @@
 {
-  
   "Error.User.InvalidCredentials": "E-posta veya şifre yanlış. Lütfen tekrar deneyin.",
   "Error": {
     "User": {
@@ -87,7 +86,8 @@
     "select": "Seçiniz",
     "voiceSearch": "Sesli Arama",
     "dropdown": {
-      "minCharsHint": "En az {{count}} karakter"
+      "minCharsHint": "En az {{count}} karakter",
+      "loadError": "Liste yüklenemedi"
     },
     "update": "Güncelle",
     "deleting": "Siliniyor...",
@@ -160,9 +160,24 @@
     "imageSettings": "Resim Özellikleri",
     "imageUrl": "Resim URL",
     "uploadFromFile": "Dosyadan yükle",
-    "imageUrlPlaceholder": "https://... veya /logo.png"
+    "imageUrlPlaceholder": "https://... veya /logo.png",
+    "routeError": {
+      "title": "Bir hata oluştu",
+      "chunkLoad": "Sayfa yüklenirken bir sorun oluştu. Lütfen sayfayı yenileyin.",
+      "unexpected": "Beklenmeyen bir hata oluştu.",
+      "refresh": "Sayfayı yenile"
+    },
+    "aqua": {
+      "api": {
+        "listLoadFailed": "Liste alınamadı",
+        "createFailed": "Kayıt oluşturulamadı",
+        "updateFailed": "Kayıt güncellenemedi",
+        "deleteFailed": "Kayıt silinemedi",
+        "queryFailed": "Sorgu alınamadı",
+        "postFailed": "Kayıt post edilemedi"
+      }
+    }
   },
-
   "auth": {
     "login": {
       "title": "Sistem Girişi",
@@ -200,7 +215,6 @@
       "failed": "Şifre sıfırlama işlemi başarısız oldu",
       "error": "Şifre sıfırlama işlemi sırasında bir hata oluştu"
     }
-    
   },
   "navbar": {
     "VERII WMS": "VERII WMS",
@@ -669,7 +683,8 @@
         "cageAddFailed": "Kafes eklenemedi",
         "feedLineCreateFailed": "Yem satırı eklenemedi",
         "savedAndPosted": "Kaydedildi ve post edildi",
-        "operationFailed": "İşlem başarısız"
+        "operationFailed": "İşlem başarısız",
+        "goodsReceiptAlreadyExists": "zaten bir mal kabul kaydı mevcut"
       }
     },
     "quickDailyEntry": {
@@ -698,7 +713,8 @@
         "batch": "Batch",
         "selectBatch": "Batch seçin",
         "deadCount": "Ölü Adet",
-        "save": "Kaydet"
+        "save": "Kaydet",
+        "exampleCount": "Örn: 15"
       },
       "weather": {
         "title": "Hava Durumu",
@@ -707,7 +723,12 @@
         "type": "Tip",
         "selectType": "Tip seçin",
         "description": "Açıklama",
-        "save": "Kaydet"
+        "save": "Kaydet",
+        "options": {
+          "sunny": "Güneşli",
+          "cloudy": "Bulutlu",
+          "rainy": "Yağmurlu"
+        }
       },
       "netOperation": {
         "title": "Ağ İşlemi",
@@ -818,6 +839,11 @@
       "consistencyFormula": "Hesap kontrolü: Başlangıç - Ölüm - Sevk = Mevcut",
       "consistent": "Tutarlı",
       "inconsistent": "Tutarsız"
+    },
+    "crud": {
+      "reorderTitle": "Sürükle bırak ile sıralamayı değiştir",
+      "formDescription": "{{module}} modülü için bilgileri doldurun.",
+      "deleteDescription": "Bu kaydı kalıcı olarak silmek üzeresiniz. Bu işlem geri alınamaz. Devam etmek istiyor musunuz?"
     }
   },
   "pdfReportDesigner": {
@@ -2788,7 +2814,8 @@
     "title": "Para Birimi Seç",
     "searchPlaceholder": "Döviz adı veya kodu ile ara...",
     "loading": "Yükleniyor...",
-    "noResults": "Sonuç bulunamadı"
+    "noResults": "Sonuç bulunamadı",
+    "currencyFallback": "Döviz {{code}}"
   },
   "customerSelectDialog": {
     "loading": "Yükleniyor...",
@@ -4570,7 +4597,9 @@
     "updateSuccess": "Kullanıcı detayı başarıyla güncellendi",
     "updateError": "Kullanıcı detayı güncellenirken bir hata oluştu",
     "uploadProfilePictureSuccess": "Profil resmi başarıyla yüklendi",
-    "uploadProfilePictureError": "Profil resmi yüklenirken bir hata oluştu"
+    "uploadProfilePictureError": "Profil resmi yüklenirken bir hata oluştu",
+    "heightPlaceholder": "Örn: 175",
+    "weightPlaceholder": "Örn: 70.5"
   },
   "profile": {
     "title": "Profil Bilgileri"

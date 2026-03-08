@@ -130,7 +130,8 @@
     "uploadFromFile": "Charger à partir d'un fichier",
     "imageUrlPlaceholder": "URL de l’image",
     "dropdown": {
-      "minCharsHint": "Veuillez saisir au moins {{count}} caractères."
+      "minCharsHint": "Veuillez saisir au moins {{count}} caractères.",
+      "loadError": "La liste n’a pas pu être chargée"
     },
     "advancedFilter": {
       "title": "Filtre avancé",
@@ -152,7 +153,24 @@
       "true": "Vrai",
       "false": "Faux"
     },
-    "inactive": "Inactif"
+    "inactive": "Inactif",
+    "comingSoon": "Bientôt disponible",
+    "routeError": {
+      "title": "Une erreur est survenue",
+      "chunkLoad": "Un problème est survenu lors du chargement de la page. Veuillez actualiser la page.",
+      "unexpected": "Une erreur inattendue est survenue.",
+      "refresh": "Actualiser la page"
+    },
+    "aqua": {
+      "api": {
+        "listLoadFailed": "La liste n’a pas pu être chargée",
+        "createFailed": "L’enregistrement n’a pas pu être créé",
+        "updateFailed": "L’enregistrement n’a pas pu être mis à jour",
+        "deleteFailed": "L’enregistrement n’a pas pu être supprimé",
+        "queryFailed": "La requête n’a pas pu être chargée",
+        "postFailed": "L’enregistrement n’a pas pu être validé"
+      }
+    }
   },
   "auth": {
     "login": {
@@ -2318,7 +2336,8 @@
     "title": "Sélectionnez la devise",
     "searchPlaceholder": "Rechercher par nom ou code de devise...",
     "loading": "Chargement...",
-    "noResults": "Aucun résultat trouvé"
+    "noResults": "Aucun résultat trouvé",
+    "currencyFallback": "Devise {{code}}"
   },
   "customerSelectDialog": {
     "loading": "Chargement...",
@@ -4100,7 +4119,9 @@
     "updateSuccess": "Détails utilisateur mis à jour avec succès",
     "updateError": "Une erreur s'est produite lors de la mise à jour des détails utilisateur",
     "uploadProfilePictureSuccess": "Photo de profil téléchargée avec succès",
-    "uploadProfilePictureError": "Une erreur s'est produite lors du téléchargement de la photo de profil"
+    "uploadProfilePictureError": "Une erreur s'est produite lors du téléchargement de la photo de profil",
+    "heightPlaceholder": "ex. : 175",
+    "weightPlaceholder": "ex. : 70,5"
   },
   "profile": {
     "title": "Informations sur le profil"
@@ -4440,7 +4461,8 @@
         "existingGoodsReceiptCheckFailed": "Mevcut mal kabul kontrolü yapılamadı",
         "existingGoodsReceiptMissingBatch": "Mevcut mal kabulde batch bilgisi eksik. Balık satırında ortalama gram girip tekrar deneyin.",
         "cageAdded": "Kafes projeye eklendi",
-        "cageAddFailed": "Kafes eklenemedi"
+        "cageAddFailed": "Kafes eklenemedi",
+        "goodsReceiptAlreadyExists": "un enregistrement de réception existe déjà"
       },
       "batchCode": "Batch Kodu",
       "currentAverageGram": "Mevcut Ortalama Gram",
@@ -4482,7 +4504,8 @@
         "batch": "Lot",
         "selectBatch": "Sélectionner lot",
         "deadCount": "Nombre morts",
-        "save": "Enregistrer"
+        "save": "Enregistrer",
+        "exampleCount": "ex. : 15"
       },
       "weather": {
         "title": "Météo",
@@ -4491,7 +4514,12 @@
         "type": "Type",
         "selectType": "Sélectionner type",
         "description": "Description",
-        "save": "Enregistrer"
+        "save": "Enregistrer",
+        "options": {
+          "sunny": "Ensoleillé",
+          "cloudy": "Nuageux",
+          "rainy": "Pluvieux"
+        }
       },
       "netOperation": {
         "title": "Opération filet",
@@ -4606,6 +4634,11 @@
       "consistencyFormula": "Hesap kontrolü: Başlangıç - Ölüm - Sevk = Mevcut",
       "consistent": "Tutarlı",
       "inconsistent": "Tutarsız"
+    },
+    "crud": {
+      "reorderTitle": "Modifier l’ordre par glisser-déposer",
+      "formDescription": "Renseignez les informations du module {{module}}.",
+      "deleteDescription": "Vous êtes sur le point de supprimer définitivement cet enregistrement. Cette action est irréversible. Voulez-vous continuer ?"
     }
   },
   "welcome": {
@@ -4613,5 +4646,11 @@
     "greeting": "Bonjour, {{name}}",
     "subtitle": "Vous pouvez continuer via le menu de gauche.",
     "userFallback": "Utilisateur"
-  }
+  },
+  "Error": {
+    "User": {
+      "InvalidCredentials": "Nom d’utilisateur ou mot de passe invalide"
+    }
+  },
+  "Error.User.InvalidCredentials": "Nom d’utilisateur ou mot de passe invalide"
 }

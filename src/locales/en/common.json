@@ -85,7 +85,8 @@
     "select": "Select",
     "voiceSearch": "Voice Search",
     "dropdown": {
-      "minCharsHint": "Please type at least {{count}} characters."
+      "minCharsHint": "Please type at least {{count}} characters.",
+      "loadError": "List could not be loaded"
     },
     "update": "Update",
     "deleting": "Deleting...",
@@ -152,7 +153,24 @@
     "imageSettings": "Image Properties",
     "imageUrl": "Image URL",
     "uploadFromFile": "Load from file",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "comingSoon": "Coming Soon",
+    "routeError": {
+      "title": "An error occurred",
+      "chunkLoad": "A problem occurred while loading the page. Please refresh the page.",
+      "unexpected": "An unexpected error occurred.",
+      "refresh": "Refresh page"
+    },
+    "aqua": {
+      "api": {
+        "listLoadFailed": "List could not be loaded",
+        "createFailed": "Record could not be created",
+        "updateFailed": "Record could not be updated",
+        "deleteFailed": "Record could not be deleted",
+        "queryFailed": "Query could not be loaded",
+        "postFailed": "Record could not be posted"
+      }
+    }
   },
   "auth": {
     "login": {
@@ -2324,7 +2342,8 @@
     "title": "Select Currency",
     "searchPlaceholder": "Search by currency name or code...",
     "loading": "Loading...",
-    "noResults": "No results found"
+    "noResults": "No results found",
+    "currencyFallback": "Currency {{code}}"
   },
   "customerSelectDialog": {
     "erpCustomers": "ERP",
@@ -4105,7 +4124,9 @@
     "updateSuccess": "User detail updated successfully",
     "updateError": "An error occurred while updating user detail",
     "uploadProfilePictureSuccess": "Profile picture uploaded successfully",
-    "uploadProfilePictureError": "An error occurred while loading the profile picture"
+    "uploadProfilePictureError": "An error occurred while loading the profile picture",
+    "heightPlaceholder": "e.g.: 175",
+    "weightPlaceholder": "e.g.: 70.5"
   },
   "profile": {
     "title": "Profile Information"
@@ -4463,7 +4484,8 @@
         "cageAddFailed": "Failed to add cage",
         "feedLineCreateFailed": "Feed line could not be added",
         "savedAndPosted": "Saved and posted",
-        "operationFailed": "Operation failed"
+        "operationFailed": "Operation failed",
+        "goodsReceiptAlreadyExists": "a goods receipt record already exists"
       }
     },
     "quickDailyEntry": {
@@ -4492,7 +4514,8 @@
         "batch": "Batch",
         "selectBatch": "Select batch",
         "deadCount": "Dead Count",
-        "save": "Save"
+        "save": "Save",
+        "exampleCount": "e.g.: 15"
       },
       "weather": {
         "title": "Weather",
@@ -4501,7 +4524,12 @@
         "type": "Type",
         "selectType": "Select type",
         "description": "Description",
-        "save": "Save"
+        "save": "Save",
+        "options": {
+          "sunny": "Sunny",
+          "cloudy": "Cloudy",
+          "rainy": "Rainy"
+        }
       },
       "netOperation": {
         "title": "Net Operation",
@@ -4612,6 +4640,17 @@
       "consistencyFormula": "Validation: Initial - Mortality - Shipment = Current",
       "consistent": "Consistent",
       "inconsistent": "Inconsistent"
+    },
+    "crud": {
+      "reorderTitle": "Change order by drag and drop",
+      "formDescription": "Fill in the information for the {{module}} module.",
+      "deleteDescription": "You are about to permanently delete this record. This action cannot be undone. Do you want to continue?"
     }
-  }
+  },
+  "Error": {
+    "User": {
+      "InvalidCredentials": "Invalid username or password"
+    }
+  },
+  "Error.User.InvalidCredentials": "Invalid username or password"
 }

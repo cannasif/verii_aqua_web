@@ -25,17 +25,6 @@ function generateId(): string {
   return `filter-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-const OPERATOR_FALLBACKS: Record<string, string> = {
-  'Contains': 'İçerir',
-  'StartsWith': 'İle Başlar',
-  'EndsWith': 'İle Biter',
-  'Equals': 'Eşittir',
-  '>': 'Büyüktür',
-  '>=': 'Büyük Eşittir',
-  '<': 'Küçüktür',
-  '<=': 'Küçük Eşittir',
-};
-
 export function AdvancedFilter({
   columns,
   defaultColumn,
@@ -80,6 +69,23 @@ export function AdvancedFilter({
     return fallback ?? key;
   };
 
+  const getOperatorLabel = (operator: string): string => {
+    const keyMap: Record<string, string> = {
+      Contains: 'operatorContains',
+      StartsWith: 'operatorStartsWith',
+      EndsWith: 'operatorEndsWith',
+      Equals: 'operatorEquals',
+      '>': 'operator>',
+      '>=': 'operator>=',
+      '<': 'operator<',
+      '<=': 'operator<=',
+    };
+
+    const translationKey = keyMap[operator];
+    if (!translationKey) return operator;
+    return getLabel(translationKey, operator);
+  };
+
   const getColumnLabel = (c: FilterColumnConfig & { translatedLabel?: string }): string => {
     if (c.translatedLabel) return c.translatedLabel;
 
@@ -97,18 +103,18 @@ export function AdvancedFilter({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
           <Search className="w-4 h-4 text-pink-500" />
-          {getLabel('title', 'Gelişmiş Filtre')}
+          {getLabel('title', t('common.advancedFilter.title', { ns: 'common', defaultValue: 'Gelişmiş Filtre' }))}
         </h3>
         <div className="flex flex-wrap gap-2">
           <Button type="button" variant="outline" size="sm" onClick={addRow} className="h-8 border-slate-200 dark:border-cyan-800/50 bg-transparent text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-blue-900/50">
             <Plus className="h-4 w-4 mr-1 text-pink-500" />
-            {getLabel('add', 'Filtre Ekle')}
+            {getLabel('add', t('common.advancedFilter.add', { ns: 'common', defaultValue: 'Filtre Ekle' }))}
           </Button>
           <Button type="button" variant="outline" size="sm" onClick={onClear} className="h-8 border-slate-200 dark:border-cyan-800/50 bg-transparent text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-blue-900/50">
-            {getLabel('clear', 'Temizle')}
+            {getLabel('clear', t('common.advancedFilter.clear', { ns: 'common', defaultValue: 'Temizle' }))}
           </Button>
           <Button type="button" size="sm" onClick={onSearch} className="h-8 bg-pink-600 hover:bg-pink-500 text-white border-0 shadow-md shadow-pink-500/20">
-            {getLabel('search', 'Ara')}
+            {getLabel('search', t('common.advancedFilter.search', { ns: 'common', defaultValue: 'Ara' }))}
           </Button>
         </div>
       </div>
@@ -126,7 +132,7 @@ export function AdvancedFilter({
                   }))}
                   value={row.column}
                   onValueChange={(v) => updateRow(row.id, { column: v })}
-                  placeholder={getLabel('column', 'Kolon Seç')}
+                  placeholder={getLabel('column', t('common.advancedFilter.column', { ns: 'common', defaultValue: 'Sütun' }))}
                   searchPlaceholder={t('common.search', { ns: 'common', defaultValue: 'Ara...' })}
                   emptyText={t('common.noResults', { ns: 'common', defaultValue: 'Sonuç yok' })}
                   className="w-full sm:w-[160px] bg-white dark:bg-blue-950 border-slate-200 dark:border-cyan-800/50 text-slate-900 dark:text-slate-200 focus-visible:ring-pink-500/20"
@@ -134,11 +140,11 @@ export function AdvancedFilter({
                 <Combobox
                   options={getOperatorsForColumn(row.column, columns).map((op) => ({
                     value: op,
-                    label: t(`advancedFilter.operator${op}`, { ns: 'common', defaultValue: OPERATOR_FALLBACKS[op] || op }),
+                      label: getOperatorLabel(op),
                   }))}
                   value={row.operator}
                   onValueChange={(v) => updateRow(row.id, { operator: v })}
-                  placeholder={getLabel('operator', 'Operatör')}
+                  placeholder={getLabel('operator', t('common.advancedFilter.operator', { ns: 'common', defaultValue: 'Operatör' }))}
                   searchPlaceholder={t('common.search', { ns: 'common', defaultValue: 'Ara...' })}
                   emptyText={t('common.noResults', { ns: 'common', defaultValue: 'Sonuç yok' })}
                   className="w-full sm:w-[130px] bg-white dark:bg-blue-950 border-slate-200 dark:border-cyan-800/50 text-slate-900 dark:text-slate-200 focus-visible:ring-pink-500/20"
@@ -146,13 +152,13 @@ export function AdvancedFilter({
                 {colConfig?.type === 'boolean' ? (
                   <Combobox
                     options={[
-                      { value: '_none', label: getLabel('value', 'Değer Seç') },
+                      { value: '_none', label: getLabel('value', t('common.advancedFilter.value', { ns: 'common', defaultValue: 'Değer' })) },
                       { value: 'true', label: t('advancedFilter.true', { ns: 'common', defaultValue: 'Evet' }) },
                       { value: 'false', label: t('advancedFilter.false', { ns: 'common', defaultValue: 'Hayır' }) },
                     ]}
                     value={row.value.toLowerCase() === 'true' ? 'true' : row.value.toLowerCase() === 'false' ? 'false' : '_none'}
                     onValueChange={(v) => updateRow(row.id, { value: v === '_none' ? '' : v })}
-                    placeholder={getLabel('value', 'Değer Seç')}
+                    placeholder={getLabel('value', t('common.advancedFilter.value', { ns: 'common', defaultValue: 'Değer' }))}
                     searchPlaceholder={t('common.search', { ns: 'common', defaultValue: 'Ara...' })}
                     emptyText={t('common.noResults', { ns: 'common', defaultValue: 'Sonuç yok' })}
                     className="w-full sm:w-[160px] bg-white dark:bg-blue-950 border-slate-200 dark:border-cyan-800/50 text-slate-900 dark:text-slate-200 focus-visible:ring-pink-500/20"
@@ -160,7 +166,7 @@ export function AdvancedFilter({
                 ) : (
                   <Input
                     type={isDate ? 'date' : 'text'}
-                    placeholder={getLabel('value', 'Değer')}
+                    placeholder={getLabel('value', t('common.advancedFilter.value', { ns: 'common', defaultValue: 'Değer' }))}
                     value={row.value}
                     onChange={(e) => updateRow(row.id, { value: e.target.value })}
                     className="w-full sm:w-[160px] h-10 bg-white dark:bg-blue-950 border-slate-200 dark:border-cyan-800/50 text-slate-900 dark:text-slate-200 focus-visible:border-pink-500 focus-visible:ring-pink-500/20 rounded-lg placeholder:text-slate-400 dark:placeholder:text-slate-500"
@@ -172,7 +178,7 @@ export function AdvancedFilter({
                   size="icon"
                   className="shrink-0 h-10 w-10 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors"
                   onClick={() => removeRow(row.id)}
-                  aria-label={getLabel('remove', 'Kaldır')}
+                  aria-label={getLabel('remove', t('common.advancedFilter.remove', { ns: 'common', defaultValue: 'Kaldır' }))}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

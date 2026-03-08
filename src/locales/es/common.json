@@ -130,7 +130,8 @@
     "uploadFromFile": "Cargar desde archivo",
     "imageUrlPlaceholder": "URL de imagen",
     "dropdown": {
-      "minCharsHint": "Por favor, escribe al menos {{count}} caracteres."
+      "minCharsHint": "Por favor, escribe al menos {{count}} caracteres.",
+      "loadError": "No se pudo cargar la lista"
     },
     "advancedFilter": {
       "title": "Filtro avanzado",
@@ -152,7 +153,24 @@
       "true": "Verdadero",
       "false": "Falso"
     },
-    "inactive": "Inactivo"
+    "inactive": "Inactivo",
+    "comingSoon": "Próximamente",
+    "routeError": {
+      "title": "Se produjo un error",
+      "chunkLoad": "Se produjo un problema al cargar la página. Actualiza la página.",
+      "unexpected": "Se produjo un error inesperado.",
+      "refresh": "Actualizar página"
+    },
+    "aqua": {
+      "api": {
+        "listLoadFailed": "No se pudo cargar la lista",
+        "createFailed": "No se pudo crear el registro",
+        "updateFailed": "No se pudo actualizar el registro",
+        "deleteFailed": "No se pudo eliminar el registro",
+        "queryFailed": "No se pudo cargar la consulta",
+        "postFailed": "No se pudo contabilizar el registro"
+      }
+    }
   },
   "auth": {
     "login": {
@@ -2363,7 +2381,8 @@
     "title": "Seleccionar moneda",
     "searchPlaceholder": "Buscar por nombre o código de moneda...",
     "loading": "Cargando...",
-    "noResults": "No se encontraron resultados"
+    "noResults": "No se encontraron resultados",
+    "currencyFallback": "Moneda {{code}}"
   },
   "customerSelectDialog": {
     "loading": "Cargando...",
@@ -4145,7 +4164,9 @@
     "updateSuccess": "El detalle del usuario se actualizó correctamente",
     "updateError": "Ocurrió un error al actualizar el detalle del usuario",
     "uploadProfilePictureSuccess": "La foto de perfil se cargó correctamente",
-    "uploadProfilePictureError": "Error al cargar la foto de perfil"
+    "uploadProfilePictureError": "Error al cargar la foto de perfil",
+    "heightPlaceholder": "Ej.: 175",
+    "weightPlaceholder": "Ej.: 70,5"
   },
   "profile": {
     "title": "Información de perfil"
@@ -4485,7 +4506,8 @@
         "existingGoodsReceiptCheckFailed": "Mevcut mal kabul kontrolü yapılamadı",
         "existingGoodsReceiptMissingBatch": "Mevcut mal kabulde batch bilgisi eksik. Balık satırında ortalama gram girip tekrar deneyin.",
         "cageAdded": "Kafes projeye eklendi",
-        "cageAddFailed": "Kafes eklenemedi"
+        "cageAddFailed": "Kafes eklenemedi",
+        "goodsReceiptAlreadyExists": "ya existe un registro de recepción"
       },
       "batchCode": "Batch Kodu",
       "currentAverageGram": "Mevcut Ortalama Gram",
@@ -4527,7 +4549,8 @@
         "batch": "Lote",
         "selectBatch": "Seleccionar lote",
         "deadCount": "Nº muertos",
-        "save": "Guardar"
+        "save": "Guardar",
+        "exampleCount": "Ej.: 15"
       },
       "weather": {
         "title": "Tiempo",
@@ -4536,7 +4559,12 @@
         "type": "Tipo",
         "selectType": "Seleccionar tipo",
         "description": "Descripción",
-        "save": "Guardar"
+        "save": "Guardar",
+        "options": {
+          "sunny": "Soleado",
+          "cloudy": "Nublado",
+          "rainy": "Lluvioso"
+        }
       },
       "netOperation": {
         "title": "Operación de red",
@@ -4651,6 +4679,11 @@
       "consistencyFormula": "Hesap kontrolü: Başlangıç - Ölüm - Sevk = Mevcut",
       "consistent": "Tutarlı",
       "inconsistent": "Tutarsız"
+    },
+    "crud": {
+      "reorderTitle": "Cambiar el orden arrastrando y soltando",
+      "formDescription": "Complete la información del módulo {{module}}.",
+      "deleteDescription": "Está a punto de eliminar permanentemente este registro. Esta acción no se puede deshacer. ¿Desea continuar?"
     }
   },
   "welcome": {
@@ -4658,5 +4691,11 @@
     "greeting": "Hola, {{name}}",
     "subtitle": "Puedes continuar desde el menú de la izquierda.",
     "userFallback": "Usuario"
-  }
+  },
+  "Error": {
+    "User": {
+      "InvalidCredentials": "Nombre de usuario o contraseña no válidos"
+    }
+  },
+  "Error.User.InvalidCredentials": "Nombre de usuario o contraseña no válidos"
 }

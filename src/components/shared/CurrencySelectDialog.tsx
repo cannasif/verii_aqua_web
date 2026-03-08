@@ -129,7 +129,7 @@ export function CurrencySelectDialog({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-sm text-slate-900 dark:text-white truncate">
-                          {currency.dovizIsmi || `Döviz ${currency.dovizTipi}`}
+                          {currency.dovizIsmi || t('currencySelectDialog.currencyFallback', { code: currency.dovizTipi })}
                         </span>
                         {isSelected && (
                           <Check size={16} className="text-amber-600 dark:text-amber-400 shrink-0" />

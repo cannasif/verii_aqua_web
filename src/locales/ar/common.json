@@ -130,7 +130,8 @@
     "uploadFromFile": "تحميل من الملف",
     "imageUrlPlaceholder": "رابط الصورة",
     "dropdown": {
-      "minCharsHint": "يرجى إدخال {{count}} أحرف على الأقل."
+      "minCharsHint": "يرجى إدخال {{count}} أحرف على الأقل.",
+      "loadError": "تعذر تحميل القائمة"
     },
     "advancedFilter": {
       "title": "تصفية متقدمة",
@@ -152,7 +153,24 @@
       "true": "صحيح",
       "false": "خطأ"
     },
-    "inactive": "غير نشط"
+    "inactive": "غير نشط",
+    "comingSoon": "قريبًا",
+    "routeError": {
+      "title": "حدث خطأ",
+      "chunkLoad": "حدثت مشكلة أثناء تحميل الصفحة. يرجى تحديث الصفحة.",
+      "unexpected": "حدث خطأ غير متوقع.",
+      "refresh": "تحديث الصفحة"
+    },
+    "aqua": {
+      "api": {
+        "listLoadFailed": "تعذر تحميل القائمة",
+        "createFailed": "تعذر إنشاء السجل",
+        "updateFailed": "تعذر تحديث السجل",
+        "deleteFailed": "تعذر حذف السجل",
+        "queryFailed": "تعذر تحميل الاستعلام",
+        "postFailed": "تعذر ترحيل السجل"
+      }
+    }
   },
   "auth": {
     "login": {
@@ -2363,7 +2381,8 @@
     "title": "حدد العملة",
     "searchPlaceholder": "البحث حسب اسم العملة أو الرمز...",
     "loading": "جاري التحميل...",
-    "noResults": "لم يتم العثور على نتائج"
+    "noResults": "لم يتم العثور على نتائج",
+    "currencyFallback": "العملة {{code}}"
   },
   "customerSelectDialog": {
     "loading": "جاري التحميل...",
@@ -4145,7 +4164,9 @@
     "updateSuccess": "تم تحديث تفاصيل المستخدم بنجاح",
     "updateError": "حدث خطأ أثناء تحديث تفاصيل المستخدم",
     "uploadProfilePictureSuccess": "تم رفع صورة الملف الشخصي بنجاح",
-    "uploadProfilePictureError": "حدث خطأ أثناء رفع صورة الملف الشخصي"
+    "uploadProfilePictureError": "حدث خطأ أثناء رفع صورة الملف الشخصي",
+    "heightPlaceholder": "مثال: 175",
+    "weightPlaceholder": "مثال: 70.5"
   },
   "profile": {
     "title": "معلومات الملف الشخصي"
@@ -4485,7 +4506,8 @@
         "existingGoodsReceiptCheckFailed": "Mevcut mal kabul kontrolü yapılamadı",
         "existingGoodsReceiptMissingBatch": "Mevcut mal kabulde batch bilgisi eksik. Balık satırında ortalama gram girip tekrar deneyin.",
         "cageAdded": "Kafes projeye eklendi",
-        "cageAddFailed": "Kafes eklenemedi"
+        "cageAddFailed": "Kafes eklenemedi",
+        "goodsReceiptAlreadyExists": "يوجد بالفعل سجل استلام"
       },
       "batchCode": "Batch Kodu",
       "currentAverageGram": "Mevcut Ortalama Gram",
@@ -4527,7 +4549,8 @@
         "batch": "الدفعة",
         "selectBatch": "اختر الدفعة",
         "deadCount": "عدد النفوق",
-        "save": "حفظ"
+        "save": "حفظ",
+        "exampleCount": "مثال: 15"
       },
       "weather": {
         "title": "الطقس",
@@ -4536,7 +4559,12 @@
         "type": "النوع",
         "selectType": "اختر النوع",
         "description": "الوصف",
-        "save": "حفظ"
+        "save": "حفظ",
+        "options": {
+          "sunny": "مشمس",
+          "cloudy": "غائم",
+          "rainy": "ممطر"
+        }
       },
       "netOperation": {
         "title": "عملية الشبكة",
@@ -4651,6 +4679,11 @@
       "consistencyFormula": "Hesap kontrolü: Başlangıç - Ölüm - Sevk = Mevcut",
       "consistent": "Tutarlı",
       "inconsistent": "Tutarsız"
+    },
+    "crud": {
+      "reorderTitle": "غيّر الترتيب بالسحب والإفلات",
+      "formDescription": "أدخل المعلومات الخاصة بوحدة {{module}}.",
+      "deleteDescription": "أنت على وشك حذف هذا السجل نهائيًا. لا يمكن التراجع عن هذا الإجراء. هل تريد المتابعة؟"
     }
   },
   "welcome": {
@@ -4658,5 +4691,11 @@
     "greeting": "مرحبًا، {{name}}",
     "subtitle": "يمكنك المتابعة من القائمة على اليسار.",
     "userFallback": "مستخدم"
-  }
+  },
+  "Error": {
+    "User": {
+      "InvalidCredentials": "اسم المستخدم أو كلمة المرور غير صالحين"
+    }
+  },
+  "Error.User.InvalidCredentials": "اسم المستخدم أو كلمة المرور غير صالحين"
 }

@@ -30,7 +30,7 @@ export function Navbar(): ReactElement {
     },
   });
 
-  const displayName = user?.name || user?.email || 'Kullanıcı';
+  const displayName = user?.name || user?.email || t('welcome.userFallback', { defaultValue: 'Kullanıcı' });
   const displayInitials = user?.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'MK';
 
   useEffect(() => {

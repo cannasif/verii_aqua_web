@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios';
+import i18n from '@/lib/i18n';
 import type { ApiResponse, PagedFilter, PagedResponse } from '@/types/api';
 import type { StockGetDto, StockGetWithMainImageDto } from '@/features/stock/types';
 
@@ -65,7 +66,7 @@ async function getDropdownPage<T>(
   const response = await api.get<ApiResponse<PagedResponse<T>>>(`${endpoint}?${queryParams.toString()}`);
 
   if (!response.success || !response.data) {
-    throw new Error(response.message || 'Dropdown listesi yüklenemedi');
+    throw new Error(response.message || i18n.t('common.dropdown.loadError', { ns: 'common' }));
   }
 
   return normalizePagedResponse(response.data as PagedResponse<T> & { items?: T[] });

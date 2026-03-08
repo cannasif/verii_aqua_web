@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/popover"
 import { VoiceSearchButton } from "@/components/ui/voice-search-button"
 import { DROPDOWN_MAX_VISIBLE_ITEMS_CLASS } from "@/components/shared/dropdown/constants"
+import { useTranslation } from "react-i18next"
 
 export interface ComboboxOption {
   value: string
@@ -39,15 +40,19 @@ export function Combobox({
   options,
   value,
   onValueChange,
-  placeholder = "Seçiniz...",
-  searchPlaceholder = "Ara...",
-  emptyText = "Sonuç bulunamadı.",
+  placeholder,
+  searchPlaceholder,
+  emptyText,
   className,
   modal = false,
   disabled = false
 }: ComboboxProps) {
+  const { t } = useTranslation('common')
   const [open, setOpen] = React.useState(false)
   const [searchQuery, setSearchQuery] = React.useState("")
+  const resolvedPlaceholder = placeholder ?? t('common.select', { defaultValue: 'Seçiniz' })
+  const resolvedSearchPlaceholder = searchPlaceholder ?? t('common.search', { defaultValue: 'Ara...' })
+  const resolvedEmptyText = emptyText ?? t('common.noResults', { defaultValue: 'Sonuç bulunamadı.' })
 
   const selectedOption = options.find((option) => option.value === value)
 
@@ -67,7 +72,7 @@ export function Combobox({
           )}
         >
           <span className="truncate min-w-0 flex-1 text-left">
-            {selectedOption ? selectedOption.label : placeholder}
+            {selectedOption ? selectedOption.label : resolvedPlaceholder}
           </span>
           <ChevronDown className={cn("ml-2 h-4 w-4 shrink-0 opacity-50 transition-transform", open && "rotate-180")} />
         </Button>
@@ -78,7 +83,7 @@ export function Combobox({
       >
         <Command className="bg-transparent text-white">
           <CommandInput 
-            placeholder={searchPlaceholder} 
+            placeholder={resolvedSearchPlaceholder} 
             value={searchQuery}
             onValueChange={setSearchQuery}
             className="text-[13px] text-white placeholder:text-[#5c7c99] border-b border-white/5"
@@ -94,7 +99,7 @@ export function Combobox({
               "overflow-y-auto p-1.5 custom-scrollbar space-y-0.5"
             )}
           >
-            <CommandEmpty className="py-4 text-center text-[13px] text-[#5c7c99]">{emptyText}</CommandEmpty>
+            <CommandEmpty className="py-4 text-center text-[13px] text-[#5c7c99]">{resolvedEmptyText}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem
