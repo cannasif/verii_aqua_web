@@ -1,7 +1,6 @@
 import { type ReactElement, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import i18n from '@/lib/i18n';
 import { toast } from 'sonner';
 import { useUIStore } from '@/stores/ui-store';
 import { useAuthStore } from '@/stores/auth-store';
@@ -9,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -30,22 +31,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { 
-  Plus, 
-  ArrowUpDown, 
-  ArrowUp, 
-  ArrowDown, 
-  ChevronDown, 
-  X, 
-  AlertTriangle, 
-  FileText,
-  ChevronRight,
-  Edit,
-  Trash2,
-  Menu,
-  FileSpreadsheet,
-  Presentation,
-  Filter,
-  GripVertical
+  Plus, ArrowUpDown, ArrowUp, ArrowDown, ChevronDown, X, AlertTriangle, FileText,
+  ChevronRight, Edit, Trash2, Menu, FileSpreadsheet, Presentation, Filter, GripVertical,
+  CheckCircle2, Copy, Eye, Download
 } from 'lucide-react';
 import type { AquaCrudConfig, AquaCrudContextFilter, AquaFieldConfig } from '../types/aqua-crud';
 import { aquaCrudApi } from '../api/aqua-crud-api';
@@ -54,20 +42,10 @@ import { loadColumnPreferences, saveColumnPreferences } from '@/lib/column-prefe
 import type { FilterRow, FilterColumnConfig } from '@/lib/advanced-filter-types';
 
 import {
-  DndContext, 
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent
+  DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent
 } from '@dnd-kit/core';
 import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  horizontalListSortingStrategy,
-  useSortable
+  arrayMove, SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -197,54 +175,44 @@ function resolveLookupLabel(item: Record<string, unknown>, field: AquaFieldConfi
   return parts.join(field.lookup.labelSeparator ?? ' - ');
 }
 
-interface DraggableThProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
-  id: string;
+// PREMIUM ÖZELLİK: Tıkla ve Kopyala Bileşeni
+function CopyableCell({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  if (!text || text === '-') return <span>{text}</span>;
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <div className="group flex items-center gap-2">
+      <span className="font-mono text-[11.5px] font-bold text-slate-700 dark:text-cyan-100 tracking-tight">{text}</span>
+      <button onClick={handleCopy} className="opacity-0 group-hover:opacity-100 transition-all text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 active:scale-90">
+        {copied ? <CheckCircle2 size={14} className="text-emerald-500" /> : <Copy size={14} />}
+      </button>
+    </div>
+  );
 }
 
-const DraggableTh = ({ id, children, className, onClick, ...props }: DraggableThProps) => {
+const DraggableTh = ({ id, children, className, onClick, ...props }: React.ThHTMLAttributes<HTMLTableCellElement> & { id: string }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
-  const style: React.CSSProperties = {
-    transform: CSS.Translate.toString(transform),
-    transition,
-    opacity: isDragging ? 0.9 : 1,
-    zIndex: isDragging ? 50 : 'auto',
-    position: isDragging ? 'relative' : 'static',
-    backgroundColor: isDragging ? 'rgba(6, 182, 212, 0.05)' : undefined, 
-  };
+  const style: React.CSSProperties = { transform: CSS.Translate.toString(transform), transition, opacity: isDragging ? 0.9 : 1, zIndex: isDragging ? 50 : 'auto', position: isDragging ? 'relative' : 'static', backgroundColor: isDragging ? 'rgba(6, 182, 212, 0.05)' : undefined };
 
   return (
-    <th
-      ref={setNodeRef}
-      style={style}
-      className={`${className} ${isDragging ? 'shadow-2xl ring-1 ring-cyan-500/20 backdrop-blur-xl' : ''}`}
-      {...props}
-    >
+    <th ref={setNodeRef} style={style} className={`${className} ${isDragging ? 'shadow-2xl ring-1 ring-cyan-500/20 backdrop-blur-xl' : ''}`} {...props}>
       <div className="flex items-center gap-1.5">
-        <button
-          type="button"
-          {...attributes}
-          {...listeners}
-          className="cursor-grab active:cursor-grabbing hover:bg-slate-200 dark:hover:bg-blue-900/50 p-1 rounded-md transition-colors touch-none text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
-                      title={i18n.t('aqua.crud.reorderTitle', { ns: 'common' })}
-        >
+        <button type="button" {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing hover:bg-slate-200 dark:hover:bg-blue-900/50 p-1 rounded-md transition-colors touch-none text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300" title="Sürükle bırak">
           <GripVertical size={14} />
         </button>
-        <div className="flex-1 flex items-center gap-2 cursor-pointer hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors select-none" onClick={onClick}>
-          {children}
-        </div>
+        <div className="flex-1 flex items-center gap-2 cursor-pointer hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors select-none" onClick={onClick}>{children}</div>
       </div>
     </th>
   );
 };
 
 export function AquaCrudPage({
-  config,
-  contextFilter,
-  hidePageHeader = false,
-  disablePageTitleSync = false,
-  rowSelectionEnabled = false,
-  selectedRowId = null,
-  onRowSelect,
+  config, contextFilter, hidePageHeader = false, disablePageTitleSync = false, rowSelectionEnabled = false, selectedRowId = null, onRowSelect,
 }: AquaCrudPageProps): ReactElement {
   const { t } = useTranslation();
   const { setPageTitle } = useUIStore();
@@ -262,6 +230,13 @@ export function AquaCrudPage({
   const [draftFilterRows, setDraftFilterRows] = useState<FilterRow[]>([]);
   const [appliedFilterRows, setAppliedFilterRows] = useState<FilterRow[]>([]);
 
+  // PREMIUM ÖZELLİK: Çoklu Seçim State
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+
+  // PREMIUM ÖZELLİK: Sağ Çekmece (Detay Görüntüleme)
+  const [viewingRow, setViewingRow] = useState<Record<string, unknown> | null>(null);
+
   const [formOpen, setFormOpen] = useState(false);
   const [editingRow, setEditingRow] = useState<Record<string, unknown> | null>(null);
   const [formValues, setFormValues] = useState<Record<string, unknown>>(() => getInitialValues(config));
@@ -273,12 +248,7 @@ export function AquaCrudPage({
       if (field.type === 'number') type = 'number';
       if (field.type === 'date' || field.type === 'datetime') type = 'date';
       if ((field.type as string) === 'checkbox' || (field.type as string) === 'boolean') type = 'boolean';
-      return {
-        value: field.key,
-        type,
-        labelKey: field.label,
-        translatedLabel: t(field.label)
-      } as FilterColumnConfig & { translatedLabel: string };
+      return { value: field.key, type, labelKey: field.label, translatedLabel: t(field.label) } as FilterColumnConfig & { translatedLabel: string };
     });
   }, [config.fields, t]);
 
@@ -303,10 +273,7 @@ export function AquaCrudPage({
         const oldIndex = items.indexOf(active.id as string);
         const newIndex = items.indexOf(over.id as string);
         const newOrder = arrayMove(items, oldIndex, newIndex);
-        saveColumnPreferences(`aqua-${config.key}`, user?.id, {
-          order: newOrder,
-          visibleKeys: visibleColumns,
-        });
+        saveColumnPreferences(`aqua-${config.key}`, user?.id, { order: newOrder, visibleKeys: visibleColumns });
         return newOrder;
       });
     }
@@ -333,32 +300,19 @@ export function AquaCrudPage({
 
   useEffect(() => {
     setPageNumber(1);
+    setSelectedIds([]); // Filtre değişince seçimleri temizle
   }, [searchTerm, pageSize, sortConfig, appliedFilterRows]);
 
-  const handleAdvancedSearch = () => {
-    setAppliedFilterRows(draftFilterRows);
-    setShowFilters(false);
-  };
-
-  const handleAdvancedClear = () => {
-    setDraftFilterRows([]);
-    setAppliedFilterRows([]);
-  };
-
+  const handleAdvancedSearch = () => { setAppliedFilterRows(draftFilterRows); setShowFilters(false); };
+  const handleAdvancedClear = () => { setDraftFilterRows([]); setAppliedFilterRows([]); };
   const hasFiltersActive = appliedFilterRows.some((r) => r.value != null && String(r.value).trim() !== '');
 
   const effectiveFilters = useMemo(() => {
     const filters: Array<{ column: string; operator: string; value: string }> = [];
-    if (contextFilter && contextFilter.value != null) {
-      filters.push({ column: contextFilter.fieldKey, operator: 'eq', value: String(contextFilter.value) });
-    }
+    if (contextFilter && contextFilter.value != null) filters.push({ column: contextFilter.fieldKey, operator: 'eq', value: String(contextFilter.value) });
     appliedFilterRows.forEach(row => {
       if (row.column && row.value != null && String(row.value).trim() !== '') {
-         filters.push({
-           column: row.column,
-           operator: row.operator || 'contains',
-           value: String(row.value)
-         });
+         filters.push({ column: row.column, operator: row.operator || 'contains', value: String(row.value) });
       }
     });
     return filters.length > 0 ? filters : undefined;
@@ -368,15 +322,7 @@ export function AquaCrudPage({
 
   const listQuery = useQuery({
     queryKey: ['aqua', config.key, pageNumber, pageSize, searchTerm, sortConfig, effectiveFilters],
-    queryFn: () =>
-      aquaCrudApi.getList(config.endpoint, {
-        pageNumber,
-        pageSize,
-        sortBy: sortConfig?.key ?? 'Id',
-        sortDirection: sortConfig?.direction ?? 'desc',
-        filters: effectiveFilters,
-        filterLogic: 'and',
-      }),
+    queryFn: () => aquaCrudApi.getList(config.endpoint, { pageNumber, pageSize, sortBy: sortConfig?.key ?? 'Id', sortDirection: sortConfig?.direction ?? 'desc', filters: effectiveFilters, filterLogic: 'and' }),
     staleTime: config.listStaleTimeMs,
     enabled: canQueryList,
   });
@@ -387,16 +333,10 @@ export function AquaCrudPage({
     queries: lookupFields.map((field) => ({
       queryKey: ['aqua-lookup', config.key, field.key],
       queryFn: async () => {
-        let pageNumber = 1;
-        let totalCount = 0;
-        const allRows: Record<string, unknown>[] = [];
+        let pageNumber = 1, totalCount = 0; const allRows: Record<string, unknown>[] = [];
         do {
-          const response = await aquaCrudApi.getList(field.lookup!.endpoint, {
-            pageNumber, pageSize: LOOKUP_PAGE_SIZE, sortBy: 'Id', sortDirection: 'asc',
-          });
-          totalCount = response.totalCount ?? 0;
-          allRows.push(...(response.data ?? []));
-          pageNumber += 1;
+          const response = await aquaCrudApi.getList(field.lookup!.endpoint, { pageNumber, pageSize: LOOKUP_PAGE_SIZE, sortBy: 'Id', sortDirection: 'asc' });
+          totalCount = response.totalCount ?? 0; allRows.push(...(response.data ?? [])); pageNumber += 1;
         } while (allRows.length < totalCount);
         return { data: allRows, totalCount, pageNumber: 1, pageSize: allRows.length };
       },
@@ -411,15 +351,11 @@ export function AquaCrudPage({
         const createdId = extractRecordId(createdRecord);
         if (!createdId) toast.error(t('aqua.toast.postFailed'));
         else {
-          try {
-            await aquaCrudApi.postDocument(config.postingSlug, createdId);
-            toast.success(t('aqua.toast.posted'));
-          } catch (error) { toast.error(error instanceof Error ? error.message : t('aqua.toast.postFailed')); }
+          try { await aquaCrudApi.postDocument(config.postingSlug, createdId); toast.success(t('aqua.toast.posted')); } 
+          catch (error) { toast.error(error instanceof Error ? error.message : t('aqua.toast.postFailed')); }
         }
       } else { toast.success(t('aqua.toast.created')); }
-      setFormOpen(false);
-      setEditingRow(null);
-      setFormValues(getInitialValues(config));
+      setFormOpen(false); setEditingRow(null); setFormValues(getInitialValues(config));
       void queryClient.invalidateQueries({ queryKey: ['aqua', config.key] });
     },
     onError: (error) => toast.error(error instanceof Error ? error.message : t('aqua.toast.createFailed')),
@@ -429,14 +365,10 @@ export function AquaCrudPage({
     mutationFn: ({ id, payload }: { id: number; payload: Record<string, unknown> }) => aquaCrudApi.update(config.endpoint, id, payload),
     onSuccess: async (_, variables) => {
       if (config.autoPostOnSave && config.postingSlug) {
-        try {
-          await aquaCrudApi.postDocument(config.postingSlug, variables.id);
-          toast.success(t('aqua.toast.posted'));
-        } catch (error) { toast.error(error instanceof Error ? error.message : t('aqua.toast.postFailed')); }
+        try { await aquaCrudApi.postDocument(config.postingSlug, variables.id); toast.success(t('aqua.toast.posted')); } 
+        catch (error) { toast.error(error instanceof Error ? error.message : t('aqua.toast.postFailed')); }
       } else { toast.success(t('aqua.toast.updated')); }
-      setFormOpen(false);
-      setEditingRow(null);
-      setFormValues(getInitialValues(config));
+      setFormOpen(false); setEditingRow(null); setFormValues(getInitialValues(config));
       void queryClient.invalidateQueries({ queryKey: ['aqua', config.key] });
     },
     onError: (error) => toast.error(error instanceof Error ? error.message : t('aqua.toast.updateFailed')),
@@ -445,24 +377,35 @@ export function AquaCrudPage({
   const deleteMutation = useMutation({
     mutationFn: (id: number) => aquaCrudApi.remove(config.endpoint, id),
     onSuccess: () => {
-      toast.success(t('aqua.toast.deleted'));
-      setRowToDelete(null);
+      toast.success(t('aqua.toast.deleted')); setRowToDelete(null);
       void queryClient.invalidateQueries({ queryKey: ['aqua', config.key] });
     },
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : t('aqua.toast.deleteFailed'));
-      setRowToDelete(null);
-    },
+    onError: (error) => { toast.error(error instanceof Error ? error.message : t('aqua.toast.deleteFailed')); setRowToDelete(null); },
   });
 
   const postMutation = useMutation({
     mutationFn: ({ slug, id }: { slug: string; id: number }) => aquaCrudApi.postDocument(slug, id),
-    onSuccess: () => {
-      toast.success(t('aqua.toast.posted'));
-      void queryClient.invalidateQueries({ queryKey: ['aqua', config.key] });
-    },
+    onSuccess: () => { toast.success(t('aqua.toast.posted')); void queryClient.invalidateQueries({ queryKey: ['aqua', config.key] }); },
     onError: (error) => toast.error(error instanceof Error ? error.message : t('aqua.toast.postFailed')),
   });
+
+  // Toplu Silme Fonksiyonu
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (!window.confirm(t('aqua.common.confirmBulkDelete', `Seçili ${selectedIds.length} kaydı silmek istediğinize emin misiniz?`))) return;
+    
+    setIsBulkDeleting(true);
+    try {
+      await Promise.all(selectedIds.map(id => aquaCrudApi.remove(config.endpoint, id)));
+      toast.success(t('aqua.common.bulkDeleteSuccess', `${selectedIds.length} kayıt başarıyla silindi.`));
+      setSelectedIds([]);
+      void queryClient.invalidateQueries({ queryKey: ['aqua', config.key] });
+    } catch (e) {
+      toast.error(t('aqua.common.bulkDeleteError', 'Toplu silme işlemi sırasında bazı hatalar oluştu.'));
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  };
 
   const lookupOptionsByField = useMemo((): Record<string, Array<{ label: string; value: string }>> => {
     const result: Record<string, Array<{ label: string; value: string }>> = {};
@@ -470,8 +413,7 @@ export function AquaCrudPage({
       const queryData = lookupQueries[index]?.data?.data ?? [];
       const valueKey = field.lookup!.valueKey;
       result[field.key] = queryData.map((item) => {
-        const value = item[valueKey];
-        const label = resolveLookupLabel(item, field);
+        const value = item[valueKey]; const label = resolveLookupLabel(item, field);
         if (value == null || label == null) return null;
         return { value: String(value), label };
       }).filter((item): item is { label: string; value: string } => item !== null);
@@ -481,9 +423,7 @@ export function AquaCrudPage({
 
   const lookupLabelsByFieldAndValue = useMemo((): Record<string, Record<string, string>> => {
     const result: Record<string, Record<string, string>> = {};
-    Object.entries(lookupOptionsByField).forEach(([fieldKey, options]) => {
-      result[fieldKey] = options.reduce<Record<string, string>>((acc, option) => { acc[option.value] = option.label; return acc; }, {});
-    });
+    Object.entries(lookupOptionsByField).forEach(([fieldKey, options]) => { result[fieldKey] = options.reduce<Record<string, string>>((acc, option) => { acc[option.value] = option.label; return acc; }, {}); });
     return result;
   }, [lookupOptionsByField]);
 
@@ -496,75 +436,45 @@ export function AquaCrudPage({
     return result;
   }, [config.fields, t]);
 
-  const visibleFields = useMemo(() => {
-    return config.fields.filter((field) => {
-      if (contextFilter?.hideFieldInForm && contextFilter.fieldKey === field.key) return false;
-      if (config.postingSlug && field.key.toLowerCase() === 'status') return false;
-      return true;
-    });
-  }, [config.fields, contextFilter, config.postingSlug]);
+  const visibleFields = useMemo(() => config.fields.filter((field) => {
+    if (contextFilter?.hideFieldInForm && contextFilter.fieldKey === field.key) return false;
+    if (config.postingSlug && field.key.toLowerCase() === 'status') return false;
+    return true;
+  }), [config.fields, contextFilter, config.postingSlug]);
 
   const handleCreate = (): void => {
-    if (contextFilter?.lockValue && contextFilter.value == null) {
-      toast.error(t('aqua.common.requiredField'));
-      return;
-    }
-    setEditingRow(null);
-    const initial = getInitialValues(config);
-    if (contextFilter?.lockValue && contextFilter.value != null) {
-      initial[contextFilter.fieldKey] = String(contextFilter.value);
-    }
-    setFormValues(initial);
-    setFormOpen(true);
+    if (contextFilter?.lockValue && contextFilter.value == null) { toast.error(t('aqua.common.requiredField')); return; }
+    setEditingRow(null); const initial = getInitialValues(config);
+    if (contextFilter?.lockValue && contextFilter.value != null) initial[contextFilter.fieldKey] = String(contextFilter.value);
+    setFormValues(initial); setFormOpen(true);
   };
 
   const handleEdit = (row: Record<string, unknown>): void => {
-    setEditingRow(row);
-    const nextValues: Record<string, unknown> = {};
-    for (const field of config.fields) {
-      nextValues[field.key] = normalizeInputValue(field, row[field.key] ?? '');
-    }
-    setFormValues({ ...getInitialValues(config), ...nextValues });
-    setFormOpen(true);
+    setEditingRow(row); const nextValues: Record<string, unknown> = {};
+    for (const field of config.fields) nextValues[field.key] = normalizeInputValue(field, row[field.key] ?? '');
+    setFormValues({ ...getInitialValues(config), ...nextValues }); setFormOpen(true);
   };
 
-  const handleDeleteClick = (row: Record<string, unknown>): void => {
-    setRowToDelete(row); 
-  };
-
+  const handleDeleteClick = (row: Record<string, unknown>): void => { setRowToDelete(row); };
   const confirmDelete = (): void => {
-    if (!rowToDelete) return;
-    const id = Number(rowToDelete.id ?? rowToDelete.Id);
-    if (!id) return;
-    deleteMutation.mutate(id);
+    if (!rowToDelete) return; const id = Number(rowToDelete.id ?? rowToDelete.Id);
+    if (!id) return; deleteMutation.mutate(id);
   };
 
   const handleSubmit = (): void => {
     const payload: Record<string, unknown> = {};
-    for (const field of config.fields) {
-      payload[field.key] = normalizeFieldValue(field, formValues[field.key]);
-    }
+    for (const field of config.fields) payload[field.key] = normalizeFieldValue(field, formValues[field.key]);
     const statusFallback = resolveStatusFallbackValue(config);
-    if (statusFallback != null && (payload.status == null || payload.status === '')) {
-      payload.status = statusFallback;
-    }
+    if (statusFallback != null && (payload.status == null || payload.status === '')) payload.status = statusFallback;
     if (contextFilter?.lockValue) {
-      if (contextFilter.value == null) {
-        toast.error(t('aqua.common.requiredField'));
-        return;
-      }
+      if (contextFilter.value == null) { toast.error(t('aqua.common.requiredField')); return; }
       payload[contextFilter.fieldKey] = contextFilter.value;
     }
     const firstMissingRequiredField = visibleFields.find((field) => isRequiredFieldMissing(field, payload[field.key]));
-    if (firstMissingRequiredField) {
-      toast.error(`${t(firstMissingRequiredField.label)} * - ${t('aqua.common.requiredField')}`);
-      return;
-    }
+    if (firstMissingRequiredField) { toast.error(`${t(firstMissingRequiredField.label)} * - ${t('aqua.common.requiredField')}`); return; }
     if (editingRow) {
-      const id = Number(editingRow.id ?? editingRow.Id);
-      if (!id) return;
-      updateMutation.mutate({ id, payload });
-      return;
+      const id = Number(editingRow.id ?? editingRow.Id); if (!id) return;
+      updateMutation.mutate({ id, payload }); return;
     }
     createMutation.mutate(payload);
   };
@@ -589,6 +499,16 @@ export function AquaCrudPage({
   const rangeStart = totalCount === 0 ? 0 : (pageNumber - 1) * pageSize + 1;
   const rangeEnd = totalCount === 0 ? 0 : Math.min(pageNumber * pageSize, totalCount);
 
+  // Çoklu Seçim Yönlendiricileri
+  const toggleSelectAll = () => {
+    if (selectedIds.length === rows.length && rows.length > 0) setSelectedIds([]);
+    else setSelectedIds(rows.map(row => Number(row.id ?? row.Id)).filter(id => !isNaN(id)));
+  };
+  const toggleSelectRow = (id: number) => {
+    if (selectedIds.includes(id)) setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+    else setSelectedIds([...selectedIds, id]);
+  };
+
   const getFormattedCellValue = (row: Record<string, unknown>, columnKey: string): string => {
     const rawValue = row[columnKey];
     const lookupLabel = lookupLabelsByFieldAndValue[columnKey]?.[String(rawValue)];
@@ -596,26 +516,46 @@ export function AquaCrudPage({
     return String(lookupLabel ?? selectLabel ?? formatCellValue(rawValue, t));
   };
 
+  // PREMIUM ÖZELLİK: Dinamik Hücre Render İşlemi (Rozetler ve Kopyalama)
+  const renderCellContent = (columnKey: string, formattedValue: string) => {
+    const lowerKey = columnKey.toLowerCase();
+    
+    // Status (Durum) ise Renkli Rozet Bas
+    if (lowerKey === 'status' || lowerKey === 'durum' || lowerKey === 'isactive') {
+      const valLower = formattedValue.toLowerCase();
+      let colorClass = "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800/50 dark:text-slate-400 dark:border-slate-700/50";
+      
+      if (valLower.includes('post') || valLower.includes('onay') || valLower.includes('aktif') || valLower.includes('yes') || valLower.includes('evet') || valLower === '1') {
+        colorClass = "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20";
+      } else if (valLower.includes('bekliyor') || valLower.includes('taslak') || valLower === '0') {
+        colorClass = "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20";
+      } else if (valLower.includes('iptal') || valLower.includes('ret') || valLower.includes('hayır') || valLower.includes('no') || valLower === '2') {
+        colorClass = "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20";
+      }
+      return <Badge className={`rounded-md text-[10px] font-bold uppercase tracking-tighter px-2.5 py-0.5 border ${colorClass}`}>{formattedValue}</Badge>;
+    }
+    
+    // Kod/No içeren bir alansa "Tıkla-Kopyala" bileşeni yap
+    if (lowerKey.includes('no') || lowerKey.includes('code') || lowerKey.includes('kod') || lowerKey.includes('mail')) {
+      return <CopyableCell text={formattedValue} />;
+    }
+
+    return formattedValue;
+  };
+
   const handleExportExcel = async () => {
     try {
       const dataToExport = rows.map((row) => {
         const exportRow: Record<string, string | number> = {};
         exportRow[t('aqua.common.id', 'ID')] = Number(row.id ?? row.Id);
-        displayedColumns.forEach((col) => {
-          exportRow[t(col.label)] = getFormattedCellValue(row, col.key);
-        });
+        displayedColumns.forEach((col) => { exportRow[t(col.label)] = getFormattedCellValue(row, col.key); });
         return exportRow;
       });
       const XLSX = await import('xlsx');
-      const ws = XLSX.utils.json_to_sheet(dataToExport);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Export");
-      XLSX.writeFile(wb, `${config.key}-export.xlsx`);
+      const ws = XLSX.utils.json_to_sheet(dataToExport); const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Export"); XLSX.writeFile(wb, `${config.key}-export.xlsx`);
       toast.success(t('aqua.common.exportSuccess', 'Başarıyla dışa aktarıldı.'));
-    } catch (error) {
-      console.error(error);
-      toast.error(t('aqua.common.exportError', 'Excel kütüphanesi eksik veya hata oluştu.'));
-    }
+    } catch (error) { toast.error(t('aqua.common.exportError', 'Excel kütüphanesi eksik veya hata.')); }
   };
 
   const handleExportPDF = async () => {
@@ -666,13 +606,11 @@ export function AquaCrudPage({
   const headStyle = `text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider py-3 px-4 border-r border-slate-200 dark:border-cyan-800/30 last:border-r-0 bg-slate-50 dark:bg-blue-950/80 text-left transition-colors`;
   const cellStyle = `text-slate-700 dark:text-slate-300 px-4 py-3 border-r border-slate-200 dark:border-cyan-800/30 last:border-r-0 text-sm align-middle whitespace-nowrap transition-colors`;
 
-  const tableContainerClass = hidePageHeader
-    ? "w-full flex flex-col bg-transparent"
-    : "bg-white dark:bg-blue-950/60 backdrop-blur-xl border border-slate-200 dark:border-cyan-800/30 shadow-sm rounded-2xl flex flex-col overflow-hidden transition-all duration-300";
+  const tableContainerClass = hidePageHeader ? "w-full flex flex-col bg-transparent relative" : "bg-white dark:bg-blue-950/60 backdrop-blur-xl border border-slate-200 dark:border-cyan-800/30 shadow-sm rounded-2xl flex flex-col overflow-hidden transition-all duration-300 relative";
 
   return (
     <>
-      <div className={hidePageHeader ? "w-full" : "w-full space-y-6 relative"}>
+      <div className={hidePageHeader ? "w-full relative pb-10" : "w-full space-y-6 relative pb-10"}>
         {!hidePageHeader && (
           <>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-2">
@@ -681,12 +619,14 @@ export function AquaCrudPage({
                 <p className="text-slate-500 dark:text-slate-400 text-sm font-medium transition-colors mt-1">{localizedDescription}</p>
               </div>
 
-              {!config.readOnly && (
-                <Button onClick={handleCreate} disabled={!canQueryList} className="px-6 py-2 bg-linear-to-r from-cyan-600 to-blue-600 rounded-xl text-white text-sm font-bold shadow-lg shadow-cyan-500/20 hover:scale-105 transition-transform border-0 hover:text-white h-11">
-                  <Plus size={18} className="mr-2" />
-                  {t('aqua.common.new')}
-                </Button>
-              )}
+              <div className="flex items-center gap-3">
+                {!config.readOnly && (
+                  <Button onClick={handleCreate} disabled={!canQueryList} className="px-6 bg-linear-to-r from-cyan-600 to-blue-600 rounded-xl text-white text-sm font-bold shadow-lg shadow-cyan-500/20 hover:scale-105 transition-transform border-0 hover:text-white h-11">
+                    <Plus size={18} className="mr-2" />
+                    {t('aqua.common.new')}
+                  </Button>
+                )}
+              </div>
             </div>
 
             <div className="bg-white dark:bg-blue-950/60 backdrop-blur-xl border border-slate-200 dark:border-cyan-800/30 shadow-sm rounded-2xl p-5 flex flex-col gap-5 transition-all duration-300">
@@ -696,93 +636,67 @@ export function AquaCrudPage({
                 onSearchChange={setSearchTerm}
                 onRefresh={async () => { await listQuery.refetch(); }}
                 rightSlot={
-                  <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 flex-1 w-full justify-start">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button className="flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white">
-                          <span className="font-medium text-sm">{pageSize}</span>
-                          <ChevronDown size={16} />
+                          <span className="font-medium text-sm">{pageSize}</span><ChevronDown size={16} />
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-20 bg-white dark:bg-blue-950 border border-slate-200 dark:border-cyan-800/30 shadow-2xl rounded-xl overflow-hidden p-1">
                           {[10, 20, 50, 100].map((size) => (
-                              <DropdownMenuItem key={size} onSelect={() => setPageSize(size)} className={`flex items-center justify-center text-xs font-medium px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${pageSize === size ? 'bg-cyan-50 dark:bg-cyan-800/30 text-cyan-600 dark:text-cyan-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white'}`}>
-                                  {size}
-                              </DropdownMenuItem>
+                              <DropdownMenuItem key={size} onSelect={() => setPageSize(size)} className={`flex items-center justify-center text-xs font-medium px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${pageSize === size ? 'bg-cyan-50 dark:bg-cyan-800/30 text-cyan-600 dark:text-cyan-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white'}`}>{size}</DropdownMenuItem>
                           ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
 
                     <Popover open={showFilters} onOpenChange={setShowFilters}>
                       <PopoverTrigger asChild>
-                        <Button
-                          variant={hasFiltersActive ? 'default' : 'outline'}
-                          className={`h-10 px-4 rounded-xl border transition-all duration-300 ${
-                            hasFiltersActive
-                              ? 'bg-cyan-50 dark:bg-cyan-800/30 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-700 hover:bg-cyan-100 dark:hover:bg-cyan-800/50'
-                              : 'bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white'
-                          }`}
-                        >
-                          <Filter className="mr-2 h-4 w-4" />
-                          {t('common.filters', 'Filtreler')}
-                          {hasFiltersActive && <span className="ml-2 flex h-2 w-2 rounded-full bg-cyan-500 animate-pulse" />}
+                        <Button variant={hasFiltersActive ? 'default' : 'outline'} className={`h-10 px-4 rounded-xl border transition-all duration-300 ${hasFiltersActive ? 'bg-cyan-50 dark:bg-cyan-800/30 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-700 hover:bg-cyan-100 dark:hover:bg-cyan-800/50' : 'bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white'}`}>
+                          <Filter className="mr-2 h-4 w-4" />{t('common.filters', 'Filtreler')}{hasFiltersActive && <span className="ml-2 flex h-2 w-2 rounded-full bg-cyan-500 animate-pulse" />}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent side="bottom" align="end" className="w-[420px] p-0 bg-white dark:bg-blue-950 border border-slate-200 dark:border-cyan-800/30 shadow-2xl rounded-2xl overflow-hidden z-50">
-                        <AdvancedFilter
-                          columns={filterColumns}
-                          defaultColumn={filterColumns[0]?.value}
-                          draftRows={draftFilterRows}
-                          onDraftRowsChange={setDraftFilterRows}
-                          onSearch={handleAdvancedSearch}
-                          onClear={handleAdvancedClear}
-                          embedded
-                        />
+                        <AdvancedFilter columns={filterColumns} defaultColumn={filterColumns[0]?.value} draftRows={draftFilterRows} onDraftRowsChange={setDraftFilterRows} onSearch={handleAdvancedSearch} onClear={handleAdvancedClear} embedded />
                       </PopoverContent>
                     </Popover>
 
-                    <ColumnPreferencesPopover
-                      pageKey={`aqua-${config.key}`}
-                      userId={user?.id}
-                      columns={baseColumns.map((col) => ({ key: col.key, label: t(col.label) }))}
-                      visibleColumns={visibleColumns}
-                      columnOrder={columnOrder}
-                      onVisibleColumnsChange={setVisibleColumns}
-                      onColumnOrderChange={setColumnOrder}
-                    />
-
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="flex items-center justify-center h-10 w-10 p-0 rounded-xl border transition-all duration-300 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white">
-                          <Menu size={18} />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-blue-950 border border-slate-200 dark:border-cyan-800/30 shadow-2xl rounded-xl overflow-hidden p-0">
-                        <div className="p-2">
-                          <div className="px-3 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                            {t('aqua.common.actions', 'İşlemler')}
+                    <ColumnPreferencesPopover pageKey={`aqua-${config.key}`} userId={user?.id} columns={baseColumns.map((col) => ({ key: col.key, label: t(col.label) }))} visibleColumns={visibleColumns} columnOrder={columnOrder} onVisibleColumnsChange={setVisibleColumns} onColumnOrderChange={setColumnOrder} />
+                    
+                    <div className="ml-auto flex items-center">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="flex items-center justify-center h-10 w-10 p-0 rounded-xl border transition-all duration-300 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white">
+                            <Menu size={18} />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-blue-950 border border-slate-200 dark:border-cyan-800/30 shadow-2xl rounded-xl overflow-hidden p-0">
+                          <div className="p-2">
+                            <div className="px-3 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                              {t('aqua.common.actions', 'İşlemler')}
+                            </div>
                           </div>
-                        </div>
-                        <div className="h-px bg-slate-200 dark:bg-cyan-800/30 my-1"></div>
-                        <div className="p-2 flex flex-col gap-1">
-                          <div className="px-3 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                            {t('aqua.common.export', 'Dışa Aktar')}
+                          <div className="h-px bg-slate-200 dark:bg-cyan-800/30 my-1"></div>
+                          <div className="p-2 flex flex-col gap-1">
+                            <div className="px-3 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                              {t('aqua.common.export', 'Dışa Aktar')}
+                            </div>
+                            <DropdownMenuItem onSelect={handleExportExcel} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-blue-900/50 transition-colors cursor-pointer">
+                              <FileSpreadsheet size={16} className="text-emerald-500" />
+                              <span>{t('aqua.common.exportExcel', "Excel'e Aktar")}</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={handleExportPDF} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-blue-900/50 transition-colors cursor-pointer">
+                              <FileText size={16} className="text-red-400" />
+                              <span>{t('aqua.common.exportPDF', "PDF'e Aktar")}</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={handleExportPowerPoint} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-blue-900/50 transition-colors cursor-pointer">
+                              <Presentation size={16} className="text-orange-400" />
+                              <span>{t('aqua.common.exportPPT', "PowerPoint'e Aktar")}</span>
+                            </DropdownMenuItem>
                           </div>
-                          <DropdownMenuItem onSelect={handleExportExcel} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-blue-900/50 transition-colors cursor-pointer">
-                            <FileSpreadsheet size={16} className="text-emerald-500" />
-                            <span>{t('aqua.common.exportExcel', "Excel'e Aktar")}</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onSelect={handleExportPDF} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-blue-900/50 transition-colors cursor-pointer">
-                            <FileText size={16} className="text-red-400" />
-                            <span>{t('aqua.common.exportPDF', "PDF'e Aktar")}</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onSelect={handleExportPowerPoint} className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-blue-900/50 transition-colors cursor-pointer">
-                            <Presentation size={16} className="text-orange-400" />
-                            <span>{t('aqua.common.exportPPT', "PowerPoint'e Aktar")}</span>
-                          </DropdownMenuItem>
-                        </div>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </div>
                 }
               />
@@ -792,40 +706,37 @@ export function AquaCrudPage({
 
         <div className={tableContainerClass}>
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <div className="overflow-x-auto w-full">
+            <div className="overflow-x-auto w-full custom-scrollbar pb-2">
               <table className="w-full min-w-[560px] sm:min-w-[700px] lg:min-w-[820px] caption-bottom text-sm relative border-collapse">
                 <thead className="bg-slate-100 dark:bg-blue-950 sticky top-0 z-10 border-b border-slate-200 dark:border-cyan-800/30">
                   <tr className="h-10 hover:bg-transparent">
+                    {/* PREMIUM ÖZELLİK: Çoklu Seçim - Tümünü Seç Checkbox */}
+                    {!rowSelectionEnabled && (
+                      <th className={`${headStyle} w-[40px] px-4 text-center cursor-default`}>
+                        <Checkbox checked={selectedIds.length === rows.length && rows.length > 0} onCheckedChange={toggleSelectAll} className="border-slate-300 dark:border-cyan-700 data-[state=checked]:bg-cyan-600" />
+                      </th>
+                    )}
+                    
                     <th className={`${headStyle} cursor-pointer hover:text-cyan-600 dark:hover:text-cyan-400`} onClick={() => handleSort('Id')}>
-                      <div className="flex items-center gap-2">
-                        {t('aqua.common.id', 'ID')}
-                        {sortConfig?.key === 'Id' ? (sortConfig.direction === 'asc' ? <ArrowUp size={14} className="text-cyan-500" /> : <ArrowDown size={14} className="text-cyan-500" />) : (<ArrowUpDown size={14} className="opacity-30 group-hover:opacity-100" />)}
-                      </div>
+                      <div className="flex items-center gap-2">{t('aqua.common.id', 'ID')}{sortConfig?.key === 'Id' ? (sortConfig.direction === 'asc' ? <ArrowUp size={14} className="text-cyan-500" /> : <ArrowDown size={14} className="text-cyan-500" />) : (<ArrowUpDown size={14} className="opacity-30 group-hover:opacity-100" />)}</div>
                     </th>
 
                     <SortableContext items={displayedColumns.map(c => c.key)} strategy={horizontalListSortingStrategy}>
                       {displayedColumns.map((column) => (
-                        <DraggableTh 
-                          key={column.key} 
-                          id={column.key} 
-                          className={headStyle} 
-                          onClick={() => handleSort(column.key)}
-                        >
-                          {t(column.label)}
-                          {sortConfig?.key === column.key ? (sortConfig.direction === 'asc' ? <ArrowUp size={14} className="text-cyan-500 ml-1" /> : <ArrowDown size={14} className="text-cyan-500 ml-1" />) : (<ArrowUpDown size={14} className="opacity-30 group-hover:opacity-100 ml-1" />)}
+                        <DraggableTh key={column.key} id={column.key} className={headStyle} onClick={() => handleSort(column.key)}>
+                          {t(column.label)}{sortConfig?.key === column.key ? (sortConfig.direction === 'asc' ? <ArrowUp size={14} className="text-cyan-500 ml-1" /> : <ArrowDown size={14} className="text-cyan-500 ml-1" />) : (<ArrowUpDown size={14} className="opacity-30 group-hover:opacity-100 ml-1" />)}
                         </DraggableTh>
                       ))}
                     </SortableContext>
-
                     <th className={`${headStyle} text-right cursor-default hover:text-slate-500 dark:hover:text-slate-400`}>{t('aqua.common.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {!canQueryList ? (
-                    <tr><td colSpan={displayedColumns.length + 2} className="text-center py-20 text-slate-500 dark:text-slate-400 font-medium">{t('aqua.common.noData')}</td></tr>
+                    <tr><td colSpan={displayedColumns.length + 3} className="text-center py-20 text-slate-500 dark:text-slate-400 font-medium">{t('aqua.common.noData')}</td></tr>
                   ) : listQuery.isLoading ? (
                     <tr>
-                      <td colSpan={displayedColumns.length + 2} className="text-center py-20">
+                      <td colSpan={displayedColumns.length + 3} className="text-center py-20">
                         <div className="flex flex-col items-center gap-3">
                           <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-current text-cyan-500" />
                           <span className="text-sm font-medium text-slate-500 dark:text-slate-400 animate-pulse">{t('aqua.common.loading')}</span>
@@ -833,25 +744,40 @@ export function AquaCrudPage({
                       </td>
                     </tr>
                   ) : rows.length === 0 ? (
-                    <tr><td colSpan={displayedColumns.length + 2} className="text-center py-20 text-slate-500 dark:text-slate-400 font-medium">{t('aqua.common.noData')}</td></tr>
+                    <tr><td colSpan={displayedColumns.length + 3} className="text-center py-20 text-slate-500 dark:text-slate-400 font-medium">{t('aqua.common.noData')}</td></tr>
                   ) : (
                     rows.map((row) => {
                       const id = Number(row.id ?? row.Id);
                       const status = Number(row.status ?? row.Status);
-                      const isSelected = rowSelectionEnabled && selectedRowId === id;
+                      const isSelected = rowSelectionEnabled ? selectedRowId === id : selectedIds.includes(id);
+                      
                       return (
                         <tr key={id} className={`h-10 border-b border-slate-200 dark:border-cyan-800/30 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-blue-900/40 group last:border-0 bg-transparent ${rowSelectionEnabled ? 'cursor-pointer' : ''} ${isSelected ? 'bg-cyan-50 dark:bg-cyan-800/20' : ''}`} onClick={() => { if (rowSelectionEnabled) onRowSelect?.(row); }}>
-                          <td className={`${cellStyle} font-mono text-xs`}>{id}</td>
+                          {/* PREMIUM ÖZELLİK: Çoklu Seçim Checkbox */}
+                          {!rowSelectionEnabled && (
+                            <td className={`${cellStyle} px-4 text-center`}>
+                              <Checkbox checked={isSelected} onCheckedChange={() => toggleSelectRow(id)} className="border-slate-300 dark:border-cyan-700 data-[state=checked]:bg-cyan-600" />
+                            </td>
+                          )}
+
+                          <td className={`${cellStyle} font-mono text-xs`}><CopyableCell text={String(id)} /></td>
+                          
                           {displayedColumns.map((column) => (
                             <td key={column.key} className={cellStyle}>
-                              {getFormattedCellValue(row, column.key)}
+                              {/* Dinamik Render (Rozet ve Copy eklentisi ile) */}
+                              {renderCellContent(column.key, getFormattedCellValue(row, column.key))}
                             </td>
                           ))}
                           <td className={`${cellStyle} text-right w-[1%] whitespace-nowrap`}>
                             <div className="flex items-center justify-end gap-1">
+                              {/* PREMIUM ÖZELLİK: Sağ Çekmeceyi (View Detay) Açan Buton */}
+                              <Button variant="ghost" size="icon" title="Detay Görüntüle" onClick={(e) => { e.stopPropagation(); setViewingRow(row); }} className="h-8 w-8 rounded-lg text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 transition-colors">
+                                <Eye size={16} />
+                              </Button>
+
                               {!config.readOnly && (
                                 <>
-                                  <Button variant="ghost" size="icon" title={t('aqua.common.edit', 'Düzenle')} onClick={(e) => { e.stopPropagation(); handleEdit(row); }} className="h-8 w-8 rounded-lg text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-blue-900/50 transition-colors">
+                                  <Button variant="ghost" size="icon" title={t('aqua.common.edit', 'Düzenle')} onClick={(e) => { e.stopPropagation(); handleEdit(row); }} className="h-8 w-8 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors">
                                     <Edit size={16} />
                                   </Button>
                                   <Button variant="ghost" size="icon" title={t('aqua.common.delete', 'Sil')} onClick={(e) => { e.stopPropagation(); handleDeleteClick(row); }} className="h-8 w-8 rounded-lg text-slate-400 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
@@ -873,7 +799,7 @@ export function AquaCrudPage({
             </div>
           </DndContext>
 
-          <div className="flex flex-col gap-2 border-t border-slate-200 dark:border-cyan-800/30 px-4 py-3 sm:flex-row sm:items-center sm:justify-between w-full shrink-0 bg-slate-50 dark:bg-blue-950/50">
+          <div className="flex flex-col gap-2 border-t border-slate-200 dark:border-cyan-800/30 px-4 py-3 sm:flex-row sm:items-center sm:justify-between w-full shrink-0 bg-slate-50 dark:bg-blue-950/50 relative z-10">
             <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{rangeStart}-{rangeEnd} / {totalCount}</span>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={() => setPageNumber((prev) => Math.max(1, prev - 1))} disabled={pageNumber <= 1} className="rounded-lg bg-white dark:bg-transparent border-slate-200 dark:border-cyan-800/30 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-blue-900/50">{t('aqua.common.previous')}</Button>
@@ -881,6 +807,24 @@ export function AquaCrudPage({
             </div>
           </div>
         </div>
+
+        {/* PREMIUM ÖZELLİK: Çoklu Seçim / Havada Asılı Bar (Floating Action Bar) */}
+        {!rowSelectionEnabled && selectedIds.length > 0 && (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">
+            <div className="flex items-center gap-2 sm:gap-4 bg-slate-900/95 dark:bg-blue-950/95 backdrop-blur-xl border border-slate-700 dark:border-cyan-700/50 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-full px-4 sm:px-6 py-2.5 sm:py-3">
+              <Badge className="bg-cyan-500/20 text-cyan-400 border-0 pointer-events-none px-3 font-bold text-xs">
+                {selectedIds.length} Seçildi
+              </Badge>
+              <div className="h-5 w-px bg-slate-700 dark:bg-cyan-800/50 hidden sm:block" />
+              <Button size="sm" variant="ghost" onClick={handleExportExcel} className="text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-blue-900/50 rounded-xl h-8 font-bold text-xs transition-colors">
+                <Download size={14} className="sm:mr-2" /> <span className="hidden sm:inline">Dışa Aktar</span>
+              </Button>
+              <Button size="sm" variant="ghost" onClick={handleBulkDelete} disabled={isBulkDeleting} className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/20 rounded-xl h-8 font-bold text-xs transition-colors">
+                <Trash2 size={14} className="sm:mr-2" /> <span className="hidden sm:inline">{isBulkDeleting ? 'Siliniyor...' : 'Seçilenleri Sil'}</span>
+              </Button>
+            </div>
+          </div>
+        )}
 
         {!config.readOnly && (
           <Dialog open={formOpen} onOpenChange={setFormOpen}>
@@ -896,7 +840,7 @@ export function AquaCrudPage({
                       <DialogTitle className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                         {editingRow ? t('aqua.common.editRecord', 'Kaydı Düzenle') : t('aqua.common.createRecord', 'Yeni Kayıt')}
                       </DialogTitle>
-                      <DialogDescription className="text-slate-500 dark:text-slate-400 text-sm">{t('aqua.crud.formDescription', { module: localizedTitle })}</DialogDescription>
+                      <DialogDescription className="text-slate-500 dark:text-slate-400 text-sm">{localizedTitle} modülü için bilgileri doldurun.</DialogDescription>
                    </div>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => setFormOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-full"><X size={20} /></Button>
@@ -936,13 +880,52 @@ export function AquaCrudPage({
                  <div className="h-16 w-16 rounded-full bg-red-100 dark:bg-red-600/10 flex items-center justify-center"><AlertTriangle size={32} className="text-red-600 dark:text-red-500" /></div>
                  <div className="space-y-3">
                    <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">{t('aqua.common.confirmDelete', 'Emin misiniz?')}</h2>
-                   <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-[280px] mx-auto">{t('aqua.crud.deleteDescription')}</p>
+                   <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-[280px] mx-auto">Bu kaydı kalıcı olarak silmek üzeresiniz. Bu işlem geri alınamaz. Devam etmek istiyor musunuz?</p>
                  </div>
               </div>
               <DialogFooter className="px-6 py-4 border-t border-slate-200 dark:border-cyan-800/30 bg-slate-50/50 dark:bg-blue-950/50 flex-col sm:flex-row gap-3">
                 <Button variant="outline" onClick={() => setRowToDelete(null)} className="w-full sm:w-auto h-11 rounded-xl bg-white dark:bg-transparent border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 text-slate-700 dark:text-slate-200 font-medium">{t('aqua.common.cancel', 'İptal')}</Button>
                 <Button onClick={confirmDelete} disabled={isDeleting} className="w-full sm:w-auto h-11 rounded-xl bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/25 border-0 font-bold">{isDeleting ? t('aqua.common.deleting', 'Siliniyor...') : t('aqua.common.delete', 'Sil')}</Button>
               </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* PREMIUM ÖZELLİK: Sağ Çekmece (Drawer) Detay Ekranı */}
+        <Dialog open={!!viewingRow} onOpenChange={(open) => !open && setViewingRow(null)}>
+          <DialogContent className="fixed right-0 top-0 sm:right-4 sm:top-4 h-full sm:h-[calc(100vh-2rem)] w-full max-w-md bg-white dark:bg-blue-950 border-l sm:border border-slate-200 dark:border-cyan-800/30 p-0 sm:rounded-3xl shadow-2xl data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right transition-transform duration-500 flex flex-col overflow-hidden [&>button]:hidden">
+            <DialogHeader className="p-6 border-b border-slate-100 dark:border-cyan-800/20 bg-slate-50/80 dark:bg-blue-900/10 shrink-0">
+              <div className="flex items-center justify-between">
+                <DialogTitle className="text-xl font-bold flex items-center gap-3 text-slate-900 dark:text-white">
+                  <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20"><FileText className="size-5 text-cyan-600 dark:text-cyan-400" /></div>
+                  Kayıt Detayı
+                </DialogTitle>
+                <Button variant="ghost" size="icon" onClick={() => setViewingRow(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"><X size={20} /></Button>
+              </div>
+            </DialogHeader>
+            <div className="flex-1 overflow-y-auto p-6 space-y-5 custom-scrollbar bg-white dark:bg-transparent">
+              {viewingRow && (
+                <>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Kayıt ID</p>
+                    <p className="font-mono text-sm font-bold text-slate-900 dark:text-white"><CopyableCell text={String(viewingRow.id ?? viewingRow.Id)} /></p>
+                  </div>
+                  {displayedColumns.map(col => (
+                    <div key={col.key} className="space-y-1">
+                      <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{t(col.label)}</p>
+                      <div className="text-sm font-medium text-slate-900 dark:text-slate-300">
+                        {renderCellContent(col.key, getFormattedCellValue(viewingRow, col.key))}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+            <div className="p-4 border-t border-slate-100 dark:border-cyan-800/20 bg-slate-50/50 dark:bg-blue-900/10 shrink-0 flex justify-end gap-3">
+              <Button variant="outline" onClick={() => setViewingRow(null)} className="rounded-xl border-slate-200 dark:border-cyan-800/30 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-blue-900/30">Kapat</Button>
+              {!config.readOnly && viewingRow && (
+                <Button onClick={() => { handleEdit(viewingRow); setViewingRow(null); }} className="rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold border-0">Düzenle</Button>
+              )}
+            </div>
           </DialogContent>
         </Dialog>
       </div>
