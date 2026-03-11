@@ -73,17 +73,16 @@ export function ColumnPreferencesPopover({
         <Button
           variant="outline"
           size="sm"
-          className="h-10 border-slate-200 dark:border-cyan-800/30 bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-blue-900/50 rounded-xl transition-all text-xs sm:text-sm"
+          className="h-10 px-3 sm:px-4 border-slate-200 dark:border-cyan-800/30 bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-blue-900/50 rounded-xl transition-all text-xs sm:text-sm"
         >
-          <Columns3 className="mr-2 h-4 w-4" />
-          {t('common.editColumns')}
+          {/* BURASI DÜZELTİLDİ: Yazı küçük ekranda gizlenir, sadece ikon kalır */}
+          <Columns3 className="h-4 w-4 sm:mr-2" />
+          <span className="hidden sm:inline">{t('common.editColumns')}</span>
         </Button>
       </PopoverTrigger>
       
-      {/* BURASI POP-UP'IN ANA ARKA PLANI: Deep Blue & Glassmorphism */}
       <PopoverContent align="end" className="w-72 p-0 bg-white/95 dark:bg-blue-950/95 backdrop-blur-xl border border-slate-200 dark:border-cyan-800/40 shadow-2xl rounded-2xl z-50 overflow-hidden">
         <div className="p-2 space-y-2">
-          {/* Pembe Vurgulu Başlık */}
           <div className="text-[10px] font-bold text-pink-600 dark:text-pink-400 uppercase tracking-widest px-2 py-1.5 flex items-center gap-2">
             <Eye className="w-3 h-3" />
             {t('activityManagement.columnCustomization.visibleColumns')}
