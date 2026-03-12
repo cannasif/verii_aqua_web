@@ -14,7 +14,7 @@ import { Switch } from '@/components/ui/switch';
 import { Edit2, Mail } from 'lucide-react';
 
 export function UserTable({ onEdit }: any): ReactElement {
-  const { t } = useTranslation(['user', 'common']);
+  const { t } = useTranslation(['user-management', 'common']);
 
   const users = [
     { id: 1, name: 'adminv3rii.com', email: 'admin@v3rii.com', role: 'Admin', status: true },
@@ -32,16 +32,16 @@ export function UserTable({ onEdit }: any): ReactElement {
               <TableHead className="w-[80px] text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 py-4 pl-6">ID</TableHead>
               {/* HATA FIX: Çeviri anahtarları düzeltildi */}
               <TableHead className="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 py-4">
-                {t('userManagement.columns.name', { defaultValue: 'İsim' })}
+                {t('table.username', { ns: 'user-management' })}
               </TableHead>
               <TableHead className="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 py-4">
-                {t('userManagement.columns.email', { defaultValue: 'E-Posta' })}
+                {t('table.email', { ns: 'user-management' })}
               </TableHead>
               <TableHead className="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 py-4">
-                {t('userManagement.columns.role', { defaultValue: 'Rol' })}
+                {t('table.role', { ns: 'user-management' })}
               </TableHead>
               <TableHead className="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 py-4 text-center">
-                {t('userManagement.columns.status', { defaultValue: 'Durum' })}
+                {t('table.status', { ns: 'user-management' })}
               </TableHead>
               <TableHead className="w-[100px] text-right py-4 pr-6"></TableHead>
             </TableRow>
@@ -66,7 +66,7 @@ export function UserTable({ onEdit }: any): ReactElement {
                   <div className="flex items-center justify-center gap-2">
                     <Switch checked={user.status} className="data-[state=checked]:bg-emerald-500" />
                     <span className="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400">
-                       {t('common.active', { defaultValue: 'Aktif' })}
+                       {t('common.active')}
                     </span>
                   </div>
                 </TableCell>
@@ -83,14 +83,14 @@ export function UserTable({ onEdit }: any): ReactElement {
 
       <div className="flex items-center justify-between px-6 py-4 bg-slate-50 dark:bg-blue-950/40 border-t border-slate-200 dark:border-cyan-800/30 rounded-b-2xl">
         <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-           {t('common.total', { defaultValue: 'Toplam' })} <span className="text-slate-900 dark:text-white font-bold">{users.length}</span> {t('common.records', { defaultValue: 'kayıt' })}
+           {t('stock.list.total', { ns: 'common' })} <span className="text-slate-900 dark:text-white font-bold">{users.length}</span> {t('common.records')}
         </span>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="h-8 rounded-lg text-xs bg-white dark:bg-transparent border-slate-200 dark:border-white/10 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
-            {t('common.previous', { defaultValue: 'Geri' })}
+            {t('common.previous')}
           </Button>
           <Button variant="outline" size="sm" className="h-8 rounded-lg text-xs bg-white dark:bg-transparent border-slate-200 dark:border-white/10 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
-            {t('common.next', { defaultValue: 'İleri' })}
+            {t('common.next')}
           </Button>
         </div>
       </div>

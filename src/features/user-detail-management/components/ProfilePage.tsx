@@ -168,7 +168,7 @@ export function ProfilePage(): ReactElement {
 
   const isSaving = createUserDetail.isPending || updateUserDetail.isPending;
   const isChangingPassword = changePassword.isPending;
-  const displayName = user?.name || user?.email || t('welcome.userFallback', { defaultValue: 'Kullanıcı' });
+  const displayName = user?.name || user?.email || t('welcome.userFallback');
 
   const inputStyle = "pl-10 h-11 bg-slate-50 dark:bg-blue-950/40 border-slate-200 dark:border-cyan-800/30 text-slate-900 dark:text-white focus-visible:ring-cyan-500/20 focus-visible:border-cyan-500 rounded-xl transition-all duration-200";
   const labelStyle = "text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-1";

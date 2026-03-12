@@ -229,7 +229,7 @@ export function UserDetailDialog({
       <DialogContent 
         className="sm:max-w-[95vw] md:max-w-6xl lg:max-w-5xl w-full h-[90vh] md:h-[700px] p-0 overflow-hidden bg-white dark:bg-[#1a1025] border-none text-zinc-900 dark:text-slate-300 shadow-2xl rounded-2xl flex flex-col focus:outline-none [&>button]:hidden"
       >
-        <DialogTitle className="sr-only">{t('userDetail.title', { ns: 'common', defaultValue: 'Kullanıcı Detayları' })}</DialogTitle>
+        <DialogTitle className="sr-only">{t('userDetail.title', { ns: 'common' })}</DialogTitle>
 
         {/* --- ÜST KAPATMA BUTONU --- */}
         <div className="absolute top-4 right-4 z-50">
@@ -267,7 +267,7 @@ export function UserDetailDialog({
               </div>
               
               <div className="w-full space-y-1">
-                 <h2 className="text-2xl font-bold text-zinc-900 dark:text-white wrap-break-word tracking-tight">{user?.name || t('welcome.userFallback', { ns: 'common', defaultValue: 'Kullanıcı' })}</h2>
+                 <h2 className="text-2xl font-bold text-zinc-900 dark:text-white wrap-break-word tracking-tight">{user?.name || t('welcome.userFallback', { ns: 'common' })}</h2>
                  <div className="flex items-center justify-center md:justify-start gap-2">
                     <Mail size={14} className="text-zinc-400 dark:text-slate-500" />
                     <p className="text-sm text-zinc-500 dark:text-slate-400 font-medium break-all">{user?.email}</p>
@@ -277,7 +277,7 @@ export function UserDetailDialog({
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
             </div>
             
-            {/* Masaüstünde Alt "Vazgeç" Butonu */}
+            {/* Desktop footer cancel button */}
             <div className="mt-auto hidden md:block w-full">
                 <Button 
                     variant="ghost" 

@@ -5,26 +5,26 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export function UserStats(): ReactElement {
   // Eğer çeviriler user.json içindeyse 'user' namespace'ini ekleyin
-  const { t } = useTranslation(['user', 'common']);
+  const { t } = useTranslation(['user-management', 'common']);
 
   const stats = [
     {
       // HATA FIX: Anahtar yolları kontrol edildi
-      title: t('userManagement.stats.total', { defaultValue: 'Toplam Kullanıcı' }),
+      title: t('stats.totalUsers', { ns: 'user-management' }),
       value: '4',
       icon: Users,
       color: 'text-cyan-600 dark:text-cyan-400',
       bg: 'bg-cyan-100 dark:bg-cyan-500/10',
     },
     {
-      title: t('userManagement.stats.active', { defaultValue: 'Aktif Kullanıcı' }),
+      title: t('stats.activeUsers', { ns: 'user-management' }),
       value: '4',
       icon: UserCheck,
       color: 'text-emerald-600 dark:text-emerald-400',
       bg: 'bg-emerald-100 dark:bg-emerald-500/10',
     },
     {
-      title: t('userManagement.stats.inactive', { defaultValue: 'Pasif Kullanıcı' }),
+      title: t('table.inactive', { ns: 'user-management' }),
       value: '0',
       icon: UserX,
       color: 'text-slate-600 dark:text-slate-400',

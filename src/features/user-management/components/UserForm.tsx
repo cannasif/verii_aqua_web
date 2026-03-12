@@ -121,13 +121,13 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
         <DialogHeader className="p-5 sm:p-6 md:p-8 border-b border-slate-100 dark:border-cyan-800/30 bg-slate-50/50 dark:bg-blue-900/10 shrink-0">
           <DialogTitle className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
             {isEditMode
-              ? t('userManagement.form.editUser', { defaultValue: 'Kullanıcı Düzenle' })
-              : t('userManagement.form.addUser', { defaultValue: 'Yeni Kullanıcı Ekle' })}
+              ? t('userManagement.form.editUser')
+              : t('userManagement.form.addUser')}
           </DialogTitle>
           <DialogDescription className="text-slate-500 dark:text-slate-400 font-medium">
             {isEditMode
-              ? t('userManagement.form.editDescription', { defaultValue: 'Kullanıcı bilgilerini düzenleyin' })
-              : t('userManagement.form.addDescription', { defaultValue: 'Yeni kullanıcı bilgilerini girin' })}
+              ? t('userManagement.form.editDescription')
+              : t('userManagement.form.addDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -136,14 +136,14 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <FormField name="username" render={({ field }) => (
                 <FormItem>
-                  <FormLabel required className={labelStyle}><User className="size-3 text-cyan-600 dark:text-cyan-400" /> {t('userManagement.form.username', { defaultValue: 'Kullanıcı Adı' })}</FormLabel>
+                  <FormLabel required className={labelStyle}><User className="size-3 text-cyan-600 dark:text-cyan-400" /> {t('userManagement.form.username')}</FormLabel>
                   <FormControl><Input {...field} className={inputStyle} disabled={isEditMode} /></FormControl>
                   <FormMessage className="text-[10px] text-red-500" />
                 </FormItem>
               )} />
               <FormField name="email" render={({ field }) => (
                 <FormItem>
-                  <FormLabel required className={labelStyle}><Mail className="size-3 text-cyan-600 dark:text-cyan-400" /> {t('userManagement.form.email', { defaultValue: 'E-posta' })}</FormLabel>
+                  <FormLabel required className={labelStyle}><Mail className="size-3 text-cyan-600 dark:text-cyan-400" /> {t('userManagement.form.email')}</FormLabel>
                   <FormControl><Input {...field} type="email" className={inputStyle} /></FormControl>
                   <FormMessage className="text-[10px] text-red-500" />
                 </FormItem>
@@ -153,7 +153,7 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
             {!isEditMode && (
               <FormField name="password" render={({ field }) => (
                 <FormItem>
-                  <FormLabel required className={labelStyle}><Lock className="size-3 text-cyan-600 dark:text-cyan-400" /> {t('userManagement.form.password', { defaultValue: 'Şifre' })}</FormLabel>
+                  <FormLabel required className={labelStyle}><Lock className="size-3 text-cyan-600 dark:text-cyan-400" /> {t('userManagement.form.password')}</FormLabel>
                   <FormControl><Input {...field} type="password" className={inputStyle} /></FormControl>
                   <FormMessage className="text-[10px] text-red-500" />
                 </FormItem>
@@ -163,7 +163,7 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <FormField name="roleId" render={({ field }) => (
                 <FormItem>
-                  <FormLabel required className={labelStyle}><Shield className="size-3 text-cyan-600 dark:text-cyan-400" /> {t('userManagement.form.role', { defaultValue: 'Rol' })}</FormLabel>
+                  <FormLabel required className={labelStyle}><Shield className="size-3 text-cyan-600 dark:text-cyan-400" /> {t('userManagement.form.role')}</FormLabel>
                   <Combobox 
                     options={roleOptions.map(o => ({ value: String(o.value), label: o.label }))}
                     value={String(field.value)}
@@ -175,7 +175,7 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
               )} />
               <FormItem className="flex flex-row items-center justify-between rounded-xl border border-slate-200 dark:border-cyan-800/30 p-4 bg-slate-50 dark:bg-blue-900/10 self-end h-11 transition-colors">
                 <FormLabel className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-2 cursor-pointer">
-                  <Power className="size-3.5 text-emerald-600 dark:text-emerald-500" /> {t('userManagement.form.isActive', { defaultValue: 'Aktif' })}
+                  <Power className="size-3.5 text-emerald-600 dark:text-emerald-500" /> {t('userManagement.form.isActive')}
                 </FormLabel>
                 <Switch 
                   checked={form.watch('isActive')} 
@@ -187,7 +187,7 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
 
             <FormField name="permissionGroupIds" render={() => (
               <FormItem className="space-y-3">
-                <FormLabel className={labelStyle}>{t('userManagement.form.permissionGroups', { defaultValue: 'İzin Grupları' })}</FormLabel>
+                <FormLabel className={labelStyle}>{t('userManagement.form.permissionGroups')}</FormLabel>
                 <div className="rounded-xl border border-slate-200 dark:border-cyan-800/30 p-1 bg-slate-50 dark:bg-transparent">
                   <UserFormPermissionGroupSelect
                     value={selectedPermissionGroupIds}
@@ -205,14 +205,14 @@ export function UserForm({ open, onOpenChange, onSubmit, user, isLoading }: any)
                 onClick={() => onOpenChange(false)} 
                 className="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 font-bold rounded-xl"
               >
-                {t('common.cancel', { defaultValue: 'İptal' })}
+                {t('common.cancel')}
               </Button>
               <Button 
                 type="submit" 
                 disabled={isSubmitDisabled}
                 className="bg-linear-to-r from-cyan-600 to-blue-600 text-white font-extrabold h-11 px-10 rounded-xl border-0 shadow-lg shadow-cyan-500/25 hover:opacity-95 transition-all active:scale-[0.98]"
               >
-                {isLoading ? <Loader2 className="size-4 animate-spin mr-2" /> : null} {t('common.save', { defaultValue: 'Kaydet' })}
+                {isLoading ? <Loader2 className="size-4 animate-spin mr-2" /> : null} {t('common.save')}
               </Button>
             </DialogFooter>
           </form>
