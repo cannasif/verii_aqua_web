@@ -135,6 +135,27 @@
       "feed": "Mangime",
       "biomass": "Biomassa",
       "survivalRate": "Tasso di sopravvivenza"
+    },
+    "controls": {
+      "viewAndProject": "Görünüm ve Proje",
+      "projectCountAndView": "{{count}} Proje • {{view}}",
+      "cardView": "Kart",
+      "listView": "Liste",
+      "viewType": "Görünüm Şekli",
+      "projectSelection": "Proje Seçimi",
+      "selectAll": "Tümünü Seç",
+      "clear": "Temizle"
+    },
+    "selectedProjects": "Seçili Projeler",
+    "listTable": {
+      "cage": "Kafes",
+      "fish": "Balık",
+      "dead": "Ölüm",
+      "feed": "Yem",
+      "biomass": "Biyokütle",
+      "survivalRate": "Yaşam Oranı",
+      "action": "İşlem",
+      "dailyFlowButton": "Günlük Akış"
     }
   }
 }
