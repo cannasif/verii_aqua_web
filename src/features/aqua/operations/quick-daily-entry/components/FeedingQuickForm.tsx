@@ -39,6 +39,7 @@ export function FeedingQuickForm({
   const { t } = useTranslation('common');
   const form = useForm<FeedingQuickFormSchema>({
     resolver: zodResolver(feedingQuickFormSchema) as Resolver<FeedingQuickFormSchema>,
+    mode: 'onChange',
     defaultValues: {
       feedingSlot: 0,
       stockId: 0,
@@ -76,14 +77,14 @@ export function FeedingQuickForm({
       </CardHeader>
       <CardContent className="p-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(handleSubmit)} noValidate className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
                   name="feedingSlot"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className={labelStyle}>
+                      <FormLabel required className={labelStyle}>
                         <ChevronRight size={14} className="text-cyan-500" />
                         {t('aqua.quickDailyEntry.feeding.slot')}
                       </FormLabel>
@@ -107,7 +108,7 @@ export function FeedingQuickForm({
                   name="stockId"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className={labelStyle}>
+                      <FormLabel required className={labelStyle}>
                         <ChevronRight size={14} className="text-cyan-500" />
                         {t('aqua.quickDailyEntry.feeding.feedStock')}
                       </FormLabel>
@@ -132,7 +133,7 @@ export function FeedingQuickForm({
                   name="qtyUnit"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className={labelStyle}>
+                      <FormLabel required className={labelStyle}>
                         <ChevronRight size={14} className="text-cyan-500" />
                         {t('aqua.quickDailyEntry.feeding.qty')}
                       </FormLabel>
@@ -148,7 +149,7 @@ export function FeedingQuickForm({
                   name="gramPerUnit"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className={labelStyle}>
+                      <FormLabel required className={labelStyle}>
                         <ChevronRight size={14} className="text-cyan-500" />
                         {t('aqua.quickDailyEntry.feeding.gramPerUnit')}
                       </FormLabel>
@@ -164,7 +165,7 @@ export function FeedingQuickForm({
             <div className="pt-4 flex justify-end border-t border-slate-200 dark:border-cyan-800/30">
                 <Button 
                   type="submit" 
-                  disabled={disabled || isSubmitting} 
+                  disabled={disabled || isSubmitting || !form.formState.isValid} 
                   className="bg-linear-to-r from-cyan-600 to-blue-600 text-white font-bold hover:opacity-95 border-0 h-11 px-10 w-full sm:w-auto rounded-xl shadow-lg shadow-cyan-500/25 transition-all duration-200 flex items-center gap-2"
                 >
                   <Save size={18} />

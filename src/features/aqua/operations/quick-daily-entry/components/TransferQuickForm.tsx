@@ -15,6 +15,7 @@ export function TransferQuickForm({ projectId, projectCageId, projectCages, sour
   const { t } = useTranslation('common');
   const form = useForm<TransferQuickFormSchema>({
     resolver: zodResolver(transferQuickFormSchema) as Resolver<TransferQuickFormSchema>,
+    mode: 'onChange',
     defaultValues: { toProjectCageId: 0, fishCount: 0, description: '' },
   });
 
@@ -51,11 +52,11 @@ export function TransferQuickForm({ projectId, projectCageId, projectCages, sour
            </div>
         )}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(handleSubmit)} noValidate className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField control={form.control} name="toProjectCageId" render={({ field }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel className={labelStyle}>
+                  <FormLabel required className={labelStyle}>
                     <ChevronRight size={14} className="text-cyan-500" />
                     {t('aqua.quickDailyEntry.transfer.targetCage', { defaultValue: 'Target Cage' })}
                   </FormLabel>
@@ -65,7 +66,7 @@ export function TransferQuickForm({ projectId, projectCageId, projectCages, sour
               )} />
               <FormField control={form.control} name="fishCount" render={({ field }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel className={labelStyle}>
+                  <FormLabel required className={labelStyle}>
                     <ChevronRight size={14} className="text-cyan-500" />
                     {t('aqua.quickDailyEntry.transfer.count', { defaultValue: 'Adet' })}
                   </FormLabel>
@@ -77,7 +78,7 @@ export function TransferQuickForm({ projectId, projectCageId, projectCages, sour
             <div className="pt-4 flex justify-end border-t border-slate-200 dark:border-cyan-800/30">
               <Button 
                 type="submit" 
-                disabled={!projectId || !projectCageId || isSubmitting} 
+                disabled={!projectId || !projectCageId || isSubmitting || !form.formState.isValid} 
                 className="bg-linear-to-r from-cyan-600 to-blue-600 text-white font-bold h-11 px-10 rounded-xl shadow-lg shadow-cyan-500/25 transition-all hover:opacity-95 border-0 flex items-center gap-2"
               >
                 <Save size={18} />

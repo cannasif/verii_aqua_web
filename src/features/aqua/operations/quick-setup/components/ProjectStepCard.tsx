@@ -38,6 +38,7 @@ export function ProjectStepCard({
   const { t } = useTranslation('common');
   const form = useForm<ProjectFormSchema>({
     resolver: zodResolver(projectFormSchema) as Resolver<ProjectFormSchema>,
+    mode: 'onChange',
     defaultValues: {
       projectCode: '',
       projectName: '',
@@ -73,14 +74,14 @@ export function ProjectStepCard({
       </CardHeader>
       <CardContent className="p-6 space-y-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5">
+          <form onSubmit={form.handleSubmit(handleSubmit)} noValidate className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <FormField
                 control={form.control}
                 name="projectCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.code')}</FormLabel>
+                    <FormLabel required className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.code')}</FormLabel>
                     <FormControl>
                       {/* Mor zemin `#0b0713` silindi */}
                       <Input className="bg-background dark:bg-blue-950 border-border dark:border-cyan-800/50 text-foreground focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl placeholder:text-slate-500" {...field} />
@@ -94,7 +95,7 @@ export function ProjectStepCard({
                 name="projectName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.name')}</FormLabel>
+                    <FormLabel required className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.name')}</FormLabel>
                     <FormControl>
                       <Input className="bg-background dark:bg-blue-950 border-border dark:border-cyan-800/50 text-foreground focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl placeholder:text-slate-500" {...field} />
                     </FormControl>
@@ -109,7 +110,7 @@ export function ProjectStepCard({
               name="startDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.startDate')}</FormLabel>
+                  <FormLabel required className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.startDate')}</FormLabel>
                   <FormControl>
                     <Input type="date" className="bg-background dark:bg-blue-950 border-border dark:border-cyan-800/50 text-foreground focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl dark:[&::-webkit-calendar-picker-indicator]:invert" {...field} />
                   </FormControl>
@@ -118,7 +119,7 @@ export function ProjectStepCard({
               )}
             />
             {/* Butondaki pembe-turuncu gradyanı koruduk */}
-            <Button type="submit" disabled={isCreating} className="w-full sm:w-auto px-8 bg-linear-to-r from-pink-600 to-orange-600 text-white font-bold hover:opacity-95 border-0 h-11 rounded-xl shadow-lg shadow-pink-500/20 transition-all duration-200">
+            <Button type="submit" disabled={isCreating || !form.formState.isValid} className="w-full sm:w-auto px-8 bg-linear-to-r from-pink-600 to-orange-600 text-white font-bold hover:opacity-95 border-0 h-11 rounded-xl shadow-lg shadow-pink-500/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
               {t('aqua.quickSetup.createProject')}
             </Button>
           </form>

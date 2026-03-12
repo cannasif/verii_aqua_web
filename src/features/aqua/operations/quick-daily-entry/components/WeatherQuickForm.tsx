@@ -15,6 +15,7 @@ export function WeatherQuickForm({ projectId, severities, onSubmit, isSubmitting
   const { t } = useTranslation('common');
   const form = useForm<WeatherQuickFormSchema>({
     resolver: zodResolver(weatherQuickFormSchema) as Resolver<WeatherQuickFormSchema>,
+    mode: 'onChange',
     defaultValues: { weatherSeverityId: 0, weatherTypeId: 0, description: '' },
   });
 
@@ -43,11 +44,11 @@ export function WeatherQuickForm({ projectId, severities, onSubmit, isSubmitting
       </CardHeader>
       <CardContent className="p-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(handleSubmit)} noValidate className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <FormField control={form.control} name="weatherTypeId" render={({ field }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel className={labelStyle}>
+                  <FormLabel required className={labelStyle}>
                     <ChevronRight size={14} className="text-cyan-500" />
                     {t('aqua.quickDailyEntry.weather.title')}
                   </FormLabel>
@@ -57,7 +58,7 @@ export function WeatherQuickForm({ projectId, severities, onSubmit, isSubmitting
               )} />
               <FormField control={form.control} name="weatherSeverityId" render={({ field }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel className={labelStyle}>
+                  <FormLabel required className={labelStyle}>
                     <ChevronRight size={14} className="text-cyan-500" />
                     {t('aqua.quickDailyEntry.weather.severity')}
                   </FormLabel>
@@ -79,7 +80,7 @@ export function WeatherQuickForm({ projectId, severities, onSubmit, isSubmitting
             <div className="pt-4 flex justify-end border-t border-slate-200 dark:border-cyan-800/30">
               <Button 
                 type="submit" 
-                disabled={!projectId || isSubmitting} 
+                disabled={!projectId || isSubmitting || !form.formState.isValid} 
                 className="bg-linear-to-r from-cyan-600 to-blue-600 text-white font-bold h-11 px-10 rounded-xl shadow-lg shadow-cyan-500/25 hover:opacity-95 transition-all duration-200 border-0 flex items-center gap-2"
               >
                 <Save size={18} />

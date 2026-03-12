@@ -52,6 +52,7 @@ export function GoodsReceiptStepCard({
   const { t } = useTranslation('common');
   const receiptForm = useForm<GoodsReceiptFormSchema>({
     resolver: zodResolver(goodsReceiptFormSchema) as Resolver<GoodsReceiptFormSchema>,
+    mode: 'onChange',
     defaultValues: {
       receiptNo: '',
       receiptDate: new Date().toISOString().slice(0, 10),
@@ -60,6 +61,7 @@ export function GoodsReceiptStepCard({
 
   const fishForm = useForm<FishLineFormSchema>({
     resolver: zodResolver(fishLineFormSchema) as Resolver<FishLineFormSchema>,
+    mode: 'onChange',
     defaultValues: { stockId: 0, fishCount: 0, currentAverageGram: 0 },
   });
 
@@ -181,7 +183,7 @@ export function GoodsReceiptStepCard({
           </div>
         ) : (
           <Form {...receiptForm}>
-            <form onSubmit={receiptForm.handleSubmit(handleSubmit)} className="space-y-6">
+            <form onSubmit={receiptForm.handleSubmit(handleSubmit)} noValidate className="space-y-6">
               {existingReceipt && (
                 // Yeşil hata kutusu (Emerald) silindi, Deep Blue slate temasından gelir
                 <div className="rounded-xl border border-border dark:border-cyan-800/30 bg-muted/30 dark:bg-white/2 p-4 text-sm text-foreground font-medium dark:backdrop-blur-md">
@@ -195,7 +197,7 @@ export function GoodsReceiptStepCard({
                     name="receiptNo"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.receiptNo')}</FormLabel>
+                        <FormLabel required className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.receiptNo')}</FormLabel>
                         <FormControl>
                           {/* Mor zemin `#0b0713` silindi */}
                           <Input className="bg-background dark:bg-blue-950 border-border dark:border-cyan-800/50 text-foreground focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl placeholder:text-slate-500" {...field} />
@@ -209,7 +211,7 @@ export function GoodsReceiptStepCard({
                     name="receiptDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.date')}</FormLabel>
+                        <FormLabel required className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.date')}</FormLabel>
                         <FormControl>
                           <Input type="date" className="bg-background dark:bg-blue-950 border-border dark:border-cyan-800/50 text-foreground focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl dark:[&::-webkit-calendar-picker-indicator]:invert" {...field} />
                         </FormControl>
@@ -229,7 +231,7 @@ export function GoodsReceiptStepCard({
                       name="stockId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.stock')}</FormLabel>
+                          <FormLabel required className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.stock')}</FormLabel>
                           <FormControl>
                             <Combobox
                               options={fishStockOptions}
@@ -251,7 +253,7 @@ export function GoodsReceiptStepCard({
                       name="fishCount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.count')}</FormLabel>
+                          <FormLabel required className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.count')}</FormLabel>
                           <FormControl>
                             <Input type="number" min={1} className="bg-background dark:bg-blue-950 border-border dark:border-cyan-800/50 text-foreground focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl placeholder:text-slate-500" {...field} />
                           </FormControl>
@@ -264,7 +266,7 @@ export function GoodsReceiptStepCard({
                       name="currentAverageGram"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.currentAverageGram')}</FormLabel>
+                          <FormLabel required className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.currentAverageGram')}</FormLabel>
                           <FormControl>
                             <Input type="number" min={0} step="0.01" className="bg-background dark:bg-blue-950 border-border dark:border-cyan-800/50 text-foreground focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl placeholder:text-slate-500" {...field} />
                           </FormControl>
@@ -322,7 +324,7 @@ export function GoodsReceiptStepCard({
 
               <div className="pt-2 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                   {/* Butondaki pembe-turuncu gradyanı koruduk */}
-                  <Button type="submit" disabled={isSubmitting} className="bg-linear-to-r from-pink-600 to-orange-600 text-white hover:opacity-90 border-0 h-11 px-8 rounded-xl shadow-lg shadow-pink-500/20 font-bold w-full sm:w-auto transition-all">
+                  <Button type="submit" disabled={isSubmitting || !receiptForm.formState.isValid || !fishForm.formState.isValid} className="bg-linear-to-r from-pink-600 to-orange-600 text-white hover:opacity-90 border-0 h-11 px-8 rounded-xl shadow-lg shadow-pink-500/20 font-bold w-full sm:w-auto transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                     {existingReceipt ? t('common.save') : t('aqua.quickSetup.createGoodsReceipt')}
                   </Button>
                   {existingReceipt && canContinueDistribution && (

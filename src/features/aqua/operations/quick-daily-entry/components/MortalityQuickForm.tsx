@@ -33,6 +33,7 @@ export function MortalityQuickForm({
   const { t } = useTranslation('common');
   const form = useForm<MortalityQuickFormSchema>({
     resolver: zodResolver(mortalityQuickFormSchema) as Resolver<MortalityQuickFormSchema>,
+    mode: 'onChange',
     defaultValues: { deadCount: 0 },
   });
 
@@ -64,14 +65,14 @@ export function MortalityQuickForm({
       
       <CardContent className="p-6 sm:p-8 relative z-10">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(handleSubmit)} noValidate className="space-y-8">
             <div className="max-w-md">
               <FormField
                 control={form.control}
                 name="deadCount"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
-                    <FormLabel className={labelStyle}>
+                    <FormLabel required className={labelStyle}>
                       <ChevronRight size={14} className="text-cyan-500" />
                       {/* ÇEVİRİ HATASI BURADA DEFAULT VALUE İLE ÇÖZÜLDÜ */}
                       {t('aqua.quickDailyEntry.mortality.count', { defaultValue: 'Ölüm Sayısı (Adet)' })}
@@ -94,7 +95,7 @@ export function MortalityQuickForm({
             <div className="pt-6 flex justify-end border-t border-slate-200 dark:border-cyan-800/20">
                 <Button 
                   type="submit" 
-                  disabled={disabled || isSubmitting} 
+                  disabled={disabled || isSubmitting || !form.formState.isValid} 
                   className="bg-linear-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 active:scale-[0.98] text-white font-bold border-0 h-11 px-10 w-full sm:w-auto rounded-xl shadow-lg shadow-cyan-500/20 transition-all duration-200 flex items-center gap-2"
                 >
                   <Save size={18} />

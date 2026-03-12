@@ -15,6 +15,7 @@ export function NetOperationQuickForm({ projectId, projectCageId, fishBatches, n
   const { t } = useTranslation('common');
   const form = useForm<NetOperationQuickFormSchema>({
     resolver: zodResolver(netOperationQuickFormSchema) as Resolver<NetOperationQuickFormSchema>,
+    mode: 'onChange',
     defaultValues: { netOperationTypeId: 0, fishBatchId: 0, description: '' },
   });
 
@@ -39,11 +40,11 @@ export function NetOperationQuickForm({ projectId, projectCageId, fishBatches, n
       </CardHeader>
       <CardContent className="p-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(handleSubmit)} noValidate className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField control={form.control} name="netOperationTypeId" render={({ field }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel className={labelStyle}>
+                  <FormLabel required className={labelStyle}>
                     <ChevronRight size={14} className="text-cyan-500" />
                     {t('aqua.quickDailyEntry.netOperation.operationType')}
                   </FormLabel>
@@ -75,7 +76,7 @@ export function NetOperationQuickForm({ projectId, projectCageId, fishBatches, n
             <div className="pt-4 flex justify-end border-t border-slate-200 dark:border-cyan-800/30">
               <Button 
                 type="submit" 
-                disabled={!projectId || !projectCageId || isSubmitting} 
+                disabled={!projectId || !projectCageId || isSubmitting || !form.formState.isValid} 
                 className="bg-linear-to-r from-cyan-600 to-blue-600 text-white font-bold h-11 px-10 rounded-xl shadow-lg shadow-cyan-500/25 transition-all hover:opacity-95 border-0 flex items-center gap-2"
               >
                 <Save size={18} />
