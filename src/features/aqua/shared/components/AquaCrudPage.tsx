@@ -455,6 +455,19 @@ export function AquaCrudPage({
     return true;
   }), [config.fields, contextFilter, config.postingSlug]);
 
+  const hasMissingRequiredField = useMemo(() => {
+    const candidatePayload: Record<string, unknown> = {};
+    for (const field of config.fields) {
+      candidatePayload[field.key] = normalizeFieldValue(field, formValues[field.key]);
+    }
+
+    if (contextFilter?.lockValue && contextFilter.value != null) {
+      candidatePayload[contextFilter.fieldKey] = contextFilter.value;
+    }
+
+    return visibleFields.some((field) => isRequiredFieldMissing(field, candidatePayload[field.key]));
+  }, [config.fields, contextFilter, formValues, visibleFields]);
+
   const handleCreate = (): void => {
     if (contextFilter?.lockValue && contextFilter.value == null) { toast.error(t('aqua.common.requiredField')); return; }
     setEditingRow(null); const initial = getInitialValues(config);
@@ -878,7 +891,7 @@ export function AquaCrudPage({
                         <Combobox options={field.lookup ? (lookupOptionsByField[field.key] ?? []).map((o) => ({ value: String(o.value), label: o.label })) : (field.options ?? (field.key.toLowerCase() === 'status' ? DOC_STATUS_OPTIONS : [])).map((o) => ({ value: String(o.value), label: t(o.label) }))} value={String(formValues[field.key] ?? '')} onValueChange={(value) => setFormValues((prev) => ({ ...prev, [field.key]: value }))} placeholder={t('aqua.common.select')} searchPlaceholder={t('common.search')} emptyText={t('common.noResults')} className="bg-slate-50 dark:bg-blue-950/50 text-slate-900 dark:text-white border-slate-200 dark:border-cyan-800/30" />
                       )}
                       {(field.type === 'text' || field.type === 'number' || field.type === 'date' || field.type === 'datetime') && (
-                        <Input id={field.key} type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : field.type === 'datetime' ? 'datetime-local' : 'text'} required={field.required} step={field.type === 'number' ? resolveNumberInputStep(field) : undefined} min={field.type === 'number' ? field.numberMin : undefined} max={field.type === 'number' ? field.numberMax : undefined} inputMode={field.type === 'number' ? 'decimal' : undefined} placeholder={field.placeholder} value={normalizeInputValue(field, formValues[field.key])} onChange={(e) => setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))} className={INPUT_STYLE} />
+                        <Input id={field.key} type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : field.type === 'datetime' ? 'datetime-local' : 'text'} step={field.type === 'number' ? resolveNumberInputStep(field) : undefined} min={field.type === 'number' ? field.numberMin : undefined} max={field.type === 'number' ? field.numberMax : undefined} inputMode={field.type === 'number' ? 'decimal' : undefined} placeholder={field.placeholder} value={normalizeInputValue(field, formValues[field.key])} onChange={(e) => setFormValues((prev) => ({ ...prev, [field.key]: e.target.value }))} className={INPUT_STYLE} />
                       )}
                     </div>
                   ))}
@@ -886,7 +899,7 @@ export function AquaCrudPage({
               </div>
               <DialogFooter className="px-6 py-5 border-t border-slate-200 dark:border-cyan-800/30 bg-slate-50/50 dark:bg-blue-950/50 flex-col sm:flex-row gap-3 sticky bottom-0 z-10 backdrop-blur-sm">
                 <Button type="button" variant="outline" onClick={() => setFormOpen(false)} className="w-full sm:w-auto h-11 rounded-xl bg-white dark:bg-transparent border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 text-slate-700 dark:text-slate-200">{t('aqua.common.cancel')}</Button>
-                <Button onClick={handleSubmit} disabled={isSubmitting} className="w-full sm:w-auto h-11 rounded-xl bg-linear-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/25 hover:opacity-95 border-0 font-bold">{isSubmitting ? t('aqua.common.saving') : t('aqua.common.save')}</Button>
+                <Button onClick={handleSubmit} disabled={isSubmitting || hasMissingRequiredField} className="w-full sm:w-auto h-11 rounded-xl bg-linear-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/25 hover:opacity-95 border-0 font-bold disabled:opacity-50 disabled:cursor-not-allowed">{isSubmitting ? t('aqua.common.saving') : t('aqua.common.save')}</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
