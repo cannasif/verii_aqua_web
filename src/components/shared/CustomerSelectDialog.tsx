@@ -256,7 +256,6 @@ export function CustomerSelectDialog({
   const isThresholdInput = searchQuery.trim().length > 0 && searchQuery.trim().length < DROPDOWN_MIN_CHARS;
   const minCharsHint = t('common.dropdown.minCharsHint', {
     count: DROPDOWN_MIN_CHARS,
-    defaultValue: `Minimum ${DROPDOWN_MIN_CHARS} characters`,
   });
 
   const displayCustomers = useMemo(() => {

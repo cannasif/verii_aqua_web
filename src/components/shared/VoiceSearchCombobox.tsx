@@ -166,7 +166,6 @@ export function VoiceSearchCombobox({
   const isThresholdMode = isAsyncMode && trimmedSearchQuery.length > 0 && trimmedSearchQuery.length < minChars;
   const minCharsHint = t('common.dropdown.minCharsHint', {
     count: minChars,
-    defaultValue: `Minimum ${minChars} characters`,
   });
 
   const handleListScroll = (event: React.UIEvent<HTMLDivElement>): void => {
