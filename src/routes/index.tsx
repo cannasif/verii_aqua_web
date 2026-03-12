@@ -5,6 +5,7 @@ import { MainLayout } from '@/components/shared/MainLayout';
 import { RouteErrorFallback } from '@/components/shared/RouteErrorFallback';
 import { ForbiddenPage } from '@/components/shared/ForbiddenPage';
 import AuthLayout from '@/layouts/AuthLayout';
+import { getAppBasePath } from '@/lib/api-config';
 
 const lazyImport = <T extends Record<string, unknown>, K extends keyof T>(
   factory: () => Promise<T>,
@@ -57,8 +58,6 @@ const AquaDashboardPage = lazyImport(() => import('@/features/aqua'), 'AquaDashb
 const QuickSetupPage = lazyImport(() => import('@/features/aqua/operations/quick-setup'), 'QuickSetupPage');
 const QuickDailyEntryPage = lazyImport(() => import('@/features/aqua/operations/quick-daily-entry'), 'QuickDailyEntryPage');
 const WelcomePage = lazyImport(() => import('@/features/welcome'), 'WelcomePage');
-
-const WINDO_FORM_ROUTE = '/';
 
 export const router = createBrowserRouter([
   {
@@ -130,5 +129,5 @@ export const router = createBrowserRouter([
     children: [{ index: true, element: <ResetPasswordPage /> }],
   },
 ], {
-  basename: WINDO_FORM_ROUTE,
+  basename: getAppBasePath(),
 });
