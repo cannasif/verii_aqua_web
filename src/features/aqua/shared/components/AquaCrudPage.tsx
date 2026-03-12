@@ -636,34 +636,38 @@ export function AquaCrudPage({
                 onSearchChange={setSearchTerm}
                 onRefresh={async () => { await listQuery.refetch(); }}
                 rightSlot={
-                  <div className="flex flex-wrap items-center gap-2 flex-1 w-full justify-start">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-300 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white">
-                          <span className="font-medium text-sm">{pageSize}</span><ChevronDown size={16} />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-20 bg-white dark:bg-blue-950 border border-slate-200 dark:border-cyan-800/30 shadow-2xl rounded-xl overflow-hidden p-1">
-                          {[10, 20, 50, 100].map((size) => (
-                              <DropdownMenuItem key={size} onSelect={() => setPageSize(size)} className={`flex items-center justify-center text-xs font-medium px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${pageSize === size ? 'bg-cyan-50 dark:bg-cyan-800/30 text-cyan-600 dark:text-cyan-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white'}`}>{size}</DropdownMenuItem>
-                          ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                  <div className="flex flex-wrap items-start sm:items-center gap-2 w-full flex-1">
+                    <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[200px]">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border transition-all duration-300 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white">
+                            <span className="font-medium text-sm">{pageSize}</span><ChevronDown size={16} />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="w-20 bg-white dark:bg-blue-950 border border-slate-200 dark:border-cyan-800/30 shadow-2xl rounded-xl overflow-hidden p-1">
+                            {[10, 20, 50, 100].map((size) => (
+                                <DropdownMenuItem key={size} onSelect={() => setPageSize(size)} className={`flex items-center justify-center text-xs font-medium px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${pageSize === size ? 'bg-cyan-50 dark:bg-cyan-800/30 text-cyan-600 dark:text-cyan-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white'}`}>{size}</DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
 
-                    <Popover open={showFilters} onOpenChange={setShowFilters}>
-                      <PopoverTrigger asChild>
-                        <Button variant={hasFiltersActive ? 'default' : 'outline'} className={`h-10 px-4 rounded-xl border transition-all duration-300 ${hasFiltersActive ? 'bg-cyan-50 dark:bg-cyan-800/30 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-700 hover:bg-cyan-100 dark:hover:bg-cyan-800/50' : 'bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white'}`}>
-                          <Filter className="mr-2 h-4 w-4" />{t('common.filters', 'Filtreler')}{hasFiltersActive && <span className="ml-2 flex h-2 w-2 rounded-full bg-cyan-500 animate-pulse" />}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent side="bottom" align="end" className="w-[420px] p-0 bg-white dark:bg-blue-950 border border-slate-200 dark:border-cyan-800/30 shadow-2xl rounded-2xl overflow-hidden z-50">
-                        <AdvancedFilter columns={filterColumns} defaultColumn={filterColumns[0]?.value} draftRows={draftFilterRows} onDraftRowsChange={setDraftFilterRows} onSearch={handleAdvancedSearch} onClear={handleAdvancedClear} embedded />
-                      </PopoverContent>
-                    </Popover>
+                      <Popover open={showFilters} onOpenChange={setShowFilters}>
+                        <PopoverTrigger asChild>
+                          <Button variant={hasFiltersActive ? 'default' : 'outline'} className={`h-10 px-3 sm:px-4 rounded-xl border transition-all duration-300 ${hasFiltersActive ? 'bg-cyan-50 dark:bg-cyan-800/30 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-700 hover:bg-cyan-100 dark:hover:bg-cyan-800/50' : 'bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white'}`}>
+                            <Filter className="sm:mr-2 h-4 w-4" />
+                            <span className="hidden sm:inline">{t('common.filters', 'Filtreler')}</span>
+                            {hasFiltersActive && <span className="ml-2 flex h-2 w-2 rounded-full bg-cyan-500 animate-pulse" />}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent side="bottom" align="start" className="w-[calc(100vw-2rem)] sm:w-[420px] p-0 bg-white dark:bg-blue-950 border border-slate-200 dark:border-cyan-800/30 shadow-2xl rounded-2xl overflow-hidden z-50">
+                          <AdvancedFilter columns={filterColumns} defaultColumn={filterColumns[0]?.value} draftRows={draftFilterRows} onDraftRowsChange={setDraftFilterRows} onSearch={handleAdvancedSearch} onClear={handleAdvancedClear} embedded />
+                        </PopoverContent>
+                      </Popover>
 
-                    <ColumnPreferencesPopover pageKey={`aqua-${config.key}`} userId={user?.id} columns={baseColumns.map((col) => ({ key: col.key, label: t(col.label) }))} visibleColumns={visibleColumns} columnOrder={columnOrder} onVisibleColumnsChange={setVisibleColumns} onColumnOrderChange={setColumnOrder} />
-                    
-                    <div className="ml-auto flex items-center">
+                      <ColumnPreferencesPopover pageKey={`aqua-${config.key}`} userId={user?.id} columns={baseColumns.map((col) => ({ key: col.key, label: t(col.label) }))} visibleColumns={visibleColumns} columnOrder={columnOrder} onVisibleColumnsChange={setVisibleColumns} onColumnOrderChange={setColumnOrder} />
+                    </div>
+
+                    <div className="ml-auto pl-2 shrink-0">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="outline" className="flex items-center justify-center h-10 w-10 p-0 rounded-xl border transition-all duration-300 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-cyan-800/30 hover:bg-slate-100 dark:hover:bg-blue-900/50 hover:text-slate-900 dark:hover:text-white">
@@ -697,6 +701,7 @@ export function AquaCrudPage({
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
+                    
                   </div>
                 }
               />
@@ -890,9 +895,9 @@ export function AquaCrudPage({
           </DialogContent>
         </Dialog>
 
-        {/* PREMIUM ÖZELLİK: Sağ Çekmece (Drawer) Detay Ekranı */}
+        {/* PREMIUM ÖZELLİK: Detay Görüntüleme Modalı (Ortalanmış ve Taşma Korumalı) */}
         <Dialog open={!!viewingRow} onOpenChange={(open) => !open && setViewingRow(null)}>
-          <DialogContent className="fixed right-0 top-0 sm:right-4 sm:top-4 h-full sm:h-[calc(100vh-2rem)] w-full max-w-md bg-white dark:bg-blue-950 border-l sm:border border-slate-200 dark:border-cyan-800/30 p-0 sm:rounded-3xl shadow-2xl data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right transition-transform duration-500 flex flex-col overflow-hidden [&>button]:hidden">
+          <DialogContent className="[&>button]:hidden bg-white dark:bg-blue-950 border border-slate-200 dark:border-cyan-800/30 text-slate-900 dark:text-white max-w-lg w-[95%] sm:w-full shadow-2xl sm:rounded-2xl p-0 overflow-hidden flex flex-col max-h-[90vh]">
             <DialogHeader className="p-6 border-b border-slate-100 dark:border-cyan-800/20 bg-slate-50/80 dark:bg-blue-900/10 shrink-0">
               <div className="flex items-center justify-between">
                 <DialogTitle className="text-xl font-bold flex items-center gap-3 text-slate-900 dark:text-white">
@@ -923,7 +928,7 @@ export function AquaCrudPage({
             <div className="p-4 border-t border-slate-100 dark:border-cyan-800/20 bg-slate-50/50 dark:bg-blue-900/10 shrink-0 flex justify-end gap-3">
               <Button variant="outline" onClick={() => setViewingRow(null)} className="rounded-xl border-slate-200 dark:border-cyan-800/30 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-blue-900/30">Kapat</Button>
               {!config.readOnly && viewingRow && (
-                <Button onClick={() => { handleEdit(viewingRow); setViewingRow(null); }} className="rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold border-0">Düzenle</Button>
+                <Button onClick={() => { handleEdit(viewingRow); setViewingRow(null); }} className="rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold border-0 shadow-lg shadow-cyan-500/20">Düzenle</Button>
               )}
             </div>
           </DialogContent>
