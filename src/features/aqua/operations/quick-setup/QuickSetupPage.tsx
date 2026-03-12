@@ -79,7 +79,7 @@ export function QuickSetupPage(): ReactElement {
               if (averageGram > 0) {
                 const fishBatch = await mutations.createFishBatch.mutateAsync({
                   projectId,
-                  batchCode: `${context.receiptNo || 'GR'}-${line.id}`,
+                  batchCode: context.receiptNo || 'GR',
                   fishStockId: line.stockId,
                   currentAverageGram: averageGram,
                   startDate: context.receiptDate || new Date().toISOString().slice(0, 10),
@@ -187,10 +187,10 @@ export function QuickSetupPage(): ReactElement {
 
       let batchId = existingDraft?.fishBatchId ?? null;
       if (batchId == null) {
-        const fishBatch = await mutations.createFishBatch.mutateAsync({ projectId, batchCode: data.fishLine.batchCode, fishStockId: data.fishLine.stockId, currentAverageGram: data.fishLine.currentAverageGram, startDate: data.receipt.receiptDate, sourceGoodsReceiptLineId: line.id });
+        const fishBatch = await mutations.createFishBatch.mutateAsync({ projectId, batchCode: data.receipt.receiptNo, fishStockId: data.fishLine.stockId, currentAverageGram: data.fishLine.currentAverageGram, startDate: data.receipt.receiptDate, sourceGoodsReceiptLineId: line.id });
         batchId = fishBatch.id;
       } else {
-        await aquaQuickApi.updateFishBatch(batchId, { projectId, batchCode: data.fishLine.batchCode, fishStockId: data.fishLine.stockId, currentAverageGram: data.fishLine.currentAverageGram, startDate: data.receipt.receiptDate, sourceGoodsReceiptLineId: line.id });
+        await aquaQuickApi.updateFishBatch(batchId, { projectId, batchCode: data.receipt.receiptNo, fishStockId: data.fishLine.stockId, currentAverageGram: data.fishLine.currentAverageGram, startDate: data.receipt.receiptDate, sourceGoodsReceiptLineId: line.id });
       }
 
       await aquaQuickApi.updateGoodsReceiptLine(line.id, { goodsReceiptId: receipt.id, fishBatchId: batchId, ...fishLinePayload });

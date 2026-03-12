@@ -60,7 +60,7 @@ export function GoodsReceiptStepCard({
 
   const fishForm = useForm<FishLineFormSchema>({
     resolver: zodResolver(fishLineFormSchema) as Resolver<FishLineFormSchema>,
-    defaultValues: { stockId: 0, fishCount: 0, batchCode: '', currentAverageGram: 0 },
+    defaultValues: { stockId: 0, fishCount: 0, currentAverageGram: 0 },
   });
 
   const feedForm = useForm<FeedLineFormSchema>({
@@ -74,7 +74,7 @@ export function GoodsReceiptStepCard({
         receiptNo: '',
         receiptDate: new Date().toISOString().slice(0, 10),
       });
-      fishForm.reset({ stockId: 0, fishCount: 0, batchCode: '', currentAverageGram: 0 });
+      fishForm.reset({ stockId: 0, fishCount: 0, currentAverageGram: 0 });
       feedForm.reset({ stockId: 0, qtyUnit: 0 });
       return;
     }
@@ -87,9 +87,6 @@ export function GoodsReceiptStepCard({
       fishForm.reset({
         stockId: existingReceipt.fishStockId ?? 0,
         fishCount: existingReceipt.fishCount > 0 ? existingReceipt.fishCount : 0,
-        batchCode:
-          existingReceipt.fishBatchCode ??
-          `${existingReceipt.receiptNo || 'GR'}-${existingReceipt.fishLineId ?? 'LINE'}`,
         currentAverageGram: existingReceipt.fishAverageGram ?? 0,
       });
       feedForm.reset({ stockId: 0, qtyUnit: 0 });
@@ -98,7 +95,7 @@ export function GoodsReceiptStepCard({
         receiptNo: '',
         receiptDate: new Date().toISOString().slice(0, 10),
       });
-      fishForm.reset({ stockId: 0, fishCount: 0, batchCode: '', currentAverageGram: 0 });
+      fishForm.reset({ stockId: 0, fishCount: 0, currentAverageGram: 0 });
       feedForm.reset({ stockId: 0, qtyUnit: 0 });
     }
   }, [projectId, existingReceipt, receiptForm, fishForm, feedForm]);
@@ -257,19 +254,6 @@ export function GoodsReceiptStepCard({
                           <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.count')}</FormLabel>
                           <FormControl>
                             <Input type="number" min={1} className="bg-background dark:bg-blue-950 border-border dark:border-cyan-800/50 text-foreground focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl placeholder:text-slate-500" {...field} />
-                          </FormControl>
-                          <FormMessage className="text-xs text-rose-500 dark:text-rose-400" />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={fishForm.control}
-                      name="batchCode"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('aqua.quickSetup.batchCode')}</FormLabel>
-                          <FormControl>
-                            <Input className="bg-background dark:bg-blue-950 border-border dark:border-cyan-800/50 text-foreground focus-visible:ring-pink-500/20 focus-visible:border-pink-500 h-11 rounded-xl placeholder:text-slate-500" {...field} />
                           </FormControl>
                           <FormMessage className="text-xs text-rose-500 dark:text-rose-400" />
                         </FormItem>
