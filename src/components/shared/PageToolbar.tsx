@@ -35,14 +35,14 @@ export function PageToolbar({
   const isRefreshDisabled = Date.now() < refreshCooldownUntil;
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+    <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
       <div className="relative group flex-1 min-w-0 max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-pink-500 transition-colors" />
         <Input
           placeholder={searchPlaceholder}
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 h-10 bg-white/50 dark:bg-card/50 border-slate-200 dark:border-white/10 focus:border-pink-500/50 focus:ring-pink-500/20 rounded-xl transition-all"
+          className="pl-10 h-10 bg-white/50 dark:bg-card/50 border-slate-200 dark:border-cyan-800/30 focus:border-pink-500/50 focus:ring-pink-500/20 rounded-xl transition-all"
         />
         {searchValue && (
           <button
@@ -53,23 +53,27 @@ export function PageToolbar({
           </button>
         )}
       </div>
-      <div
-        className={`h-10 w-10 flex items-center justify-center rounded-xl shrink-0 transition-all ${
-          isRefreshDisabled
-            ? 'cursor-not-allowed opacity-50 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10'
-            : 'cursor-pointer bg-white/50 dark:bg-card/50 border border-slate-200 dark:border-white/10 hover:border-pink-500/30 hover:bg-pink-50/50 dark:hover:bg-pink-500/10 group'
-        }`}
-        onClick={handleRefresh}
-        role="button"
-        aria-disabled={isRefreshDisabled}
-        tabIndex={isRefreshDisabled ? -1 : 0}
-      >
-        <RefreshCw
-          size={18}
-          className={`text-slate-500 dark:text-slate-400 transition-colors ${isRefreshing ? 'animate-spin' : ''} ${!isRefreshDisabled ? 'group-hover:text-pink-600 dark:group-hover:text-pink-400' : ''}`}
-        />
+      
+      {/* BURASI DÜZELTİLDİ: Refresh butonu ve sağdaki menüler tek satırda kalsın diye flex row içine alındı */}
+      <div className="flex items-center gap-2">
+        <div
+          className={`h-10 w-10 flex items-center justify-center rounded-xl shrink-0 transition-all ${
+            isRefreshDisabled
+              ? 'cursor-not-allowed opacity-50 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10'
+              : 'cursor-pointer bg-white/50 dark:bg-card/50 border border-slate-200 dark:border-cyan-800/30 hover:border-pink-500/30 hover:bg-pink-50/50 dark:hover:bg-pink-500/10 group'
+          }`}
+          onClick={handleRefresh}
+          role="button"
+          aria-disabled={isRefreshDisabled}
+          tabIndex={isRefreshDisabled ? -1 : 0}
+        >
+          <RefreshCw
+            size={18}
+            className={`text-slate-500 dark:text-slate-400 transition-colors ${isRefreshing ? 'animate-spin' : ''} ${!isRefreshDisabled ? 'group-hover:text-pink-600 dark:group-hover:text-pink-400' : ''}`}
+          />
+        </div>
+        {rightSlot}
       </div>
-      {rightSlot}
     </div>
   );
 }
