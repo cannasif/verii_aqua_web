@@ -134,7 +134,7 @@ export function PermissionGroupsPage(): ReactElement {
 
   return (
     <div className="w-full space-y-8 pb-10">
-      <Breadcrumb items={[{ label: t('sidebar.accessControl') }, { label: t('sidebar.permissionGroups'), isActive: true }]} />
+      <Breadcrumb items={[{ label: t('sidebar.accessControl', { ns: 'common' }) }, { label: t('sidebar.permissionGroups', { ns: 'common' }), isActive: true }]} />
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-1">
         <div className="flex items-center gap-4">

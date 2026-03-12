@@ -175,7 +175,7 @@ export function ProfilePage(): ReactElement {
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6 sm:space-y-8 pb-10 animate-in fade-in duration-500">
-      <Breadcrumb items={[{ label: t('sidebar.home') }, { label: t('userDetailManagement.profilePageTitle'), isActive: true }]} />
+      <Breadcrumb items={[{ label: t('sidebar.home', { ns: 'common' }) }, { label: t('userDetailManagement.profilePageTitle'), isActive: true }]} />
 
       <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">
         <ArrowLeft size={16} />

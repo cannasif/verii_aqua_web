@@ -27,67 +27,68 @@ interface MainLayoutProps {
 }
 
 export function MainLayout({ navItems }: MainLayoutProps): ReactElement {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'hangfire-monitoring', 'user-detail-management']);
   const { data: permissions, isLoading, isError } = useMyPermissionsQuery();
+  const sidebarT = (key: string): string => t(`sidebar.${key}`, { ns: 'common' });
 
   const defaultNavItems: NavItem[] = useMemo(() => {
     const iconSize = 22;
 
     const logicalMenuStructure: NavItem[] = [
       {
-        title: t('sidebar.aquaOperations'),
+        title: sidebarT('aquaOperations'),
         icon: <Waves size={iconSize} className="text-emerald-500" />,
         children: [
-          { title: t('sidebar.aquaQuickSetup'), href: '/aqua/operations/quick-setup' },
-          { title: t('sidebar.aquaQuickDailyEntry'), href: '/aqua/operations/quick-daily-entry' },
-          { title: t('sidebar.aquaGoodsReceipts'), href: '/aqua/operations/goods-receipts' },
-          { title: t('sidebar.aquaFeedings'), href: '/aqua/operations/feedings' },
-          { title: t('sidebar.aquaMortalities'), href: '/aqua/operations/mortalities' },
-          { title: t('sidebar.aquaTransfers'), href: '/aqua/operations/transfers' },
-          { title: t('sidebar.aquaShipments'), href: '/aqua/operations/shipments' },
-          { title: t('sidebar.aquaStockConverts'), href: '/aqua/operations/stock-converts' },
-          { title: t('sidebar.aquaDailyWeathers'), href: '/aqua/operations/daily-weathers' },
-          { title: t('sidebar.aquaNetOperations'), href: '/aqua/operations/net-operations' },
+          { title: sidebarT('aquaQuickSetup'), href: '/aqua/operations/quick-setup' },
+          { title: sidebarT('aquaQuickDailyEntry'), href: '/aqua/operations/quick-daily-entry' },
+          { title: sidebarT('aquaGoodsReceipts'), href: '/aqua/operations/goods-receipts' },
+          { title: sidebarT('aquaFeedings'), href: '/aqua/operations/feedings' },
+          { title: sidebarT('aquaMortalities'), href: '/aqua/operations/mortalities' },
+          { title: sidebarT('aquaTransfers'), href: '/aqua/operations/transfers' },
+          { title: sidebarT('aquaShipments'), href: '/aqua/operations/shipments' },
+          { title: sidebarT('aquaStockConverts'), href: '/aqua/operations/stock-converts' },
+          { title: sidebarT('aquaDailyWeathers'), href: '/aqua/operations/daily-weathers' },
+          { title: sidebarT('aquaNetOperations'), href: '/aqua/operations/net-operations' },
         ],
       },
       {
-        title: t('sidebar.aquaReports'),
+        title: sidebarT('aquaReports'),
         icon: <BarChart3 size={iconSize} className="text-indigo-500" />,
         children: [
-          { title: t('sidebar.aquaDashboard'), href: '/aqua/dashboard' },
-          { title: t('sidebar.aquaProjectDetailReport'), href: '/aqua/reports/project-detail' },
-          { title: t('sidebar.aquaBatchMovements'), href: '/aqua/reports/batch-movements' },
-          { title: t('sidebar.aquaCageBalances'), href: '/aqua/reports/cage-balances' },
+          { title: sidebarT('aquaDashboard'), href: '/aqua/dashboard' },
+          { title: sidebarT('aquaProjectDetailReport'), href: '/aqua/reports/project-detail' },
+          { title: sidebarT('aquaBatchMovements'), href: '/aqua/reports/batch-movements' },
+          { title: sidebarT('aquaCageBalances'), href: '/aqua/reports/cage-balances' },
         ],
       },
       {
-        title: t('sidebar.aquaDefinitions'),
+        title: sidebarT('aquaDefinitions'),
         icon: <BookOpen size={iconSize} className="text-cyan-500" />,
         children: [
-          { title: t('sidebar.aquaProjects'), href: '/aqua/definitions/projects' },
-          { title: t('sidebar.aquaCages'), href: '/aqua/definitions/cages' },
-          { title: t('sidebar.aquaProjectCageAssignments'), href: '/aqua/definitions/project-cage-assignments' },
-          { title: t('sidebar.aquaWeatherSeverities'), href: '/aqua/definitions/weather-severities' },
-          { title: t('sidebar.aquaWeatherTypes'), href: '/aqua/definitions/weather-types' },
-          { title: t('sidebar.aquaNetOperationTypes'), href: '/aqua/definitions/net-operation-types' },
+          { title: sidebarT('aquaProjects'), href: '/aqua/definitions/projects' },
+          { title: sidebarT('aquaCages'), href: '/aqua/definitions/cages' },
+          { title: sidebarT('aquaProjectCageAssignments'), href: '/aqua/definitions/project-cage-assignments' },
+          { title: sidebarT('aquaWeatherSeverities'), href: '/aqua/definitions/weather-severities' },
+          { title: sidebarT('aquaWeatherTypes'), href: '/aqua/definitions/weather-types' },
+          { title: sidebarT('aquaNetOperationTypes'), href: '/aqua/definitions/net-operation-types' },
         ],
       },
       {
-        title: t('sidebar.productAndStock'),
+        title: sidebarT('productAndStock'),
         icon: <PackageIcon size={iconSize} className="text-pink-500" />,
         children: [
-          { title: t('sidebar.stockManagement'), href: '/stocks' },
+          { title: sidebarT('stockManagement'), href: '/stocks' },
         ],
       },
       {
-        title: t('sidebar.accessControl'),
+        title: sidebarT('accessControl'),
         icon: <Shield01Icon size={iconSize} className="text-violet-500" />,
         children: [
-          { title: t('sidebar.userManagement'), href: '/user-management' },
-          { title: t('sidebar.mailSettings'), href: '/users/mail-settings' },
-          { title: t('sidebar.permissionDefinitions'), href: '/access-control/permission-definitions' },
-          { title: t('sidebar.permissionGroups'), href: '/access-control/permission-groups' },
-          { title: t('sidebar.userGroupAssignments'), href: '/access-control/user-group-assignments' },
+          { title: sidebarT('userManagement'), href: '/user-management' },
+          { title: sidebarT('mailSettings'), href: '/users/mail-settings' },
+          { title: sidebarT('permissionDefinitions'), href: '/access-control/permission-definitions' },
+          { title: sidebarT('permissionGroups'), href: '/access-control/permission-groups' },
+          { title: sidebarT('userGroupAssignments'), href: '/access-control/user-group-assignments' },
           { title: t('menu', { ns: 'hangfire-monitoring' }), href: '/hangfire-monitoring' },
         ],
       },

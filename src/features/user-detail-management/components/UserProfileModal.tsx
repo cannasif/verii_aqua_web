@@ -97,7 +97,7 @@ export function UserProfileModal({
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
 
-        <DialogTitle className="sr-only">{t('sidebar.settings')}</DialogTitle>
+        <DialogTitle className="sr-only">{t('sidebar.settings', { ns: 'common' })}</DialogTitle>
 
         <div className="flex flex-col md:flex-row w-full h-full overflow-y-auto md:overflow-hidden">
           
@@ -154,7 +154,7 @@ export function UserProfileModal({
           <div className="flex-1 p-6 md:p-10 lg:p-12 flex flex-col min-h-0 relative">
             <div className="flex items-center gap-3 mb-6 md:mb-8 shrink-0">
               <div className="w-1.5 h-6 bg-cyan-500 rounded-full" />
-              <h3 className="text-xl md:text-2xl font-black tracking-widest uppercase text-slate-900 dark:text-white">{t('sidebar.settings')}</h3>
+              <h3 className="text-xl md:text-2xl font-black tracking-widest uppercase text-slate-900 dark:text-white">{t('sidebar.settings', { ns: 'common' })}</h3>
             </div>
 
             <div className={cn(

@@ -38,6 +38,8 @@ const EMPTY_PERMISSION_DEFINITIONS: PermissionDefinitionDto[] = [];
 
 export function PermissionDefinitionsPage(): ReactElement {
   const { t } = useTranslation(['access-control', 'common']);
+  const getPermissionTitle = (key: string, fallback: string): string =>
+    t(key, { ns: 'common', defaultValue: fallback });
   const { setPageTitle } = useUIStore();
   const queryClient = useQueryClient();
   const [formOpen, setFormOpen] = useState(false);
@@ -74,7 +76,7 @@ export function PermissionDefinitionsPage(): ReactElement {
     const lower = searchTerm.toLowerCase();
     return items.filter((item) => {
       const meta = getPermissionDisplayMeta(item.code);
-      const displayName = meta ? t(meta.key, meta.fallback) : item.name;
+      const displayName = meta ? getPermissionTitle(meta.key, meta.fallback) : item.name;
       return (
         item.code.toLowerCase().includes(lower) ||
         item.name.toLowerCase().includes(lower) ||
@@ -91,7 +93,7 @@ export function PermissionDefinitionsPage(): ReactElement {
   const handleSyncFromRoutes = async (): Promise<void> => {
     const itemsToSync = PERMISSION_CODE_CATALOG.map((code) => {
       const meta = getPermissionDisplayMeta(code);
-      const name = meta ? t(meta.key, meta.fallback) : code;
+      const name = meta ? getPermissionTitle(meta.key, meta.fallback) : code;
       return { code, name, isActive: true };
     });
     await syncMutation.mutateAsync({ items: itemsToSync });
@@ -137,7 +139,7 @@ export function PermissionDefinitionsPage(): ReactElement {
 
   return (
     <div className="w-full space-y-8 pb-10 animate-in fade-in duration-500">
-      <Breadcrumb items={[{ label: t('sidebar.accessControl') }, { label: t('sidebar.permissionDefinitions'), isActive: true }]} />
+      <Breadcrumb items={[{ label: t('sidebar.accessControl', { ns: 'common' }) }, { label: t('sidebar.permissionDefinitions', { ns: 'common' }), isActive: true }]} />
       
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-1">
         <div className="flex items-center gap-4">
@@ -231,12 +233,12 @@ export function PermissionDefinitionsPage(): ReactElement {
                         <span className="font-bold text-sm text-slate-900 dark:text-slate-200 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                           {(() => {
                             const meta = getPermissionDisplayMeta(item.code);
-                            return meta ? t(meta.key, meta.fallback) : item.name;
+                            return meta ? getPermissionTitle(meta.key, meta.fallback) : item.name;
                           })()}
                         </span>
                         {(() => {
                           const meta = getPermissionDisplayMeta(item.code);
-                          const displayName = meta ? t(meta.key, meta.fallback) : item.name;
+                          const displayName = meta ? getPermissionTitle(meta.key, meta.fallback) : item.name;
                           if (!meta || item.name.trim().toLowerCase() === displayName.trim().toLowerCase()) return null;
                           return <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase font-black tracking-widest">{item.name}</span>;
                         })()}

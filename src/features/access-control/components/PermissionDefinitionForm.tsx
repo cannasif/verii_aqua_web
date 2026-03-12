@@ -52,6 +52,8 @@ export function PermissionDefinitionForm({
   usedCodes = [],
 }: PermissionDefinitionFormProps): ReactElement {
   const { t } = useTranslation(['access-control', 'common']);
+  const getPermissionTitle = (key: string, fallback: string): string =>
+    t(key, { ns: 'common', defaultValue: fallback });
 
   const form = useForm<CreatePermissionDefinitionSchema>({
     resolver: zodResolver(createPermissionDefinitionSchema),
@@ -97,7 +99,7 @@ export function PermissionDefinitionForm({
       return !usedSet.has(lowerCode);
     }).map((code) => {
       const meta = getPermissionDisplayMeta(code);
-      const title = meta ? t(meta.key, meta.fallback) : code;
+      const title = meta ? getPermissionTitle(meta.key, meta.fallback) : code;
       return { value: code, label: `${title} (${code})` };
     });
   }, [t, usedCodes, item?.code]);
@@ -149,7 +151,7 @@ export function PermissionDefinitionForm({
                         onValueChange={(value) => {
                           field.onChange(value);
                           const meta = getPermissionDisplayMeta(value);
-                          const title = meta ? t(meta.key, meta.fallback) : '';
+                          const title = meta ? getPermissionTitle(meta.key, meta.fallback) : '';
                           if (!form.getValues('name') && title) {
                             form.setValue('name', title, { shouldDirty: true });
                           }

@@ -153,7 +153,7 @@ export const ACCESS_CONTROL_ADMIN_ONLY_PATTERNS: RegExp[] = [
 ];
 
 export const PERMISSION_CODE_DISPLAY: Record<string, { key: string; fallback: string }> = {
-  'dashboard.view': { key: 'sidebar.home', fallback: 'Home' },
+  'dashboard.view': { key: 'sidebar.home', fallback: 'Ana Sayfa' },
   'stock.stocks.view': { key: 'sidebar.stockManagement', fallback: 'Stok Yönetimi' },
   'users.profile.view': { key: 'sidebar.settings', fallback: 'Ayarlar' },
 
@@ -208,9 +208,9 @@ export const PERMISSION_CODE_DISPLAY: Record<string, { key: string; fallback: st
   },
   'aqua.reports.batch-movements.view': {
     key: 'sidebar.aquaBatchMovements',
-    fallback: 'Batch Movement',
+    fallback: 'Parti Hareketleri',
   },
-  'aqua.reports.cage-balances.view': { key: 'sidebar.aquaCageBalances', fallback: 'Kafes Balance' },
+  'aqua.reports.cage-balances.view': { key: 'sidebar.aquaCageBalances', fallback: 'Kafes Dengesi' },
 };
 
 export function getPermissionDisplayMeta(code: string): { key: string; fallback: string } | null {
@@ -218,11 +218,11 @@ export function getPermissionDisplayMeta(code: string): { key: string; fallback:
 }
 
 export const PERMISSION_MODULE_DISPLAY: Record<string, { key: string; fallback: string }> = {
-  dashboard: { key: 'sidebar.home', fallback: 'Home' },
+  dashboard: { key: 'sidebar.home', fallback: 'Ana Sayfa' },
   stock: { key: 'sidebar.productAndStock', fallback: 'Ürünler ve Stok' },
   users: { key: 'sidebar.profile', fallback: 'Profil' },
-  aqua: { key: 'sidebar.aquaOperations', fallback: 'Aqua' },
-  'access-control': { key: 'sidebar.accessControl', fallback: 'Access Control' },
+  aqua: { key: 'sidebar.aquaOperations', fallback: 'Aqua İşlemleri' },
+  'access-control': { key: 'sidebar.accessControl', fallback: 'Erişim Kontrolü' },
 };
 
 export function getPermissionModuleDisplayMeta(prefix: string): { key: string; fallback: string } | null {
