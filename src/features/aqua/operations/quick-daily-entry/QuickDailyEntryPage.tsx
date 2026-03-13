@@ -138,29 +138,35 @@ export function QuickDailyEntryPage(): ReactElement {
     return () => { active = false; };
   }, [projectCages]);
 
-  const sourceProjectCages = useMemo(() => 
-    (Array.isArray(projectCages) ? projectCages : []).filter((cage) => {
-      if (projectId != null && Number(cage.projectId) !== Number(projectId)) return false;
-      const snapshot = sourceBatchByCageId[cage.id];
-      return snapshot != null && snapshot.liveCount > 0;
-    }),
-    [projectCages, sourceBatchByCageId, projectId]
+  const sourceProjectCages = useMemo(() =>
+    (Array.isArray(projectCages) ? projectCages : []).filter((cage) =>
+      projectId == null ? true : Number(cage.projectId) === Number(projectId)
+    ),
+    [projectCages, projectId]
   );
 
-  const projectOptions = useMemo(() => 
-    (Array.isArray(projects) ? projects : []).map((p) => ({
-      value: String(p.id),
-      label: `${p.projectCode ?? ''} - ${p.projectName ?? ''}`,
-    })),
+  const projectOptions = useMemo(
+    () =>
+      (Array.isArray(projects) ? projects : []).map((p) => ({
+        value: String(p.id),
+        label: `${p.projectCode ?? ''} - ${p.projectName ?? ''}`,
+      })),
     [projects]
   );
 
-  const cageOptions = useMemo(() => 
-    sourceProjectCages.map((pc) => ({
-      value: String(pc.id),
-      label: pc.cageCode ?? pc.cageName ?? String(pc.id),
-    })),
-    [sourceProjectCages]
+  const cageOptions = useMemo(
+    () =>
+      sourceProjectCages.map((pc) => {
+      const snapshot = sourceBatchByCageId[pc.id];
+      const liveCount = Number(snapshot?.liveCount ?? 0);
+      const averageGram = Number(snapshot?.averageGram ?? 0);
+      const baseLabel = pc.cageCode ?? pc.cageName ?? String(pc.id);
+      return {
+        value: String(pc.id),
+        label: `${baseLabel} (${liveCount}/${averageGram})`,
+      };
+      }),
+    [sourceProjectCages, sourceBatchByCageId]
   );
 
   useEffect(() => {
