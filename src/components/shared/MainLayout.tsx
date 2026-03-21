@@ -12,6 +12,7 @@ import {
   Shield01Icon,
   PackageIcon, 
   UserCircleIcon,
+  DashboardBrowsingIcon
 } from 'hugeicons-react';
 import { Waves, BookOpen, BarChart3 } from 'lucide-react';
 
@@ -36,6 +37,11 @@ export function MainLayout({ navItems }: MainLayoutProps): ReactElement {
 
     const logicalMenuStructure: NavItem[] = [
       {
+        title: sidebarT('dashboard'),
+        icon: <DashboardBrowsingIcon size={iconSize} className="text-cyan-500" />,
+        href: '/aqua/dashboard',
+      },
+      {
         title: sidebarT('aquaOperations'),
         icon: <Waves size={iconSize} className="text-emerald-500" />,
         children: [
@@ -55,7 +61,6 @@ export function MainLayout({ navItems }: MainLayoutProps): ReactElement {
         title: sidebarT('aquaReports'),
         icon: <BarChart3 size={iconSize} className="text-indigo-500" />,
         children: [
-          { title: sidebarT('aquaDashboard'), href: '/aqua/dashboard' },
           { title: sidebarT('aquaProjectDetailReport'), href: '/aqua/reports/project-detail' },
           { title: sidebarT('aquaBatchMovements'), href: '/aqua/reports/batch-movements' },
           { title: sidebarT('aquaCageBalances'), href: '/aqua/reports/cage-balances' },

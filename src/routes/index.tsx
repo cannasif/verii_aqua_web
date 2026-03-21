@@ -69,7 +69,8 @@ export const router = createBrowserRouter([
     ),
     errorElement: <RouteErrorFallback />,
     children: [
-      { index: true, element: <Navigate to="/welcome" replace /> },
+      // Root/home artık dashboard olacak (redirect yok).
+      { index: true, element: <AquaDashboardPage /> },
       { path: 'welcome', element: <WelcomePage /> },
       { path: 'forbidden', element: <ForbiddenPage /> },
       { path: 'user-management', element: <UserManagementPage /> },

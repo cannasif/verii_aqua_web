@@ -45,7 +45,8 @@ export const ROUTE_PERMISSION_MAP: Record<string, string> = {
   '/aqua/reports/project-detail': 'aqua.reports.project-detail.view',
   '/aqua/reports/batch-movements': 'aqua.reports.batch-movements.view',
   '/aqua/reports/cage-balances': 'aqua.reports.cage-balances.view',
-  '/aqua/dashboard': 'aqua.reports.project-detail.view',
+  // Home/dashboard ikilisi aynı sayfayı temsil ediyor.
+  '/aqua/dashboard': 'dashboard.view',
 };
 
 export const PATH_TO_PERMISSION_PATTERNS: Array<{ pattern: RegExp; permission: string }> = [
@@ -118,7 +119,7 @@ export const PATH_TO_PERMISSION_PATTERNS: Array<{ pattern: RegExp; permission: s
   },
   {
     pattern: /^\/aqua\/dashboard(\/|$)/,
-    permission: 'aqua.reports.project-detail.view',
+    permission: 'dashboard.view',
   },
   {
     pattern: /^\/aqua\/reports\/batch-movements(\/|$)/,
@@ -189,7 +190,7 @@ export const PERMISSION_CODE_DISPLAY: Record<string, { key: string; fallback: st
     key: 'sidebar.aquaFeedings',
     fallback: 'Besleme (Sabah/Akşam)',
   },
-  'aqua.operations.mortalities.view': { key: 'sidebar.aquaMortalities', fallback: 'Ölüm' },
+  'aqua.operations.mortalities.view': { key: 'sidebar.aquaMortalities', fallback: 'Balık Fire' },
   'aqua.operations.transfers.view': { key: 'sidebar.aquaTransfers', fallback: 'Transfer' },
   'aqua.operations.shipments.view': { key: 'sidebar.aquaShipments', fallback: 'Sevkiyat' },
   'aqua.operations.stock-converts.view': {

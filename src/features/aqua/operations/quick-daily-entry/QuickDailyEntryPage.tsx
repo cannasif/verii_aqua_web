@@ -1,5 +1,6 @@
 import { type ReactElement, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
   AlertDialog,
@@ -59,6 +60,11 @@ import { ChevronRight, ClipboardEdit, CheckCircle2 } from 'lucide-react';
 
 export function QuickDailyEntryPage(): ReactElement {
   const { t } = useTranslation('common');
+  const [searchParams] = useSearchParams();
+  const projectIdParam = searchParams.get('projectId');
+  const projectCageIdParam = searchParams.get('projectCageId');
+  const initialProjectId = projectIdParam ? Number(projectIdParam) : null;
+  const initialProjectCageId = projectCageIdParam ? Number(projectCageIdParam) : null;
   const [projectId, setProjectId] = useState<number | null>(null);
   const [projectCageId, setProjectCageId] = useState<number | null>(null);
   const [sourceBatch, setSourceBatch] = useState<ActiveCageBatchSnapshot | null>(null);
@@ -94,6 +100,12 @@ export function QuickDailyEntryPage(): ReactElement {
   const handleCageChange = (value: string): void => {
     setProjectCageId(value ? Number(value) : null);
   };
+
+  useEffect(() => {
+    if (initialProjectId) {
+      setProjectId(initialProjectId);
+    }
+  }, [initialProjectId]);
 
   useEffect(() => {
     let active = true;
@@ -174,6 +186,16 @@ export function QuickDailyEntryPage(): ReactElement {
     const existsInSourceList = sourceProjectCages.some((c) => c.id === projectCageId);
     if (!existsInSourceList) setProjectCageId(null);
   }, [projectCageId, sourceProjectCages]);
+
+  useEffect(() => {
+    if (!initialProjectCageId) return;
+    if (!projectId) return;
+
+    const exists = sourceProjectCages.some((c) => c.id === initialProjectCageId);
+    if (exists) {
+      setProjectCageId(initialProjectCageId);
+    }
+  }, [initialProjectCageId, projectId, sourceProjectCages]);
 
   const handleFeedingSubmit = async (data: FeedingQuickFormSchema): Promise<void> => {
     if (projectId == null || projectCageId == null) return;

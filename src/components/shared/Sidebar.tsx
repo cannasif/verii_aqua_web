@@ -117,17 +117,19 @@ function NavItemComponent({
   isManualClick: boolean;
 }): ReactElement {
   const location = useLocation();
+  // Root/home path ('/') dashboard gibi davranıyor.
+  const effectivePathname = location.pathname === '/' ? '/aqua/dashboard' : location.pathname;
   const { isSidebarOpen, setSidebarOpen } = useUIStore();
   
   const checkIsActive = (navItem: NavItem): boolean => {
-    if (navItem.href === location.pathname) return true;
+    if (navItem.href === effectivePathname) return true;
     if (navItem.children) return navItem.children.some(checkIsActive);
     return false;
   };
 
   const hasChildren = item.children && item.children.length > 0;
   const isAnyChildActive = hasChildren && checkIsActive(item);
-  const isActive = item.href ? location.pathname === item.href : false;
+  const isActive = item.href ? effectivePathname === item.href : false;
   
   const itemKey = item.href || item.title;
   const isExpanded = expandedItemKeys.has(itemKey);
@@ -226,18 +228,18 @@ function NavItemComponent({
           <div className="ml-12 mt-2 space-y-1 border-l border-slate-200 dark:border-white/10 pl-2">
             {item.children?.map((child) => (
               child.children && child.children.length > 0 
-                ? <SubMenuComponent key={child.title} item={child} pathname={location.pathname} searchQuery={searchQuery} />
+                ? <SubMenuComponent key={child.title} item={child} pathname={effectivePathname} searchQuery={searchQuery} />
                 : <Link
                     key={child.href}
                     to={child.href || '#'}
                     className={cn(
                       "flex items-center justify-between px-3 py-2 rounded-lg transition-colors text-sm w-full relative",
-                      location.pathname === child.href ? 'bg-slate-50 text-slate-800 font-semibold dark:bg-[#00f7ff]/15 dark:text-[#00f7ff]' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-[#5c7c99] dark:hover:bg-[#00f7ff]/10 dark:hover:text-[#00f7ff]'
+                      effectivePathname === child.href ? 'bg-slate-50 text-slate-800 font-semibold dark:bg-[#00f7ff]/15 dark:text-[#00f7ff]' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-[#5c7c99] dark:hover:bg-[#00f7ff]/10 dark:hover:text-[#00f7ff]'
                     )}
                     onClick={() => { if (window.innerWidth < 1024) useUIStore.getState().setSidebarOpen(false); }}
                   >
                     <span className="whitespace-normal leading-tight text-left wrap-break-word">{child.title}</span>
-                    {location.pathname === child.href && <span className="w-2 h-2 rounded-full bg-[#00f7ff] shrink-0 ml-2 shadow-[0_0_8px_rgba(0,247,255,0.8)]" />}
+                    {effectivePathname === child.href && <span className="w-2 h-2 rounded-full bg-[#00f7ff] shrink-0 ml-2 shadow-[0_0_8px_rgba(0,247,255,0.8)]" />}
                   </Link>
             ))}
           </div>
@@ -271,12 +273,14 @@ function NavItemComponent({
 export function Sidebar({ items }: SidebarProps): ReactElement {
   const { isSidebarOpen, setSidebarOpen, searchQuery } = useUIStore();
   const location = useLocation();
+  // Root/home path ('/') dashboard gibi davranıyor.
+  const effectivePathname = location.pathname === '/' ? '/aqua/dashboard' : location.pathname;
   
   const getDefaultKeys = useCallback(() => {
     const keys = new Set<string>();
     const findActive = (navItems: NavItem[]) => {
       navItems.forEach(item => {
-        if (item.href === location.pathname || (item.children?.some(c => c.href === location.pathname))) {
+        if (item.href === effectivePathname || (item.children?.some(c => c.href === effectivePathname))) {
           keys.add(item.href || item.title);
         }
         if (item.children) findActive(item.children);
@@ -284,7 +288,7 @@ export function Sidebar({ items }: SidebarProps): ReactElement {
     };
     findActive(items);
     return keys;
-  }, [items, location.pathname]);
+  }, [items, effectivePathname]);
 
   const [expandedItemKeys, setExpandedItemKeys] = useState<Set<string>>(new Set());
   const [isManualClick, setIsManualClick] = useState(false);
